@@ -1,0 +1,2345 @@
+{
+	"info": {
+		"_postman_id": "c6fff82a-f2b4-43cc-ad2f-7f6271324b31",
+		"name": "API 명세서",
+		"description": "# **기능 정리**\n\n- 유저\n    - 로그인\n        - 일반 로그인\n        - 소셜 로그인\n    - 아이디/비밀번호 찾기\n        - 본인인증(핸드폰)\n        - 본인인증(이메일)\n    - 회원가입\n        - 일반 회원가입\n        - 소셜 회원가입\n    - 중복확인\n        - 아이디 중복 확인\n        - 닉네임 중복 확인\n        - 이메일 중복 확인\n        - 휴대폰 중복 확인\n        - 회원 중복 확인\n    - 유효성 확인\n        - 비밀번호 유효성 확인\n        - 핸드폰 유효성 확인\n        - 이메일 유효성 확인\n    - 회원 정보 변경\n        - 닉네임 변경\n        - 비밀번호 변경\n        - 휴대폰 번호 변경\n        - 이메일 변경\n- 메모\n    \n    - CRUD\n        \n        - 메모 생성\n        - 메모 수정(제목, 내용)\n        - 메모 삭제\n        - 내 모든 메모 조회\n            \n        - 공유 메모 조회\n        - 특정 메모 검색 (Front에서 해결)\n    - 부가기능\n        - 메모 잠금(수정,삭제X)\n        - 메모 접근 권한 설정\n        - 메모 카테고리 설정\n        - 메모 즐겨찾기 설정\n        - 메모 복제\n        - 메모 공유\n    - 팔로우\n        - 메모 팔로우 요청\n        - 메모 팔로우 제안\n        - 메모 팔로우 관리(수락, 거절)\n        - 팔로잉 메모 관리\n- 캘린더\n    - CRUD\n        - 일정 생성\n        - 일정 수정(제목, 내용, 시간)\n        - 일정 삭제\n        - 내 모든 일정 조회\n        - 특정 일정 검색\n    - 부가기능\n        - 일정 잠금(수정,삭제X)\n        - 일정 접근 권한 설정\n        - 일정 카테고리 설정\n        - 일정 즐겨찾기 설정\n        - 일정 알람 설정\n        - 일정 복제\n        - 일정 공유\n    - 팔로우\n        - 일정 팔로우 요청\n        - 일정 팔로우 제안\n        - 일정 팔로우 관리(수락, 거절)\n        - 팔로잉 일정 관리\n- 루틴\n    - CRUD\n        - 루틴 생성\n        - 루틴 수정(제목, 내용, 시간)\n        - 루틴 삭제\n        - 내 모든 루틴 조회\n        - 특정 일정 검색\n    - 부가기능\n        - 루틴 잠금(수정,삭제X)\n        - 루틴 접근 권한 설정\n        - 루틴 카테고리 설정\n        - 루틴 즐겨찾기 설정\n        - 루틴 알람 설정\n        - 루틴 복제\n        - 루틴 공유\n        - 루틴 대시보드 조회(혼자해요, 함께해요, 경쟁해요)\n        - 루틴 집계 조회(일별, 월별, 연도별)\n    - 팔로우\n        - 루틴 팔로우 요청(혼자해요, 함께해요, 경쟁해요)\n        - 루틴 팔로우 제안\n        - 루틴 팔로우 관리(수락, 거절)\n        - 팔로잉 루틴 관리\n- 그룹\n    - CRUD\n        - 그룹 생성\n        - 그룹 수정\n        - 그룹 삭제\n        - 내 그룹 조회\n        - 특정 그룹 검색\n    - 팔로우\n        - 그룹 팔로우 요청\n        - 그룹 팔로우 제안\n        - 그룹 팔로우 관리(수락, 거절)\n        - 그룹 팔로우 권한 관리(RWD)\n        - 팔로잉 그룹 관리\n- 서약\n    - CRUD\n        - 서약 생성\n        - 서약 수정\n        - 서약 삭제\n        - 특정 서약 검색\n- 알람\n    - CRUD\n        - 알람 생성\n        - 알람 수정\n        - 알람 삭제\n        - 내 모든 알람 조회\n        - 특정 알람 검색\n    - 부가 기능\n        - 알람 방식 설정(앱,웹,톡,메일,문자)\n        - 루틴 알람 반복 기능\n- 카테고리\n    - CRUD\n        - 카테고리 생성\n        - 카테고리 수정\n        - 카테고리 삭제\n        - 카테고리 검색",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30823185",
+		"_collection_link": "https://www.postman.com/avionics-meteorologist-47133674/workspace/the-10000-hour-rule/collection/30823185-c6fff82a-f2b4-43cc-ad2f-7f6271324b31?action=share&source=collection_link&creator=30823185"
+	},
+	"item": [
+		{
+			"name": "유저일반로그인 : /api/user/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/social-login",
+					"path": [
+						"api",
+						"user",
+						"social-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저소셜로그인 : /api/user/login/social",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/login/social",
+					"path": [
+						"api",
+						"user",
+						"login",
+						"social"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저본인인증요청 : /api/user/auth/phone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"홍길동\",\r\n    \"phone\":\"010-0000-0000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/user/auth/phone",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"phone"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "홍길동",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "010-0000-0000",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저본인인증요청 : /api/user/auth/email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"홍길동\",\r\n    \"email\":\"test@naver.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/user/auth/email",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저본인인증번호확인 : /api/user/check/auth",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check/auth?idx=1&key=123456",
+					"path": [
+						"api",
+						"user",
+						"check",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "idx",
+							"value": "1"
+						},
+						{
+							"key": "key",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저일반회원가입 : /api/user/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/signup",
+					"path": [
+						"api",
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저소셜회원가입 : /api/user/signup/social",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/signup/social",
+					"path": [
+						"api",
+						"user",
+						"signup",
+						"social"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저아이디중복확인 : /api/user/check/id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check/id",
+					"path": [
+						"api",
+						"user",
+						"check",
+						"id"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저닉네임아이디중복확인 : /api/user/check/nickname",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check/nickname",
+					"path": [
+						"api",
+						"user",
+						"check",
+						"nickname"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저이메일중복확인 : /api/user/check/email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check/email",
+					"path": [
+						"api",
+						"user",
+						"check",
+						"email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저핸드폰중복확인 : /api/user/check/phone",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check/phone",
+					"path": [
+						"api",
+						"user",
+						"check",
+						"phone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저회원중복확인 : /api/user/check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/api/user/check",
+					"path": [
+						"api",
+						"user",
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저핸드폰유효성확인 : /api/user/auth/phone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/auth/phone",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"phone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저이메일유효성확인 : /api/user/auth/email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/api/user/auth/email",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저닉네임변경 /api/users/${userID}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"nickname\":\"DYONYON\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/users/${userID}",
+					"path": [
+						"api",
+						"users",
+						"${userID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저비밀번호변경 /api/users/${userID}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"password\":\"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/users/${userID}",
+					"path": [
+						"api",
+						"users",
+						"${userID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저휴대폰번호변경 /api/users/${userID}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"phone\":\"010-1234-5678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/users/${userID}",
+					"path": [
+						"api",
+						"users",
+						"${userID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "유저이메일변경 /api/users/${userID}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"email\":\"test@naver.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/users/${userID}",
+					"path": [
+						"api",
+						"users",
+						"${userID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모생성 /api/memo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\",\r\n    \"type\":\"U/G\",\r\n    \"owner\":\"\",\r\n    \"category\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memo",
+					"path": [
+						"api",
+						"memo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모수정 /api/memos/${memoIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos${memoIDX}",
+					"path": [
+						"api",
+						"memos${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모삭제 /api/memo/${memoIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모조회 /api/memos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/memos?type=user혹은group&owner=jychoi9712&user=userID",
+					"path": [
+						"api",
+						"memos"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "user혹은group"
+						},
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						},
+						{
+							"key": "user",
+							"value": "userID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "공유메모조회 /api/memos/${memoIDX}/share",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/memos/${memoIDX}/share?sharedkey=암호화sharedkey",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"share"
+					],
+					"query": [
+						{
+							"key": "sharedkey",
+							"value": "암호화sharedkey"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모상태변경 /api/memos/${memoIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모접근권한변경 /api/memos/${memoIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"access\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모카테고리변경 /api/memos/${memoIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"category\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모즐겨찾기변경 /api/memos/${memoIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"favorite\":\"Y\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모복제 /api/memos/${memoIDX}/copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}/copy",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"copy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모공유 /api/memos/${memoIDX}/shared",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/memos/${memoIDX}/shared",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"shared"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모팔로우요청 /api/memos/${memoIDX}/follow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}/follow",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모팔로우제안 /api/memos/${memoIDX}/propose",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"follower\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}/follow/propose",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"follow",
+						"propose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모팔로우조회 /api/memo/follows",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/memo/follows?owner=ownerID&follower=followerID",
+					"path": [
+						"api",
+						"memo",
+						"follows"
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "ownerID"
+						},
+						{
+							"key": "follower",
+							"value": "followerID"
+						},
+						{
+							"key": "memoIDX",
+							"value": "memoIDX",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "메모팔로우관리 /api/memo/follows/${followIDX)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // 내가 user일 때\r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"-1\",\r\n\r\n    // 내가 owner일 떄 \r\n    \"user\":\"\",\r\n    \"memoIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"2\",\r\n    \"access\":\"\",\r\n    \"responseMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memo/follows/${followIDX)",
+					"path": [
+						"api",
+						"memo",
+						"follows",
+						"${followIDX)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정생성 /api/calender",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\",\r\n    \"type\":\"U/G\",\r\n    \"owner\":\"\",\r\n    \"category\":\"\",\r\n    \"start\":\"\",\r\n    \"end\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calender",
+					"path": [
+						"api",
+						"calender"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정수정 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\",\r\n    \"category\":\"\",\r\n    \"start\":\"\",\r\n    \"end\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정삭제 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정조회 /api/calenders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/calenders?type=user혹은group&owner=jychoi9712&user=userID",
+					"path": [
+						"api",
+						"calenders"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "user혹은group"
+						},
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						},
+						{
+							"key": "user",
+							"value": "userID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "공유일정조회 /api/calenders/${calenderIDX}/share",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}/share?sharedkey=암호화sharedkey",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}",
+						"share"
+					],
+					"query": [
+						{
+							"key": "sharedkey",
+							"value": "암호화sharedkey"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정상태변경 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정접근권한변경 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"access\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정카테고리변경 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"category\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정즐겨찾기변경 /api/calenders/${calenderIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"favorite\":\"Y\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정복제 /api/calenders/${calenderIDX}/copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}/copy",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}",
+						"copy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정공유 /api/calenders/${calenderIDX}/shared",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}/shared",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}",
+						"shared"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정팔로우요청 /api/calenders/${calenderIDX}/follow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}/follow",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정팔로우제안 /api/calenders/${calenderIDX}/propose",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"follower\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calenders/${calenderIDX}/follow/propose",
+					"path": [
+						"api",
+						"calenders",
+						"${calenderIDX}",
+						"follow",
+						"propose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정팔로우조회 /api/calender/follows",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/calender/follows?owner=ownerID&follower=followerID",
+					"path": [
+						"api",
+						"calender",
+						"follows"
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "ownerID"
+						},
+						{
+							"key": "follower",
+							"value": "followerID"
+						},
+						{
+							"key": "calenderIDX",
+							"value": "calenderIDX",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "일정팔로우관리 /api/calender/follows/${followIDX)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // 내가 user일 때\r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"-1\",\r\n\r\n    // 내가 owner일 떄 \r\n    \"user\":\"\",\r\n    \"calenderIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"2\",\r\n    \"access\":\"\",\r\n    \"responseMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/calender/follows/${followIDX)",
+					"path": [
+						"api",
+						"calender",
+						"follows",
+						"${followIDX)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴생성 /api/routine",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\",\r\n    \"type\":\"U/G\",\r\n    \"owner\":\"\",\r\n    \"category\":\"\",\r\n    \"goal\":\"\",\r\n    \"day\":\"\",\r\n    \"start\":\"\",\r\n    \"end\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routine",
+					"path": [
+						"api",
+						"routine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴수정 /api/routines/${routineIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\",\r\n    \"category\":\"\",\r\n    \"goal\":\"\",\r\n    \"day\":\"\",\r\n    \"start\":\"\",\r\n    \"end\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴삭제 /api/routines/${routineIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"session\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴조회 /api/routines",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/routines?type=user혹은group&owner=jychoi9712&user=userID",
+					"path": [
+						"api",
+						"routines"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "user혹은group"
+						},
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						},
+						{
+							"key": "user",
+							"value": "userID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "공유루틴조회 /api/routines/${routineIDX}/share",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/routines/${routineIDX}/share?sharedkey=암호화sharedkey",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}",
+						"share"
+					],
+					"query": [
+						{
+							"key": "sharedkey",
+							"value": "암호화sharedkey"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴기록조회 /api/routines/${routineIDX}/history",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/routines/${routineIDX}/history",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴상태변경 /api/routines/${routineIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴접근권한변경 /api/routines/${routineIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"access\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴카테고리변경 /api/routines/${routineIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"category\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴즐겨찾기변경 /api/routines/${routineIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"favorite\":\"Y\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴모드변경 /api/routines/${routineIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"mode\":\"0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴복제 /api/routines/${routineIDX}/copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}/copy",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}",
+						"copy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴공유 /api/routines/${routineIDX}/shared",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/routines/${routinesIDX}/shared",
+					"path": [
+						"api",
+						"routines",
+						"${routinesIDX}",
+						"shared"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴팔로우요청 /api/routines/${routineIDX}/follow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"requestMsg\":\"\",\r\n    \"mode\":\"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/memos/${memoIDX}/follow",
+					"path": [
+						"api",
+						"memos",
+						"${memoIDX}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴팔로우제안 /api/routines/${routineIDX}/propose",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"follower\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routines/${routineIDX}/follow/propose",
+					"path": [
+						"api",
+						"routines",
+						"${routineIDX}",
+						"follow",
+						"propose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴팔로우조회 /api/routine/follows",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/routine/follows?owner=ownerID&follower=followerID",
+					"path": [
+						"api",
+						"routine",
+						"follows"
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "ownerID"
+						},
+						{
+							"key": "follower",
+							"value": "followerID"
+						},
+						{
+							"key": "routineIDX",
+							"value": "routineIDX",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "루틴팔로우관리 /api/routine/follows/${followIDX)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // 내가 user일 때\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"-1\",\r\n    \"mode\":\"1\",\r\n\r\n    // 내가 owner일 떄 \r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"2\",\r\n    \"mode\":\"1\",\r\n    \"access\":\"\",\r\n    \"responseMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/routine/follows/${followIDX)",
+					"path": [
+						"api",
+						"routine",
+						"follows",
+						"${followIDX)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹생성 /api/group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\":\"\",\r\n    \"name\":\"\",\r\n    \"tag\":\"\",\r\n    \"introduction\":\"\",\r\n    \"img_url\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/group",
+					"path": [
+						"api",
+						"group"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹수정 /api/groups/${groupIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\":\"\",\r\n    \"name\":\"\",\r\n    \"tag\":\"\",\r\n    \"introduction\":\"\",\r\n    \"img_url\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹삭제 /api/groups/${groupIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹조회 /api/groups",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/groups?type=user혹은group&owner=jychoi9712&user=userID&group=groupname",
+					"path": [
+						"api",
+						"groups"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "user혹은group"
+						},
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						},
+						{
+							"key": "user",
+							"value": "userID"
+						},
+						{
+							"key": "group",
+							"value": "groupname"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹상태변경 /api/groups/${groupIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"groupIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹접근권한변경 /api/routines/${routineIDX} Copy",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"groupIDX\":\"\",\r\n    \"access\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹팔로우요청 /api/groups/${groupIDX}/follow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"groupIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}/follow",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹팔로우제안 /api/groups/${groupIDX}/propose",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"follower\":\"\",\r\n    \"groupIDX\":\"\",\r\n    \"requestMsg\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/groups/${groupIDX}/propose",
+					"path": [
+						"api",
+						"groups",
+						"${groupIDX}",
+						"propose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹팔로우조회 /api/group/follows",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/group/follows?owner=ownerID&follower=followerID",
+					"path": [
+						"api",
+						"group",
+						"follows"
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "ownerID"
+						},
+						{
+							"key": "follower",
+							"value": "followerID"
+						},
+						{
+							"key": "groupIDX",
+							"value": "routineIDX",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "그룹팔로우관리 /api/group/follows/${followIDX)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // 내가 user일 때\r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"-1\",\r\n    \"mode\":\"1\",\r\n\r\n    // 내가 owner일 떄 \r\n    \"user\":\"\",\r\n    \"routineIDX\":\"\",\r\n    \"followIDX\":\"\",\r\n    \"status\":\"2\",\r\n    \"mode\":\"1\",\r\n    \"access\":\"\",\r\n    \"responseMsg\":\"\",\r\n    \"memo_access\":\"\",\r\n    \"calender_access\":\"\",\r\n    \"routine_access\":\"\",\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/group/follows/${followIDX)",
+					"path": [
+						"api",
+						"group",
+						"follows",
+						"${followIDX)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "카테고리생성 /api/category",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"category_type\":\"\",\r\n    \"content_type\":\"\",\r\n    \"type\":\"U/G\",\r\n    \"owner\":\"\",\r\n    \"title\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/category",
+					"path": [
+						"api",
+						"category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "카테고리수정 /api/categories/${categoryIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/categories/${categoryIDX}",
+					"path": [
+						"api",
+						"categories",
+						"${categoryIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "카테고리삭제 /api/categories/${categoryIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"categoryType\":\"\",\r\n    \"contentType\":\"\",\r\n    \"owner\":\"\",\r\n    \"title\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/categories/${categoryIDX}",
+					"path": [
+						"api",
+						"categories",
+						"${categoryIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "카테고리조회 /api/categories",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/categories?contentType=user혹은group&owner=jychoi9712&user=userID&group=groupname&categoryType=memo혹은calender혹은Routine",
+					"path": [
+						"api",
+						"categories"
+					],
+					"query": [
+						{
+							"key": "contentType",
+							"value": "user혹은group"
+						},
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						},
+						{
+							"key": "user",
+							"value": "userID"
+						},
+						{
+							"key": "group",
+							"value": "groupname"
+						},
+						{
+							"key": "categoryType",
+							"value": "memo혹은calender혹은Routine"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약생성 /api/agreement",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/agreement",
+					"path": [
+						"api",
+						"agreement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약수정 /api/agreements/${agreementIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"title\":\"\",\r\n    \"content\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약삭제 /api/agreements/${agreementIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					],
+					"query": [
+						{
+							"key": "userID",
+							"value": "userID",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약원본조회 /api/agreements/${agreementIDX}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약유저등록 /api/agreements/endroll",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}?userID=userID",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					],
+					"query": [
+						{
+							"key": "userID",
+							"value": "userID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약상태변경 /api/agreements/${agreementIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"agreementIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "서약유저플래그변경 /api/agreements/${agreementIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\",\r\n    \"agreementIDX\":\"\",\r\n    \"flag\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/agreements/${agreementIDX}",
+					"path": [
+						"api",
+						"agreements",
+						"${agreementIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "알람생성 /api/alarm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\":\"\",\r\n    \"type\":\"\",\r\n    \"method\":\"\",\r\n    \"contentIDX\":\"\",\r\n    \"contentType\":\"\",\r\n    \"alarmMin\":\"\",\r\n    \"cycle\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/alarm",
+					"path": [
+						"api",
+						"alarm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "알람수정 /api/alarms/${alarmIDX}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\":\"\",\r\n    \"type\":\"\",\r\n    \"contentIDX\":\"\",\r\n    \"contentType\":\"\",\r\n    \"alarmMin\":\"\",\r\n    \"cycle\":\"\",\r\n    \"status\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/alarms/${alarmIDX}",
+					"path": [
+						"api",
+						"alarms",
+						"${alarmIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "알람삭제 /api/alarms/${alarmIDX}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/alarms/${alarmIDX}",
+					"path": [
+						"api",
+						"alarms",
+						"${alarmIDX}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "알람조회 /api/alarms",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "cookie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/alarms?owner=jychoi9712",
+					"path": [
+						"api",
+						"alarms"
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "jychoi9712"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "알람상태변경 /api/alarms/${alarmIDX}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\":\"\",\r\n    \"alarmIDX\":\"\",\r\n    \"status\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/alarms/${alarmIDX}",
+					"path": [
+						"api",
+						"alarms",
+						"${alarmIDX}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
