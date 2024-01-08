@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyonyon.The10000HourRule.repository.UserRepository">
+    <select id="getAllUsers" resultType="com.dyonyon.The10000HourRule.domain.UserInfo">
+        SELECT * FROM "USER"
+    </select>
+</mapper>
