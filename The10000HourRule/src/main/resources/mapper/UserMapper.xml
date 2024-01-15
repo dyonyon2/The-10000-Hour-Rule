@@ -4,4 +4,7 @@
     <select id="getAllUsers" resultType="com.dyonyon.The10000HourRule.domain.UserInfo">
         SELECT * FROM "USER"
     </select>
+    <select id="getLoginResult" resultType="com.dyonyon.The10000HourRule.domain.UserAuthInfo">
+        SELECT * FROM USER_AUTH WHERE USER_ID = '${user_id}' AND PW = '${pw}'
+    </select>
 </mapper>
