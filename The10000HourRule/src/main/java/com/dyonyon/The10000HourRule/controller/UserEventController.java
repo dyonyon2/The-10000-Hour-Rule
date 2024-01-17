@@ -37,17 +37,9 @@ public class UserEventController {
 
     @RequestMapping("/login")
     public String loginController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
-        log.info("/api/user/login API CALL");
-        log.info("session : "+req.getSession());
-        log.info("userAuthInfo : "+userAuthInfo);
-        return userLoginService.login(req, userAuthInfo).toString();
-    }
-
-    @RequestMapping("/login/cache")
-    public String loginCacheController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
-        log.info("/api/user/login/cache API CALL");
-        log.info("session : "+req.getSession());
-        log.info("userAuthInfo : "+userAuthInfo);
+        log.info("[Controller][Request] : CALL {}",req.getRequestURL());
+        log.info("[Controller][Request] : SESSION {}",req.getSession());
+        log.info("[Controller][Request] : BODY {}",userAuthInfo);
         return userLoginService.login(req, userAuthInfo).toString();
     }
 

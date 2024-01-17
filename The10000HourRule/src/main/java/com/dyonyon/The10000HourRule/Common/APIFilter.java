@@ -33,21 +33,21 @@ public class APIFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
-//            RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest)request);
-//            ResponseBodyWrapper resWrapper = new ResponseBodyWrapper((HttpServletResponse)response);
-//            log.info("In filter : req {}",reqWrapper.getRequestData());
+            RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest)request);
+            log.info("[Filter][Request] : URL {}",reqWrapper.getRequestURL());
+            log.info("[Filter][Request] : BODY DATA {}",reqWrapper.getRequestData());
+            ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
+
+            // SetAttribute로 추가로 넣어주는 방법!
 //            wrapper.setAttribute("requestBody", wrapper.getRequestData());
 //            log.info("In filter : res {}",resWrapper.getResponseData());
 
-            ContentCachingRequestWrapper reqCaching = new ContentCachingRequestWrapper((HttpServletRequest) request);
-            String messageBody = new String(reqCaching.getContentAsByteArray());
-            log.info("In filter 0 : req "+ messageBody);
-            ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
-            log.info("In filter 1");
-//            chain.doFilter(reqWrapper, response);
-            chain.doFilter(reqCaching, resCaching);
-            log.info("In filter 2");
+            chain.doFilter(reqWrapper, resCaching);
+
+            String responseBody = new String(resCaching.getContentAsByteArray());
+            log.info("[Filter][Response] : RESPONSE {}",responseBody);
             resCaching.copyBodyToResponse();
+
         } catch (Exception e) {
             chain.doFilter(request, response);
         }
