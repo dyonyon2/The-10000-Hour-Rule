@@ -23,38 +23,53 @@ import java.util.Map;
 @Slf4j
 public class APIInterceptor implements HandlerInterceptor {
 
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-
+    private boolean isAPICall(String url){
+        if(url.contains("/api/user")){
+            log.info("[Interceptor] /api/user Logging 처리");
+        } else if(url.contains("/api/memo")){
+            log.info("[Interceptor] /api/memo Logging 처리");
+        } else if(url.contains("/api/calender")){
+            log.info("[Interceptor] /api/calender Logging 처리");
+        } else if(url.contains("/api/routine")){
+            log.info("[Interceptor] /api/routine Logging 처리");
+        } else if(url.contains("/api/group")){
+            log.info("[Interceptor] /api/routine Logging 처리");
+        } else if(url.contains("/api/etc")){
+            log.info("[Interceptor] /api/etc Logging 처리");
+        } else if(url.contains("error")){
+            log.info("[Interceptor] error Logging 처리");
+            return false;
+        } else {
+            log.info("[Interceptor] else Logging 처리");
+            return false;
+        }
+        return true;
+    }
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
-        // LOG INSERT
-//        log.info("test"+ req.getAttribute("requestBody"));
-        log.info("[Interceptor-PreHandle][Request] : URL {}",req.getRequestURL());
-        ServletInputStream inputStream = req.getInputStream();
-        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-        log.info("[Interceptor-PreHandle][Request] : BODY {}", messageBody);
+        // LOGGING
+        String url = String.valueOf(req.getRequestURL());
+        if(isAPICall(url)){
+            log.info("[Interceptor-PreHandle][Request] : ID {}",req.getAttribute("req_id"));
+            log.info("[Interceptor-PreHandle][Request] : URL {}",url);
+            ServletInputStream inputStream = req.getInputStream();
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            log.info("[Interceptor-PreHandle][Request] : BODY {}", messageBody);
 
-//        String messageBody = StreamUtils.copyToString(((ContentCachingRequestWrapper)req).getInputStream(), StandardCharsets.UTF_8);
-//        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) req;
-//        log.info("In Intercept preHandle2 : "+requestWrapper.getRequestURL());
-//        String info = new String (requestWrapper.getContentAsByteArray());
-//        log.info("In Intercept preHandle2 : messageBody={}", info);
+            // LOG INSERT
+        }
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception ex) throws Exception {
-        // LOG 결과 상태 및 END TIME UPDATE
-//        log.info("[Interceptor-AfterCompletion][Request] : URL {}",req.getRequestURL());
-//        ServletInputStream inputStream = req.getInputStream();
-//        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-//        log.info("[Interceptor-AfterCompletion][Request] : BODY {}", messageBody);
-
-        ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
-        String responseBody = new String(responseWrapper.getContentAsByteArray());
-        log.info("[Interceptor-AfterCompletion][Response] : STATUS {}",responseWrapper.getStatus());
-        log.info("[Interceptor-AfterCompletion][Response] : BODY {}",responseBody);
+        String url = String.valueOf(req.getRequestURL());
+        if(isAPICall(url)) {
+            // LOG 결과 상태 및 END TIME UPDATE
+            ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
+            String responseBody = new String(responseWrapper.getContentAsByteArray());
+            log.info("[Interceptor-AfterCompletion][Response] : STATUS {}", responseWrapper.getStatus());
+            log.info("[Interceptor-AfterCompletion][Response] : BODY {}", responseBody);
+        }
     }
-
 }

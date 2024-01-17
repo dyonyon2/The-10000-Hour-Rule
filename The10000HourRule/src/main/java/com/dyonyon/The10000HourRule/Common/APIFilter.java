@@ -10,20 +10,39 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @WebFilter(urlPatterns = "/api/*")
 @Slf4j
 public class APIFilter implements Filter {
-
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        RequestBodyWrapper requestWrapper = new RequestBodyWrapper(request);
-//        log.info("In filter : "+requestWrapper.getRequestData());
-//        requestWrapper.setAttribute("requestBody", requestWrapper.getRequestData());
-////        HttpServletResponse responseWrapper = new ResponseBodyWrapper(response);
-//        filterChain.doFilter(requestWrapper, response);
-////        filterChain.doFilter(request, response);
-//    }
+    private int isAPICall(String url){
+        if(url.contains("/api/user")){
+            log.info("[Filter][API] USER CALL : {} 처리",url);
+            return 1;
+        } else if(url.contains("/api/memo")){
+            log.info("[Filter][API] MEMO CALL : {} 처리",url);
+            return 2;
+        } else if(url.contains("/api/calender")){
+            log.info("[Filter][API] CALENDER CALL : {} 처리",url);
+            return 3;
+        } else if(url.contains("/api/routine")){
+            log.info("[Filter][API] ROUTINE CALL : {} 처리",url);
+            return 4;
+        } else if(url.contains("/api/group")){
+            log.info("[Filter][API] GROUP CALL : {} 처리",url);
+            return 5;
+        } else if(url.contains("/api/etc")){
+            log.info("[Filter][API] ETC CALL : {} 처리",url);
+            return 6;
+        } else if(url.contains("error")){
+            log.info("[Filter][API] ERROR CALL : {} 처리",url);
+            return -1;
+        } else {
+            log.info("[Filter][API] ELSE CALL : {} 처리",url);
+            return -2;
+        }
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -33,22 +52,28 @@ public class APIFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
-            RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest)request);
-            log.info("[Filter][Request] : URL {}",reqWrapper.getRequestURL());
-            log.info("[Filter][Request] : BODY DATA {}",reqWrapper.getRequestData());
-            ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
+            String url = String.valueOf(((HttpServletRequest)request).getRequestURL());
+            int result = isAPICall(url);
+            if(result>0){
+                RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest) request);
+                SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String id = now.format(new Date());
+                reqWrapper.setAttribute("req_id",id);
+                log.info("[Filter][Request] : ID {}", reqWrapper.getAttribute("req_id"));
+                log.info("[Filter][Request] : URL {}", reqWrapper.getRequestURL());
+                log.info("[Filter][Request] : BODY DATA {}", reqWrapper.getRequestData());
+                ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
-            // SetAttribute로 추가로 넣어주는 방법!
-//            wrapper.setAttribute("requestBody", wrapper.getRequestData());
-//            log.info("In filter : res {}",resWrapper.getResponseData());
+                chain.doFilter(reqWrapper, resCaching);
 
-            chain.doFilter(reqWrapper, resCaching);
-
-            String responseBody = new String(resCaching.getContentAsByteArray());
-            log.info("[Filter][Response] : RESPONSE {}",responseBody);
-            resCaching.copyBodyToResponse();
-
+                String responseBody = new String(resCaching.getContentAsByteArray());
+                log.info("[Filter][Response] : RESPONSE {}", responseBody);
+                resCaching.copyBodyToResponse();
+            } else {
+                chain.doFilter(request, response);
+            }
         } catch (Exception e) {
+            log.info("[Filter][ERROR] : ERROR {}", (Object) e.getStackTrace());
             chain.doFilter(request, response);
         }
     }
