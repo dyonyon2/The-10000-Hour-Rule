@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfo {
-
-    String user_idx;
+public class APICallLogInfo {
+    String req_id;
     String user_id;
-    String status;
+    String user_idx;    // => 로그인 이후에만 사용
+    String api_url;
+    String req_data;
+//    String start_dt;  // => SYSDATE로 입력
 }

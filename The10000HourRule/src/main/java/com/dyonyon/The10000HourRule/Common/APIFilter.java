@@ -16,6 +16,7 @@ import java.util.Date;
 @WebFilter(urlPatterns = "/api/*")
 @Slf4j
 public class APIFilter implements Filter {
+
     private int isAPICall(String url){
         if(url.contains("/api/user")){
             log.info("[Filter][API] USER CALL : {} 처리",url);
@@ -59,21 +60,22 @@ public class APIFilter implements Filter {
                 SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmssSSS");
                 String id = now.format(new Date());
                 reqWrapper.setAttribute("req_id",id);
-                log.info("[Filter][Request] : ID {}", reqWrapper.getAttribute("req_id"));
-                log.info("[Filter][Request] : URL {}", reqWrapper.getRequestURL());
-                log.info("[Filter][Request] : BODY DATA {}", reqWrapper.getRequestData());
+                reqWrapper.setAttribute("req_type",result);
+                log.info("[Filter][Request] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
+                log.info("[Filter][Request] URL : {}", reqWrapper.getRequestURL());
+                log.info("[Filter][Request] BODY : {}", reqWrapper.getRequestData());
                 ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
                 chain.doFilter(reqWrapper, resCaching);
 
                 String responseBody = new String(resCaching.getContentAsByteArray());
-                log.info("[Filter][Response] : RESPONSE {}", responseBody);
+                log.info("[Filter][Response] RESPONSE : {}", responseBody);
                 resCaching.copyBodyToResponse();
             } else {
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            log.info("[Filter][ERROR] : ERROR {}", (Object) e.getStackTrace());
+            log.info("[Filter][ERROR] ERROR : {}", (Object) e.getStackTrace());
             chain.doFilter(request, response);
         }
     }

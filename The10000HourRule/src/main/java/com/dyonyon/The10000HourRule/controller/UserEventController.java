@@ -31,7 +31,7 @@ public class UserEventController {
     private UserLoginService userLoginService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UserEventController(UserLoginService userLoginService, UserAPICallLogService userAPICallLogService) {
+    public UserEventController(UserLoginService userLoginService) {
         this.userLoginService = userLoginService;
     }
 
