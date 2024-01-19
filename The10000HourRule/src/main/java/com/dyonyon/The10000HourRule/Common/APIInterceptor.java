@@ -31,6 +31,7 @@ public class APIInterceptor implements HandlerInterceptor {
 
     @Autowired
     private LogRepository logRepository;
+    private APICallLogInfo apiCallLogInfo = new APICallLogInfo();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private int isAPICall(String url){
@@ -71,69 +72,104 @@ public class APIInterceptor implements HandlerInterceptor {
             // 4.1 로그인 필요시, 로그인 체크
             // 4.2 로그인 조건 불충분할 시 로그인 필요 경고 창 return & 로그 상태값 update
 
+            // 변수 세팅
             String url = String.valueOf((req).getRequestURL());
             String method = req.getMethod();
-            String reqId;
-            String userId = null;
-            String userIdx = null;
-            String reqData = null;
-            APICallLogInfo apiCallLogInfo;
+            String sessionId = req.getSession().getId();
+            String reqId; String userId = null; String userIdx = null; String reqData = null;
+            APICallLogInfo tmp = null;
             int result = isAPICall(url);
             int insertRes = -1;
-            if (result > 0) {
-                reqId = String.valueOf(req.getAttribute("req_id"));
-                ServletInputStream inputStream = req.getInputStream();
-                log.info("[Interceptor-PreHandle][Request] REQ_ID : {}", reqId);
-                log.info("[Interceptor-PreHandle][Request] URL : {}", url);
-                log.info("[Interceptor-PreHandle][Request] METHOD : {}", method);
 
+            // 정의된 Call만 처리
+            if (result > 0) {
+                // Filter에서 attribute 세팅한 req_id를 get
+                reqId = String.valueOf(req.getAttribute("req_id"));
 
                 //POST, GET에 따라 USER_ID와 REQ_DATA 저장
-                if ("GET".equals(method)) {
+                ServletInputStream inputStream = req.getInputStream();
+                if ("GET".equals(method)) { // GET일 때는 쿼리스트링에서 데이터 GET
                     reqData = req.getQueryString();
                     userId = req.getParameter("user_id");
-                } else {
+                } else {    // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
                     reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                    APICallLogInfo tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
+                    tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
                 }
                 reqData=reqData.replace("\"","");
-                log.info("[Interceptor-PreHandle][Request] BODY : {}", reqData);
-                log.info("[Interceptor-PreHandle][Request] USER_ID : {}", userId);
+
+                // USERIDX 찾는 쿼리
                 if (userId != null) {
-                    // USERIDX 찾는 쿼리
                     userIdx = logRepository.getUserIdx(userId);
                 }
-                log.info("[Interceptor-PreHandle][Request] USER_IDX : {}", userIdx);
-                apiCallLogInfo = new APICallLogInfo(reqId, userId, userIdx, url, reqData);
-                log.info("[Interceptor-PreHandle][Request] LOG INSERT : {}", apiCallLogInfo.toString());
 
-                log.info("[Interceptor-PreHandle][Request] SWITCH : {}", result);
+                // REQUEST 정보 출력
+                log.info("[Interceptor-PreHandle][Request] REQ_ID : {}", reqId);
+                log.info("[Interceptor-PreHandle][Request] SESSION : {}", sessionId);
+                log.info("[Interceptor-PreHandle][Request] URL : {}", url);
+                log.info("[Interceptor-PreHandle][Request] METHOD : {}", method);
+                log.info("[Interceptor-PreHandle][Request] BODY : {}", reqData);
+                log.info("[Interceptor-PreHandle][Request] USER_ID : {}", userId);
+                log.info("[Interceptor-PreHandle][Request] USER_IDX : {}", userIdx);
+
+                //LOG 공통 데이터 세팅
+                apiCallLogInfo.setReq_id(reqId);
+                apiCallLogInfo.setUser_id(userId);
+                apiCallLogInfo.setUser_idx(userIdx);
+                apiCallLogInfo.setApi_url(url);
+                apiCallLogInfo.setReq_data(reqData);
+                apiCallLogInfo.setSession_id(sessionId);
+
                 // LOG INSERT
+                log.info("[Interceptor-PreHandle][Request] LOG INSERT : {}", apiCallLogInfo.toString());
+                log.info("[Interceptor-PreHandle][Request] SWITCH : {}", result);
                 switch (result) {
                     case 1: // /api/user
                         insertRes = logRepository.insertUserLog(apiCallLogInfo);
                         break;
                     case 2: // /api/memo
+                        if ("GET".equals(method))
+                            apiCallLogInfo.setMemo_idx(req.getParameter("memo_idx"));
+                        else
+                            apiCallLogInfo.setMemo_idx(tmp.getMemo_idx());
                         insertRes = logRepository.insertMemoLog(apiCallLogInfo);
                         break;
                     case 3: // /api/calender
+                        if ("GET".equals(method))
+                            apiCallLogInfo.setCalender_idx(req.getParameter("calender_idx"));
+                        else
+                            apiCallLogInfo.setCalender_idx(tmp.getCalender_idx());
                         insertRes = logRepository.insertCalenderLog(apiCallLogInfo);
                         break;
                     case 4: // /api/routine
+                        if ("GET".equals(method))
+                            apiCallLogInfo.setRoutine_idx(req.getParameter("routine_idx"));
+                        else
+                            apiCallLogInfo.setRoutine_idx(tmp.getRoutine_idx());
                         insertRes = logRepository.insertRoutineLog(apiCallLogInfo);
                         break;
                     case 5: // /api/group
+                        if ("GET".equals(method))
+                            apiCallLogInfo.setGroup_idx(req.getParameter("group_idx"));
+                        else
+                            apiCallLogInfo.setGroup_idx(tmp.getGroup_idx());
                         insertRes = logRepository.insertGroupLog(apiCallLogInfo);
                         break;
                     case 6: // /api/etc
+                        if ("GET".equals(method)) {
+                            apiCallLogInfo.setTarget_idx(req.getParameter("target_idx"));
+                            apiCallLogInfo.setTarget_type(req.getParameter("target_type"));
+                        } else {
+                            apiCallLogInfo.setTarget_idx(tmp.getTarget_idx());
+                            apiCallLogInfo.setTarget_type(tmp.getTarget_type());
+                        }
                         insertRes = logRepository.insertEtcLog(apiCallLogInfo);
                         break;
                     default:
                         break;
                 }
-                if (insertRes != 1) {
+                if (insertRes > 0) {
                     log.info("[Interceptor-PreHandle][Request] : LOG INSERT SUCCESSED {}", insertRes);
                 } else {
                     log.info("[Interceptor-PreHandle][Request] : LOG INSERT FAILED {}", insertRes);

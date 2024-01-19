@@ -2,7 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dyonyon.The10000HourRule.repository.LogRepository">
     <insert id="insertUserLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        INSERT INTO USER_LOG (REQ_ID, USER_IDX, API_URL, REQ_DATA) VALUES ('${req_id}', '${user_idx}', '${api_url}', '${req_data}');
+        INSERT INTO USER_LOG (REQ_ID, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
+    </insert>
+    <insert id="insertGroupLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
+        INSERT INTO GROUP_LOG (REQ_ID, GROUP_IDX, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${group_idx}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
+    </insert>
+    <insert id="insertMemoLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
+        INSERT INTO MEMO_LOG (REQ_ID, MEMO_IDX, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${memo_idx}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
+    </insert>
+    <insert id="insertCalenderLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
+        INSERT INTO CALENDER_LOG (REQ_ID, CALENDER_IDX, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${calender_idx}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
+    </insert>
+    <insert id="insertRoutineLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
+        INSERT INTO ROUTINE_LOG (REQ_ID, ROUTINE_IDX, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${routine_idx}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
+    </insert>
+    <insert id="insertEtcLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
+        INSERT INTO ETC_LOG (REQ_ID, TARGET_IDX, TARGET_TYPE, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${target_idx}', '${target_type}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
     </insert>
     <select id="getUserIdx" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT USER_IDX FROM "USER" WHERE USER_ID = '${user_id}'

@@ -13,5 +13,16 @@ public class APICallLogInfo {
     String user_idx;    // => 로그인 이후에만 사용
     String api_url;
     String req_data;
-//    String start_dt;  // => SYSDATE로 입력
+    String res_code;
+    String res_data;
+    String start_dt;  // => SYSDATE로 입력
+    String end_dt;
+    String session_id;
+    String group_idx;
+    String memo_idx;
+    String calender_idx;
+    String routine_idx;
+    String target_idx;
+    String target_type;
+
 }
