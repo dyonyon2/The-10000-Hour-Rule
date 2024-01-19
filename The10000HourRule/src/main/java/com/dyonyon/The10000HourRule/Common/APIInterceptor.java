@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Intercepts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,33 +32,33 @@ public class APIInterceptor implements HandlerInterceptor {
 
     @Autowired
     private LogRepository logRepository;
-    private APICallLogInfo apiCallLogInfo = new APICallLogInfo();
+//    private APICallLogInfo apiCallLogInfo = new APICallLogInfo();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private int isAPICall(String url){
         if(url.contains("/api/user")){
-            log.info("[Filter][API] USER CALL : {} 처리",url);
+            log.info("[Interceptor][API] USER CALL : {} 처리",url);
             return 1;
         } else if(url.contains("/api/memo")){
-            log.info("[Filter][API] MEMO CALL : {} 처리",url);
+            log.info("[Interceptor][API] MEMO CALL : {} 처리",url);
             return 2;
         } else if(url.contains("/api/calender")){
-            log.info("[Filter][API] CALENDER CALL : {} 처리",url);
+            log.info("[Interceptor][API] CALENDER CALL : {} 처리",url);
             return 3;
         } else if(url.contains("/api/routine")){
-            log.info("[Filter][API] ROUTINE CALL : {} 처리",url);
+            log.info("[Interceptor][API] ROUTINE CALL : {} 처리",url);
             return 4;
         } else if(url.contains("/api/group")){
-            log.info("[Filter][API] GROUP CALL : {} 처리",url);
+            log.info("[Interceptor][API] GROUP CALL : {} 처리",url);
             return 5;
         } else if(url.contains("/api/etc")){
-            log.info("[Filter][API] ETC CALL : {} 처리",url);
+            log.info("[Interceptor][API] ETC CALL : {} 처리",url);
             return 6;
         } else if(url.contains("error")){
-            log.info("[Filter][API] ERROR CALL : {} 처리",url);
+            log.info("[Interceptor][API] ERROR CALL : {} 처리",url);
             return -1;
         } else {
-            log.info("[Filter][API] ELSE CALL : {} 처리",url);
+            log.info("[Interceptor][API] ELSE CALL : {} 처리",url);
             return -2;
         }
     }
@@ -77,7 +78,9 @@ public class APIInterceptor implements HandlerInterceptor {
             String method = req.getMethod();
             String sessionId = req.getSession().getId();
             String reqId; String userId = null; String userIdx = null; String reqData = null;
+            APICallLogInfo apiCallLogInfo = new APICallLogInfo();
             APICallLogInfo tmp = null;
+
             int result = isAPICall(url);
             int insertRes = -1;
 
@@ -186,14 +189,31 @@ public class APIInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception ex) throws Exception {
+
+        // 변수 세팅
         String url = String.valueOf(req.getRequestURL());
+        String sessionId = req.getSession().getId();
+        String reqId = String.valueOf(req.getAttribute("req_id"));
+        String userId = null; String userIdx = null; String reqData = null;
+        APICallLogInfo apiCallLogInfo = new APICallLogInfo();
+        APICallLogInfo tmp = null;
         int result = isAPICall(url);
+        int updateRes = -1;
+
+        // 정의된 Call만 처리
         if(result>0){
-            // LOG 결과 상태 및 END TIME UPDATE
+            // 데이터 세팅
             ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
             String responseBody = new String(responseWrapper.getContentAsByteArray());
-            log.info("[Interceptor-AfterCompletion][Response] : STATUS {}", responseWrapper.getStatus());
-            log.info("[Interceptor-AfterCompletion][Response] : BODY {}", responseBody);
+
+            // RESPONSE 정보 출력
+            log.info("[Interceptor-AfterCompletion][Response] REQ_ID : {}", reqId);
+            log.info("[Interceptor-AfterCompletion][Response] SESSION : {}", sessionId);;
+            log.info("[Interceptor-AfterCompletion][Response] URL : {}", url);
+            log.info("[Interceptor-AfterCompletion][Response] STATUS : {}", responseWrapper.getStatus());
+            log.info("[Interceptor-AfterCompletion][Response] BODY : {}", responseBody);
+            log.info("[Interceptor-AfterCompletion][Response] USER_ID : {}", userId);
+            log.info("[Interceptor-AfterCompletion][Response] USER_IDX : {}", userIdx);
         }
     }
 }
