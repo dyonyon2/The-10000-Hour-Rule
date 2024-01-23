@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dyonyon.The10000HourRule.repository.UserRepository">
-    <select id="getAllUsers" resultType="com.dyonyon.The10000HourRule.domain.UserInfo">
+    <select id="getAllUsers" resultType="com.dyonyon.The10000HourRule.domain.user.UserInfo">
         SELECT * FROM "USER"
     </select>
-    <select id="getLoginResult" parameterType="com.dyonyon.The10000HourRule.domain.UserAuthInfo" resultType="com.dyonyon.The10000HourRule.domain.UserAuthInfo">
+    <select id="getLoginResult" parameterType="com.dyonyon.The10000HourRule.domain.user.UserAuthInfo" resultType="com.dyonyon.The10000HourRule.domain.user.UserAuthInfo">
         SELECT * FROM USER_AUTH WHERE USER_ID = '${user_id}' AND PW = '${pw}'
     </select>
+    <insert id="insertLoginLog" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo">
+        INSERT INTO USER_LOGIN_LOG VALUES ('${req_id}', '${session_id}', '${user_id}', '0', SYSDATE, 'N')
+    </insert>
+    <select id="getLoginAttempt" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo" resultType="int">
+        SELECT COUNT(*) FROM USER_LOGIN_LOG WHERE SESSION_ID = '${session_id}' AND USER_ID = '${user_id}' AND START_DT > SYSDATE - INTERVAL '30' MINUTE AND ATTEMPT_FLAG = 'N'
+    </select>
+    <update id="updateStatus" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo" >
+        UPDATE USER_LOGIN_LOG SET STATUS = '${status}' WHERE REQ_ID = '${req_id}'
+    </update>
+    <update id="resetLoginAttempt" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo" >
+        UPDATE USER_LOGIN_LOG SET ATTEMPT_FLAG = 'Y' WHERE USER_ID = '${user_id}' AND START_DT > SYSDATE - INTERVAL '30' MINUTE
+    </update>
+
+
 </mapper>

@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.domain;
+package com.dyonyon.The10000HourRule.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

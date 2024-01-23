@@ -1,6 +1,6 @@
 package com.dyonyon.The10000HourRule.service;
 
-import com.dyonyon.The10000HourRule.domain.UserInfo;
+import com.dyonyon.The10000HourRule.domain.user.UserInfo;
 import com.dyonyon.The10000HourRule.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

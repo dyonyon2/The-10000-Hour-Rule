@@ -12,4 +12,11 @@ public interface LogRepository {
     int insertGroupLog(APICallLogInfo apiCallLogInfo);
     int insertEtcLog(APICallLogInfo apiCallLogInfo);
     String getUserIdx(String user_id);
+
+    int updateResDataUserLog(APICallLogInfo apiCallLogInfo);
+    int updateResDataMemoLog(APICallLogInfo apiCallLogInfo);
+    int updateResDataCalenderLog(APICallLogInfo apiCallLogInfo);
+    int updateResDataRoutineLog(APICallLogInfo apiCallLogInfo);
+    int updateResDataGroupLog(APICallLogInfo apiCallLogInfo);
+    int updateResDataEtcLog(APICallLogInfo apiCallLogInfo);
 }

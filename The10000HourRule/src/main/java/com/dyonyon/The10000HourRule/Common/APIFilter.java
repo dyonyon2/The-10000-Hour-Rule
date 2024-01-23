@@ -52,6 +52,7 @@ public class APIFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        boolean doFilter = false;
         try {
             String url = String.valueOf(((HttpServletRequest)request).getRequestURL());
             int result = isAPICall(url);
@@ -61,22 +62,28 @@ public class APIFilter implements Filter {
                 String id = now.format(new Date());
                 reqWrapper.setAttribute("req_id",id);
                 reqWrapper.setAttribute("req_type",result);
-                log.info("[Filter][Request] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
-                log.info("[Filter][Request] URL : {}", reqWrapper.getRequestURL());
-                log.info("[Filter][Request] BODY : {}", reqWrapper.getRequestData());
+//                log.info("[Filter][Request][{}] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
+                log.info("[Filter][Request][{}] URL : {}", id, reqWrapper.getRequestURL());
+                log.info("[Filter][Request][{}] BODY : {}", id, reqWrapper.getRequestData());
                 ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
+                doFilter = true;
                 chain.doFilter(reqWrapper, resCaching);
 
                 String responseBody = new String(resCaching.getContentAsByteArray());
-                log.info("[Filter][Response] RESPONSE : {}", responseBody);
+                log.info("[Filter][Response][{}] RESPONSE : {}", id, responseBody);
                 resCaching.copyBodyToResponse();
             } else {
+                doFilter = true;
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            log.info("[Filter][ERROR] ERROR : {}", (Object) e.getStackTrace());
-            chain.doFilter(request, response);
+            if(!doFilter){
+                chain.doFilter(request, response);
+            }
+            log.info("[Filter][ERROR] ERROR : {}", e.getMessage());
+
+
         }
     }
 

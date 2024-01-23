@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.domain;
+package com.dyonyon.The10000HourRule.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,6 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAuthInfo {
-
     String user_idx;
     String user_id;
     String pw;
@@ -19,4 +18,5 @@ public class UserAuthInfo {
     String mail;
     Date expire_dt;
     Date join_dt;
+    String msg;
 }
