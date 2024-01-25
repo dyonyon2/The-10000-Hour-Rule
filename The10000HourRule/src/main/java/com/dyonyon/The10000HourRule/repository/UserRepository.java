@@ -16,4 +16,7 @@ public interface UserRepository {
     UserAuthInfo getLoginResult(UserLoginLogInfo info);
     int updateStatus(String req_id, String status);
     int resetLoginAttempt(String user_id);
+    int getLoginSession(String user_idx);
+    int updateLoginSession(UserLoginLogInfo info);
+    int insertLoginSession(UserLoginLogInfo info);
 }
