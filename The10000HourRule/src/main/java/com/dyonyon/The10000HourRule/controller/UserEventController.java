@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.controller;
 
+import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.service.UserLoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,15 +29,14 @@ public class UserEventController {
     }
 
     @RequestMapping("/login")
-    public String loginController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
-        String returnString;
+    public ResponseInfo loginController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
+        ResponseInfo result;
         log.info("[Controller-UserEvent][/login][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
         log.info("[Controller-UserEvent][/login][{}] BODY : {}",req.getAttribute("req_id"), userAuthInfo);
-//        if(userAuthInfo.getUser_id()==null||userAuthInfo.getPw()==null||userAuthInfo.getUser_id()==null)
         log.info("[Controller-UserEvent][/login][{}] Call UserLoginService....",req.getAttribute("req_id"));
-        returnString = userLoginService.login(req, userAuthInfo).toString();
-        log.info("[Controller-UserEvent][/login][{}] RESULT : {}",req.getAttribute("req_id"),returnString);
-        return returnString;
+        result = userLoginService.login(req, userAuthInfo);
+        log.info("[Controller-UserEvent][/login][{}] RESULT : {}",req.getAttribute("req_id"),result.getStatus());
+        return result;
     }
 
     @RequestMapping("/test")

@@ -23,7 +23,7 @@
         SELECT COUNT(*) FROM USER_SESSION WHERE USER_IDX = '${user_idx}'
     </select>
     <update id="updateLoginSession" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo" >
-        UPDATE USER_SESSION SET SESSION_ID = '${session_id}' WHERE USER_IDX = '${user_idx}'
+        UPDATE USER_SESSION SET SESSION_ID = '${session_id}', CREATE_DT = SYSDATE, UPDATE_DT = SYSDATE, EXPIRE_DT = SYSDATE + INTERVAL '30' MINUTE WHERE USER_IDX = '${user_idx}'
     </update>
     <insert id="insertLoginSession" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo">
         INSERT INTO USER_SESSION (USER_IDX, USER_ID, SESSION_ID) VALUES ('${user_idx}', '${user_id}','${session_id}')

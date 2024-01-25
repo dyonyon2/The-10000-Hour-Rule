@@ -12,6 +12,8 @@ public class APICallLogInfo {
     String user_id;
     String user_idx;    // => 로그인 이후에만 사용
     String api_url;
+    String status;
+    String msg;
     String req_data;
     String res_code;
     String res_data;

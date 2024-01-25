@@ -1,6 +1,8 @@
 package com.dyonyon.The10000HourRule.Common;
 
 import com.dyonyon.The10000HourRule.domain.APICallLogInfo;
+import com.dyonyon.The10000HourRule.domain.ResponseInfo;
+import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.repository.LogRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,12 +99,12 @@ public class APIInterceptor implements HandlerInterceptor {
 
                 // REQUEST 정보 출력
 //                log.info("[Interceptor-PreHandle][Request][{}] REQ_ID : {}", reqId);
-                log.info("[Interceptor-PreHandle][Request][{}] URL : {}", reqId, url);
-                log.info("[Interceptor-PreHandle][Request][{}] SESSION : {}", reqId,sessionId);
-                log.info("[Interceptor-PreHandle][Request][{}] METHOD : {}", reqId, method);
-                log.info("[Interceptor-PreHandle][Request][{}] BODY : {}", reqId, reqData);
-                log.info("[Interceptor-PreHandle][Request][{}] USER_ID : {}", reqId, userId);
-                log.info("[Interceptor-PreHandle][Request][{}] USER_IDX : {}", reqId, userIdx);
+                log.trace("[Interceptor-PreHandle][Request][{}] URL : {}", reqId, url);
+                log.trace("[Interceptor-PreHandle][Request][{}] SESSION : {}", reqId,sessionId);
+                log.trace("[Interceptor-PreHandle][Request][{}] METHOD : {}", reqId, method);
+                log.trace("[Interceptor-PreHandle][Request][{}] BODY : {}", reqId, reqData);
+                log.trace("[Interceptor-PreHandle][Request][{}] USER_ID : {}", reqId, userId);
+                log.trace("[Interceptor-PreHandle][Request][{}] USER_IDX : {}", reqId, userIdx);
 
                 //LOG 공통 데이터 세팅
                 apiCallLogInfo.setReq_id(reqId);
@@ -113,8 +115,8 @@ public class APIInterceptor implements HandlerInterceptor {
                 apiCallLogInfo.setSession_id(sessionId);
 
                 // LOG INSERT
-                log.info("[Interceptor-PreHandle][Request][{}] LOG INSERT : {}", reqId, apiCallLogInfo.toString());
-                log.info("[Interceptor-PreHandle][Request][{}] SWITCH : {}", reqId, result);
+                log.trace("[Interceptor-PreHandle][Request][{}] LOG INSERT : {}", reqId, apiCallLogInfo.toString());
+                log.trace("[Interceptor-PreHandle][Request][{}] SWITCH : {}", reqId, result);
                 switch (result) {
                     case 1: // /api/user
                         insertRes = logRepository.insertUserLog(apiCallLogInfo);
@@ -161,9 +163,9 @@ public class APIInterceptor implements HandlerInterceptor {
                         break;
                 }
                 if (insertRes > 0) {
-                    log.info("[Interceptor-PreHandle][Request][{}] LOG INSERT SUCCESSED : {}", reqId, insertRes);
+                    log.trace("[Interceptor-PreHandle][Request][{}] LOG INSERT SUCCESSED : {}", reqId, insertRes);
                 } else {
-                    log.info("[Interceptor-PreHandle][Request][{}] LOG INSERT FAILED : {}", reqId, insertRes);
+                    log.error("[Interceptor-PreHandle][Request][{}] LOG INSERT FAILED : {}", reqId, insertRes);
                 }
 
                 return true;
@@ -184,7 +186,6 @@ public class APIInterceptor implements HandlerInterceptor {
         String reqId = String.valueOf(req.getAttribute("req_id"));
         String userId = null; String userIdx = null; String reqData = null;
         APICallLogInfo apiCallLogInfo = new APICallLogInfo();
-        APICallLogInfo tmp = null;
         int result = isAPICall(url);
         int updateRes = -1;
 
@@ -192,23 +193,29 @@ public class APIInterceptor implements HandlerInterceptor {
         if(result>0){
             // 데이터 세팅
             ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
-            String responseBody = new String(responseWrapper.getContentAsByteArray());
+            ResponseInfo responseInfo = objectMapper.readValue(responseWrapper.getContentAsByteArray(),ResponseInfo.class);
+            String responseBody = responseInfo.getRes_data()==null?"":responseInfo.getRes_data().toString();
+            String responseMsg = responseInfo.getMsg()==null?"":responseInfo.getMsg();
+            String responseStatus = responseInfo.getStatus();
 
             // RESPONSE 정보 출력
 //            log.info("[Interceptor-AfterCompletion][Response][{}] REQ_ID : {}", reqId);
-            log.info("[Interceptor-AfterCompletion][Response][{}] URL : {}", reqId, url);
-            log.info("[Interceptor-AfterCompletion][Response][{}] SESSION : {}", reqId, sessionId);;
-            log.info("[Interceptor-AfterCompletion][Response][{}] STATUS : {}", reqId, responseWrapper.getStatus());
-            log.info("[Interceptor-AfterCompletion][Response][{}] BODY : {}", reqId, responseBody);
-            log.info("[Interceptor-AfterCompletion][Response][{}] USER_ID : {}", reqId, userId);
-            log.info("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] URL : {}", reqId, url);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] SESSION : {}", reqId, sessionId);;
+            log.trace("[Interceptor-AfterCompletion][Response][{}] STATUS : {}, {}", reqId, responseWrapper.getStatus(), responseStatus);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] MSG : {}", reqId, responseMsg);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] BODY : {}", reqId, responseBody);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] USER_ID : {}", reqId, userId);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
 
             apiCallLogInfo.setReq_id(reqId);
             apiCallLogInfo.setRes_data(responseBody);
+            apiCallLogInfo.setStatus(responseStatus);
+            apiCallLogInfo.setMsg(responseMsg);
 
             // LOG INSERT
-            log.info("[Interceptor-AfterCompletion][Response][{}] LOG INSERT : {}", reqId, apiCallLogInfo.toString());
-            log.info("[Interceptor-AfterCompletion][Response][{}] SWITCH : {}", reqId, result);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE : {}", reqId, apiCallLogInfo.toString());
+            log.trace("[Interceptor-AfterCompletion][Response][{}] SWITCH : {}", reqId, result);
             switch (result) {
                 case 1: // /api/user
                     updateRes = logRepository.updateResDataUserLog(apiCallLogInfo);
@@ -233,9 +240,9 @@ public class APIInterceptor implements HandlerInterceptor {
             }
 
             if (updateRes > 0) {
-                log.info("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE SUCCESSED : {}", reqId, updateRes);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE SUCCESSED : {}", reqId, updateRes);
             } else {
-                log.info("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE FAILED : {}", reqId, updateRes);
+                log.error("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE FAILED : {}", reqId, updateRes);
             }
         }
     }
