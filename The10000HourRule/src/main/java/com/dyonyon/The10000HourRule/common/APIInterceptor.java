@@ -1,9 +1,8 @@
-package com.dyonyon.The10000HourRule.Common;
+package com.dyonyon.The10000HourRule.common;
 
 import com.dyonyon.The10000HourRule.domain.APICallLogInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
-import com.dyonyon.The10000HourRule.repository.LogRepository;
+import com.dyonyon.The10000HourRule.mapper.LogMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletInputStream;
@@ -21,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 public class APIInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private LogRepository logRepository;
+    private LogMapper logMapper;
 //    private APICallLogInfo apiCallLogInfo = new APICallLogInfo();
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -90,11 +89,12 @@ public class APIInterceptor implements HandlerInterceptor {
                     tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
                 }
-                reqData=reqData.replace("\"","");
+                if(reqData!=null)
+                    reqData=reqData.replace("\"","");
 
                 // USERIDX 찾는 쿼리
                 if (userId != null) {
-                    userIdx = logRepository.getUserIdx(userId);
+                    userIdx = logMapper.getUserIdx(userId);
                 }
 
                 // REQUEST 정보 출력
@@ -119,35 +119,35 @@ public class APIInterceptor implements HandlerInterceptor {
                 log.trace("[Interceptor-PreHandle][Request][{}] SWITCH : {}", reqId, result);
                 switch (result) {
                     case 1: // /api/user
-                        insertRes = logRepository.insertUserLog(apiCallLogInfo);
+                        insertRes = logMapper.insertUserLog(apiCallLogInfo);
                         break;
                     case 2: // /api/memo
                         if ("GET".equals(method))
                             apiCallLogInfo.setMemo_idx(req.getParameter("memo_idx"));
                         else
                             apiCallLogInfo.setMemo_idx(tmp.getMemo_idx());
-                        insertRes = logRepository.insertMemoLog(apiCallLogInfo);
+                        insertRes = logMapper.insertMemoLog(apiCallLogInfo);
                         break;
                     case 3: // /api/calender
                         if ("GET".equals(method))
                             apiCallLogInfo.setCalender_idx(req.getParameter("calender_idx"));
                         else
                             apiCallLogInfo.setCalender_idx(tmp.getCalender_idx());
-                        insertRes = logRepository.insertCalenderLog(apiCallLogInfo);
+                        insertRes = logMapper.insertCalenderLog(apiCallLogInfo);
                         break;
                     case 4: // /api/routine
                         if ("GET".equals(method))
                             apiCallLogInfo.setRoutine_idx(req.getParameter("routine_idx"));
                         else
                             apiCallLogInfo.setRoutine_idx(tmp.getRoutine_idx());
-                        insertRes = logRepository.insertRoutineLog(apiCallLogInfo);
+                        insertRes = logMapper.insertRoutineLog(apiCallLogInfo);
                         break;
                     case 5: // /api/group
                         if ("GET".equals(method))
                             apiCallLogInfo.setGroup_idx(req.getParameter("group_idx"));
                         else
                             apiCallLogInfo.setGroup_idx(tmp.getGroup_idx());
-                        insertRes = logRepository.insertGroupLog(apiCallLogInfo);
+                        insertRes = logMapper.insertGroupLog(apiCallLogInfo);
                         break;
                     case 6: // /api/etc
                         if ("GET".equals(method)) {
@@ -157,7 +157,7 @@ public class APIInterceptor implements HandlerInterceptor {
                             apiCallLogInfo.setTarget_idx(tmp.getTarget_idx());
                             apiCallLogInfo.setTarget_type(tmp.getTarget_type());
                         }
-                        insertRes = logRepository.insertEtcLog(apiCallLogInfo);
+                        insertRes = logMapper.insertEtcLog(apiCallLogInfo);
                         break;
                     default:
                         break;
@@ -209,7 +209,7 @@ public class APIInterceptor implements HandlerInterceptor {
             log.trace("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
 
             apiCallLogInfo.setReq_id(reqId);
-            apiCallLogInfo.setRes_data(responseBody);
+            apiCallLogInfo.setRes_data(responseBody.replace("'",""));
             apiCallLogInfo.setStatus(responseStatus);
             apiCallLogInfo.setMsg(responseMsg);
 
@@ -218,22 +218,22 @@ public class APIInterceptor implements HandlerInterceptor {
             log.trace("[Interceptor-AfterCompletion][Response][{}] SWITCH : {}", reqId, result);
             switch (result) {
                 case 1: // /api/user
-                    updateRes = logRepository.updateResDataUserLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataUserLog(apiCallLogInfo);
                     break;
                 case 2: // /api/memo
-                    updateRes = logRepository.updateResDataMemoLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataMemoLog(apiCallLogInfo);
                     break;
                 case 3: // /api/calender
-                    updateRes = logRepository.updateResDataCalenderLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataCalenderLog(apiCallLogInfo);
                     break;
                 case 4: // /api/routine
-                    updateRes = logRepository.updateResDataRoutineLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataRoutineLog(apiCallLogInfo);
                     break;
                 case 5: // /api/group
-                    updateRes = logRepository.updateResDataGroupLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataGroupLog(apiCallLogInfo);
                     break;
                 case 6: // /api/etc
-                    updateRes = logRepository.updateResDataEtcLog(apiCallLogInfo);
+                    updateRes = logMapper.updateResDataEtcLog(apiCallLogInfo);
                     break;
                 default:
                     break;

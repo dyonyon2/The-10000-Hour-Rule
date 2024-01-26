@@ -1,10 +1,10 @@
-package com.dyonyon.The10000HourRule.repository;
+package com.dyonyon.The10000HourRule.mapper;
 
 import com.dyonyon.The10000HourRule.domain.APICallLogInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface LogRepository {
+public interface LogMapper {
     int insertUserLog(APICallLogInfo apiCallLogInfo);
     int insertMemoLog(APICallLogInfo apiCallLogInfo);
     int insertCalenderLog(APICallLogInfo apiCallLogInfo);

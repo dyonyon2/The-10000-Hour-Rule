@@ -1,7 +1,7 @@
 package com.dyonyon.The10000HourRule.service;
 
-import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
-import com.dyonyon.The10000HourRule.repository.UserRepository;
+import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
+import com.dyonyon.The10000HourRule.mapper.UserLoginMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserAPICallLogService {
 
-    private UserRepository userRepository;
+    private UserLoginMapper userLoginMapper;
 
-    public UserAPICallLogService(UserRepository userRepository){
-        this.userRepository = userRepository;
+    public UserAPICallLogService(UserLoginMapper userLoginMapper){
+        this.userLoginMapper = userLoginMapper;
     }
 
-    public UserAuthInfo login(HttpServletRequest req, UserAuthInfo userAuthInfo) {
+    public UserDetailInfo login(HttpServletRequest req, UserDetailInfo userDetailInfo) {
 //        log.info("In UserLoginService : id = "+userAuthInfo.getUser_id()+", pw : "+userAuthInfo.getPw());
 //        UserAuthInfo loginResult = userRepository.getLoginResult(userAuthInfo);
-        return userAuthInfo;
+        return userDetailInfo;
     }
 }

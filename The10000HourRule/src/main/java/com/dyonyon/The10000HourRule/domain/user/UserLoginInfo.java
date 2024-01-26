@@ -4,19 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuthInfo {
+public class UserLoginInfo {
     String user_idx;
     String user_id;
     String pw;
-    String name;
-    String phone;
-    String mail;
-    Date expire_dt;
-    Date join_dt;
+    String status;
+    String req_id;
+    String session_id;
+
     String msg;
 }

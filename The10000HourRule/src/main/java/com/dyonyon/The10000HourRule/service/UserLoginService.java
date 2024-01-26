@@ -3,27 +3,24 @@ package com.dyonyon.The10000HourRule.service;
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.code.ResultCode;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserLoginLogInfo;
-import com.dyonyon.The10000HourRule.repository.LogRepository;
-import com.dyonyon.The10000HourRule.repository.UserRepository;
+import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
+import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
+import com.dyonyon.The10000HourRule.mapper.UserLoginMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 
 @Service
 @Slf4j
 public class UserLoginService {
 
-    private UserRepository userRepository;
+    private UserLoginMapper userLoginMapper;
 
-    public UserLoginService(UserRepository userRepository){
-        this.userRepository = userRepository;
+    public UserLoginService(UserLoginMapper userLoginMapper){
+        this.userLoginMapper = userLoginMapper;
     }
 
-    public ResponseInfo login(HttpServletRequest req, UserAuthInfo userAuthInfo) {
+    public ResponseInfo login(HttpServletRequest req, UserLoginInfo userLoginInfo) {
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
@@ -32,44 +29,45 @@ public class UserLoginService {
             log.info("[Service-UserLogin][login][{}] Login Started...", req_id);
 
             // 0. 변수 세팅
-            UserLoginLogInfo userLoginLogInfo = new UserLoginLogInfo(); // 로그인 이전 정보
-            userLoginLogInfo.setReq_id(req_id); userLoginLogInfo.setSession_id(req.getSession().getId()); userLoginLogInfo.setUser_id(userAuthInfo.getUser_id()); userLoginLogInfo.setPw(userAuthInfo.getPw());
+//            UserLoginInfo userLoginInfo = new UserLoginInfo(); // 로그인 이전 정보
+            userLoginInfo.setReq_id(req_id); userLoginInfo.setSession_id(req.getSession().getId());
             String sessionId = req.getSession().getId();
 
             // 1. USER_LOGIN_LOG TBL Insert => 로그 기록
-            if (insertLoginLog(req_id, userLoginLogInfo, responseInfo) != 1) {
-                log.info("[Service-UserLogin][login][{}] Login Log Insertion Failed",req_id);
-                responseInfo.setMsg("Login Log Insertion Failed");
+            if (insertLoginLog(req_id, userLoginInfo, responseInfo) != 1) {
+                log.info("[Service-UserLogin][login][{}] Login Log Insertion Failed : {}",req_id,responseInfo.getRes_data());
+                responseInfo.setMsg("Login Failed : Login Log Insertion Failed");
                 responseInfo.setStatus("-1"); //RES_CODE도 정리&추가 되어야함
                 updateLogStatus(req_id, ResultCode.USER_LOGIN_INSERT_ERROR, responseInfo);
                 return responseInfo;
             }
 
             // 2. USER_LOGIN_LOG TBL Select => 로그인 시도 체크 (동일 세션에서 동일 아이디 attempt)
-            int attempt = checkLoginAttempt(req_id, userLoginLogInfo, responseInfo);
+            int attempt = checkLoginAttempt(req_id, userLoginInfo, responseInfo);
             if(attempt >= GlobalConstants.LoginAttemptCount) {
-                log.info("[Service-UserLogin][login][{}] Log Attempts Exceeded : attempt {} Is Over Than {}",req_id,attempt,GlobalConstants.LoginAttemptCount);
-                responseInfo.setMsg("Log Attempts Exceeded");
+                log.info("[Service-UserLogin][login][{}] Log Attempts Exceeded : Attempt {} Is Over Than {}",req_id,attempt,GlobalConstants.LoginAttemptCount);
+                responseInfo.setMsg("Login Failed : Log Attempts Exceeded");
                 updateLogStatus(req_id, ResultCode.USER_LOGIN_ATTEMPT_OVER_ERROR, responseInfo);
                 return responseInfo;
             }
 
             // 3. 로그인 체크
-            UserAuthInfo loginUserInfo = checkLogin(req_id, userLoginLogInfo, responseInfo);
+            UserDetailInfo loginUserInfo = checkLogin(req_id, userLoginInfo, responseInfo);
             if(loginUserInfo != null) { // 로그인 요청시 입력한 USER_ID와, USER 테이블에서 SELECT한 정보의 USER_ID가 같으면 로그인 정보 일치한 것
 //                returnInfo.setMsg("Login Success");
                 responseInfo.setMsg("Login Success");
                 responseInfo.setRes_data(loginUserInfo);
-                userLoginLogInfo.setUser_idx(loginUserInfo.getUser_idx());
+                userLoginInfo.setUser_idx(loginUserInfo.getUser_idx());
 
                 // 4. 로그인 로그 정보 테이블(USER_LOGIN_LOG) 상태값 update
                 updateLogStatus(req_id, ResultCode.USER_LOGIN_SUCCESS, responseInfo);
+
+                // 5. 로그인 정보 테이블(USER_LOGIN_LOG) Flag update
                 resetLoginAttempt(loginUserInfo.getUser_id(), responseInfo);
 
-                // 5. 로그인 세션 정보 테이블(USER_SESSION) Insert
-                int insertResult = insertLoginSession(req_id, userLoginLogInfo, responseInfo);
-                if(insertResult != 1){
-                    log.info("[Service-UserLogin][login][{}] Session Insert Failed : {}",req_id,insertResult);
+                // 6. 로그인 세션 정보 테이블(USER_SESSION) Insert
+                if( insertLoginSession(req_id, userLoginInfo, responseInfo) != 1){
+                    log.info("[Service-UserLogin][login][{}] Session Insert Failed : {}",req_id,responseInfo.getRes_data());
                     responseInfo.setStatus("-1");
                     responseInfo.setMsg("Login Failed : Session Insert Failed");
                     return responseInfo;
@@ -77,7 +75,7 @@ public class UserLoginService {
                 log.info("[Service-UserLogin][login][{}] Login Success...",req_id);
                 return responseInfo;
             } else {
-                log.info("[Service-UserLogin][login][{}] Login Failed : Invalid ID/PW : {} / {}",req_id,userLoginLogInfo.getUser_id(),userLoginLogInfo.getPw());
+                log.info("[Service-UserLogin][login][{}] Login Failed : Invalid ID/PW : {} / {}",req_id, userLoginInfo.getUser_id(), userLoginInfo.getPw());
                 responseInfo.setMsg("Login Failed : Invalid ID/PW");
 
                 // 4. 로그인 로그 정보 테이블(USER_LOGIN_LOG) 상태값 update
@@ -85,7 +83,7 @@ public class UserLoginService {
                 return responseInfo;
             }
         } catch (Exception e){
-            log.error("[Service-UserLogin][login][{}] ERROR OCCURRED : {}",req_id,e.getMessage());
+            log.error("[Service-UserLogin][login][{}] Login Failed : ERROR OCCURRED {}",req_id,e.getMessage());
             responseInfo.setStatus("-1");
             responseInfo.setMsg("Login Failed : Unknown Error Occurred");
             responseInfo.setRes_data(e.getMessage());
@@ -94,20 +92,19 @@ public class UserLoginService {
         }
     }
 
-
     public void updateLogStatus(String req_id, String status, ResponseInfo resInfo){
         try{
-            int result = userRepository.updateStatus(req_id, status);
+            int result = userLoginMapper.updateStatus(req_id, status);
             log.info("[Service-UserLogin][updateLogStatus][{}] Login Log Status({}) Update Successed : {}",req_id,status,result);
         } catch (Exception e){
             log.error("[Service-UserLogin][updateLogStatus][{}] Login Log Status({}) Update Failed : {}",req_id, status, e.getMessage());
             resInfo.setRes_data(e.getMessage());
         }
     }
-    public int insertLoginLog(String req_id, UserLoginLogInfo info, ResponseInfo resInfo){
+    public int insertLoginLog(String req_id, UserLoginInfo info, ResponseInfo resInfo){
         int result = -1;
         try {
-            result = userRepository.insertLoginLog(info);
+            result = userLoginMapper.insertLoginLog(info);
             log.info("[Service-UserLogin][insertLoginLog][{}] Login Log Insert Successed : {}",req_id,result);
         } catch (Exception e) {
             log.error("[Service-UserLogin][insertLoginLog][{}] Login Log Insert Failed : {}, {}",req_id,result,e.getMessage());
@@ -116,10 +113,10 @@ public class UserLoginService {
         return result;
     }
 
-    public int checkLoginAttempt(String req_id, UserLoginLogInfo info, ResponseInfo resInfo){
+    public int checkLoginAttempt(String req_id, UserLoginInfo info, ResponseInfo resInfo){
         int result = 0;
         try {
-            result = userRepository.getLoginAttempt(info);
+            result = userLoginMapper.getLoginAttempt(info);
             log.info("[Service-UserLogin][checkLoginAttempt][{}] Login Attempt Select Successed : {}",req_id,result);
         } catch (Exception e) {
             log.info("[Service-UserLogin][checkLoginAttempt][{}] Login Attempt Select Failed : {}, {}",req_id,result,e.getMessage());
@@ -128,10 +125,10 @@ public class UserLoginService {
         return result;
     }
 
-    public UserAuthInfo checkLogin(String req_id, UserLoginLogInfo info, ResponseInfo resInfo){
-        UserAuthInfo result = null;
+    public UserDetailInfo checkLogin(String req_id, UserLoginInfo info, ResponseInfo resInfo){
+        UserDetailInfo result = null;
         try {
-            result = userRepository.getLoginResult(info);
+            result = userLoginMapper.getLoginResult(info);
             if(result!=null)
                 log.info("[Service-UserLogin][getLoginResult][{}] Login Success : {}", req_id, result);
             else
@@ -145,7 +142,7 @@ public class UserLoginService {
 
     public void resetLoginAttempt(String user_id, ResponseInfo resInfo){
         try{
-            int result = userRepository.resetLoginAttempt(user_id);
+            int result = userLoginMapper.resetLoginAttempt(user_id);
             log.info("[Service-UserLogin][resetLoginAttempt][{}] Login Log Flag Reset Successed : {}",user_id,result);
         } catch (Exception e){
             log.error("[Service-UserLogin][resetLoginAttempt][{}] Login Log Flag Reset Failed : {}",user_id,e.getMessage());
@@ -155,26 +152,24 @@ public class UserLoginService {
 
     // Login Session TBL에서 기존 로그인 세션 select
     // 기록이 있다면 update, 없다면 insert
-    public int insertLoginSession(String req_id,UserLoginLogInfo info, ResponseInfo resInfo){
+    public int insertLoginSession(String req_id, UserLoginInfo info, ResponseInfo resInfo){
         int result = -1;
         try {
-            result = userRepository.getLoginSession(info.getUser_idx());
-            if(result == 1){
-                log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Select Successed : {}",req_id, result);
-                result = userRepository.updateLoginSession(info);
+            String session = userLoginMapper.getLoginSessionId(info.getUser_id());
+            if(session != null){
+                log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Select Successed : {}",req_id, session);
+                result = userLoginMapper.updateLoginSession(info);
                 if(result==1)
                     log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Update Successed : {}",req_id, result);
                 else
                     log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Update Failed : {}",req_id, result);
-            } else if(result == 0){
-                log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Select Successed : {}",req_id, result);
-                result = userRepository.insertLoginSession(info);
+            } else{
+                log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Select Successed : Previous Session is not exist",req_id);
+                result = userLoginMapper.insertLoginSession(info);
                 if(result==1)
                     log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Insert Successed : {}",req_id, result);
                 else
                     log.info("[Service-UserLogin][insertLoginSession][{}] Login Session Insert Failed : {}",req_id, result);
-            } else {
-                log.error("[Service-UserLogin][insertLoginSession][{}] Login Session Select Failed : {}",req_id, result);
             }
         } catch (Exception e) {
             log.error("[Service-UserLogin][insertLoginSession][{}] Login Session Insert Failed : {}, {}",req_id, result, e.getMessage());

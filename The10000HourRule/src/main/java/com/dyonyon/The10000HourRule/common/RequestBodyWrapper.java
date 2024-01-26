@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.Common;
+package com.dyonyon.The10000HourRule.common;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;

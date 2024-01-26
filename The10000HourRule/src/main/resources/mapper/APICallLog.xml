@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dyonyon.The10000HourRule.repository.LogRepository">
+<mapper namespace="com.dyonyon.The10000HourRule.mapper.LogMapper">
     <insert id="insertUserLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
         INSERT INTO USER_LOG (REQ_ID, USER_IDX, API_URL, REQ_DATA, SESSION_ID) VALUES ('${req_id}', '${user_idx}', '${api_url}', '${req_data}' ,'${session_id}')
     </insert>
