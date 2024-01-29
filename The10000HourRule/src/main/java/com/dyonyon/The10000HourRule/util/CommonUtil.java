@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommonUtil {
-    public static boolean isNull(Object param){
-        return param == null;
+    public static boolean isNull(String key, Object param){
+        boolean result = (param == null);
+        if(result)
+            log.error("[CommonUtil-isNull] {} Is Null",key);
+        return result;
     }
 
     public static boolean isFormat(String key, String value){
@@ -18,6 +21,7 @@ public class CommonUtil {
                     } else if(Character.isLetter(c)){
                     } else if(Character.isWhitespace(c)) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -28,6 +32,7 @@ public class CommonUtil {
                     if(Character.isLetter(c)){
                     } else if(Character.isDigit(c)) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -38,6 +43,7 @@ public class CommonUtil {
                     if(Character.isDigit(c)) {
                     } else if('-' == c) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -50,6 +56,7 @@ public class CommonUtil {
                     } else if('.' == c) {
                     } else if('@' == c) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -60,6 +67,7 @@ public class CommonUtil {
                     if(Character.isDigit(c)) {
                     } else if('/' == c) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -71,6 +79,7 @@ public class CommonUtil {
                     } else if(Character.isLetter(c)){
                     } else if(Character.isDigit(c)) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
@@ -80,6 +89,7 @@ public class CommonUtil {
                 if("M".equals(value)){
                 } else if("W".equals(value)){
                 } else {
+                    log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                     res = false;
                 }
                 break;
@@ -88,13 +98,14 @@ public class CommonUtil {
                     if(Character.isLetter(c)){
                     } else if(Character.isDigit(c)) {
                     } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
                         res = false;
                         break;
                     }
                 }
                 break;
             default:
-                log.error("[CommonUtil-formatCheck] {} Is Unknown Case",key);
+                log.error("[CommonUtil-isFormat] {}({}) Is Unknown Case",key,value);
                 res = false;
                 break;
         }

@@ -8,7 +8,8 @@ public interface UserSignupMapper {
     int checkProfileDuplication(String key, String value);
     int checkAuthDuplication(String key, String value);
 
-    String signupUser(UserDetailInfo userDetailInfo);
-    String signupUserProfile(UserDetailInfo userDetailInfo);
-    String signupUserAuth(UserDetailInfo userDetailInfo);
+    int insertSignupUser(UserDetailInfo userDetailInfo);
+    int insertSignupUserProfile(UserDetailInfo userDetailInfo);
+    int insertSignupUserAuth(UserDetailInfo userDetailInfo);
+    String getUserIdx(String user_id);
 }

@@ -15,7 +15,8 @@ public class APICallLogInfo {
     String status;
     String msg;
     String req_data;
-    String res_code;
+    String err_code;
+    String res_status;
     String res_data;
     String start_dt;  // => SYSDATE로 입력
     String end_dt;

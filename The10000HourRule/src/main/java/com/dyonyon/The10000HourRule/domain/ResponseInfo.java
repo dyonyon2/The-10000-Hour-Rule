@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class ResponseInfo {
     String status;
     String msg;
-    String res_code;
+    String res_status;
     Object res_data;
+    String err_code;
 }

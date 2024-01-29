@@ -34,11 +34,11 @@ public class UserSignupService {
             // 체크 : 필수 값, 규칙 체크, 중복 체크
             // 1. 필수 값 체크
             // isNull => true (null), false(null X)
-            if(CommonUtil.isNull(userDetailInfo.getUser_id())||
-                    CommonUtil.isNull(userDetailInfo.getPw())||CommonUtil.isNull(userDetailInfo.getName())||
-                    CommonUtil.isNull(userDetailInfo.getNickname())||CommonUtil.isNull(userDetailInfo.getSex())||
-                    CommonUtil.isNull(userDetailInfo.getBirth())||CommonUtil.isNull(userDetailInfo.getRegion())||
-                    CommonUtil.isNull(userDetailInfo.getPhone())||CommonUtil.isNull(userDetailInfo.getMail())){
+            if(CommonUtil.isNull(GlobalConstants.user_id, userDetailInfo.getUser_id())||
+                    CommonUtil.isNull(GlobalConstants.pw, userDetailInfo.getPw())||CommonUtil.isNull(GlobalConstants.name, userDetailInfo.getName())||
+                    CommonUtil.isNull(GlobalConstants.nickname, userDetailInfo.getNickname())||CommonUtil.isNull(GlobalConstants.sex, userDetailInfo.getSex())||
+                    CommonUtil.isNull(GlobalConstants.birth, userDetailInfo.getBirth())||CommonUtil.isNull(GlobalConstants.region, userDetailInfo.getRegion())||
+                    CommonUtil.isNull(GlobalConstants.phone, userDetailInfo.getPhone())||CommonUtil.isNull(GlobalConstants.mail, userDetailInfo.getMail())){
                 log.info("[Service-UserSignup][signup][{}] Signup Failed : Required Data Is Missing", req_id);
                 responseInfo.setMsg("Signup Failed : Required Data Is Missing");
                 return responseInfo;
@@ -94,7 +94,6 @@ public class UserSignupService {
             responseInfo.setRes_code("UN");
             return responseInfo;
         }
-        return responseInfo;
     }
 
     public boolean isDuplication(String req_id, String key, String value, ResponseInfo resInfo){
@@ -123,19 +122,42 @@ public class UserSignupService {
 
     @Transactional
     public String signupUser(String req_id, UserDetailInfo info, ResponseInfo resInfo){
+        int result = -1;
         String res = null;
         try {
             // insert 3개
-            res = userSignupMapper.signupUser(info);
-            res = userSignupMapper.signupUserProfile(info);
-            res = userSignupMapper.signupUserAuth(info);
-            if(res==null){
-                info.setUser_idx(res);
+            result = userSignupMapper.insertSignupUser(info);
+            if(result==1){
+                log.info("[Service-UserSignup][signupUser][{}] USER Insert Successed  : USER_ID({})",req_id, info.getUser_id());
+            } else {
+                log.info("[Service-UserSignup][signupUser][{}] USER Insert Failed  : USER_ID({}), {}",req_id, info.getUser_id(),result);
+                throw new Exception("USER Insert Failed  : USER_ID("+info.getUser_id()+")");
             }
-            log.info("[Service-UserSignup][signupUser][{}] Signup User Insert Successed  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(), res);
-
+            res = userSignupMapper.getUserIdx(info.getUser_id());
+            if(res!=null){
+                log.info("[Service-UserSignup][signupUser][{}] Signup USER_IDX Select Successed  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(),res);
+                info.setUser_idx(res);
+            } else {
+                log.info("[Service-UserSignup][signupUser][{}] USER_AUTH Insert Failed  : USER_ID({}), {}",req_id, info.getUser_id(),result);
+                throw new Exception("USER_AUTH Select Failed  : USER_ID("+info.getUser_id()+")");
+            }
+            result = userSignupMapper.insertSignupUserProfile(info);
+            if(result==1){
+                log.info("[Service-UserSignup][signupUser][{}] USER_PROFILE Insert Successed  : USER_ID({})",req_id, info.getUser_id());
+            } else {
+                log.info("[Service-UserSignup][signupUser][{}] USER_PROFILE Insert Failed  : USER_ID({}), {}",req_id, info.getUser_id(),result);
+                throw new Exception("USER_PROFILE Insert Failed  : USER_ID("+info.getUser_id()+")");
+            }
+            result = userSignupMapper.insertSignupUserAuth(info);
+            if(result==1){
+                log.info("[Service-UserSignup][signupUser][{}] USER_AUTH Insert Successed  : USER_ID({})",req_id, info.getUser_id());
+            } else {
+                log.info("[Service-UserSignup][signupUser][{}] USER_AUTH Insert Failed  : USER_ID({}), {}",req_id, info.getUser_id(),result);
+                throw new Exception("USER_AUTH Insert Failed  : USER_ID("+info.getUser_id()+")");
+            }
+            log.info("[Service-UserSignup][signupUser][{}] Signup Insert Successed  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(), res);
         } catch (Exception e) {
-            log.info("[Service-UserLogin][signupUser][{}] Signup User Insert Failed : {}",req_id,e.getMessage());
+            log.info("[Service-UserLogin][signupUser][{}] Signup User Failed : {}",req_id,e.getMessage());
             resInfo.setMsg("Signup Failed : Unknown Error Occurred");
             resInfo.setRes_data(e.getMessage());
             resInfo.setStatus("-1");

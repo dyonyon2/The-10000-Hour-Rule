@@ -14,6 +14,5 @@ public class UserLoginInfo {
     String status;
     String req_id;
     String session_id;
-
     String msg;
 }
