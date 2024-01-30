@@ -23,22 +23,21 @@
         SELECT USER_IDX FROM "USER" WHERE USER_ID = '${user_id}'
     </select>
     <update id="updateResDataUserLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE USER_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE USER_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
     <update id="updateResDataMemoLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE MEMO_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE MEMO_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
     <update id="updateResDataCalenderLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE CALENDER_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE CALENDER_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
     <update id="updateResDataRoutineLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE ROUTINE_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE ROUTINE_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
     <update id="updateResDataGroupLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE GROUP_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE GROUP_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
     <update id="updateResDataEtcLog" parameterType="com.dyonyon.The10000HourRule.domain.APICallLogInfo">
-        UPDATE ETC_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', MSG = '${msg}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
+        UPDATE ETC_LOG SET RES_DATA = '${res_data}', STATUS = '${status}', RES_STATUS = '${res_status}', MSG = '${msg}', ERR_CODE = '${err_code}', END_DT = SYSDATE WHERE REQ_ID = '${req_id}'
     </update>
-
 </mapper>

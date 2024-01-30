@@ -59,7 +59,6 @@ public class APIFilter implements Filter {
                 SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmssSSS");
                 String id = now.format(new Date());
                 reqWrapper.setAttribute("req_id",id);
-                reqWrapper.setAttribute("req_type",result);
 //                log.info("[Filter][Request][{}] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
                 log.info("[Filter][Request][{}] URL : {}", id, reqWrapper.getRequestURL());
                 log.info("[Filter][Request][{}] BODY : {}", id, reqWrapper.getRequestData());

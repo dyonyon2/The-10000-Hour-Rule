@@ -1,9 +1,10 @@
 package com.dyonyon.The10000HourRule.controller;
 
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
+import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
-import com.dyonyon.The10000HourRule.service.APICheckService;
+import com.dyonyon.The10000HourRule.service.APIVerificationService;
 import com.dyonyon.The10000HourRule.service.UserLoginService;
 import com.dyonyon.The10000HourRule.service.UserManageService;
 import com.dyonyon.The10000HourRule.service.UserSignupService;
@@ -21,14 +22,14 @@ import java.util.Enumeration;
 @RequestMapping("/api/user")
 public class UserEventController {
 
-    private APICheckService apiCheckService;
+    private APIVerificationService apiVerificationService;
     private UserLoginService userLoginService;
     private UserSignupService userSignupService;
     private UserManageService userManageService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UserEventController(APICheckService apiCheckService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService) {
-        this.apiCheckService = apiCheckService;
+    public UserEventController(APIVerificationService apiVerificationService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService) {
+        this.apiVerificationService = apiVerificationService;
         this.userLoginService = userLoginService;
         this.userSignupService = userSignupService;
         this.userManageService = userManageService;
@@ -43,7 +44,7 @@ public class UserEventController {
         log.info("[Controller-UserEvent][/login][{}] BODY : {}",req.getAttribute("req_id"), userLoginInfo);
         log.info("[Controller-UserEvent][/login][{}] Call UserLoginService....",req.getAttribute("req_id"));
         result = userLoginService.login(req, userLoginInfo);
-        log.info("[Controller-UserEvent][/login][{}] RESULT : {}",req.getAttribute("req_id"),result.getStatus());
+        log.info("[Controller-UserEvent][/login][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         return result;
     }
 
@@ -55,16 +56,14 @@ public class UserEventController {
         log.info("[Controller-UserEvent][/signup][{}] BODY : {}",req.getAttribute("req_id"), userDetailInfo);
         log.info("[Controller-UserEvent][/signup][{}] Call UserSignupService....",req.getAttribute("req_id"));
         result = userSignupService.signup(req, userDetailInfo);
-        log.info("[Controller-UserEvent][/signup][{}] RESULT : {}",req.getAttribute("req_id"),result.getStatus());
+        log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         return result;
     }
 
     // 중복체크 (회원가입, 내 정보 수정)
-//    @GetMapping(value={"/check","/check/{what}"})
-//    public ResponseInfo checkController(HttpServletRequest req, @ModelAttribute UserDetailInfo userDetailInfo) {
     @GetMapping("/check")
     public ResponseInfo checkController(HttpServletRequest req) {
-        ResponseInfo result = new ResponseInfo();
+        ResponseInfo result;
         Enumeration<String> parameterNames = req.getParameterNames();
         String key = null;
         String value = null;
@@ -76,10 +75,29 @@ public class UserEventController {
             log.info("[Controller-UserEvent][/check][{}] QUERY STRING VALUE : {}",req.getAttribute("req_id"), value);
         }
         log.info("[Controller-UserEvent][/check][{}] Call UserSignupService....",req.getAttribute("req_id"));
-        result = userManageService.check(req, key, value);
-//        log.info("[Controller-UserEvent][/signup][{}] RESULT : {}",req.getAttribute("req_id"),result.getStatus());
+        result = userManageService.checkDuplication(req, key, value);
+        log.info("[Controller-UserEvent][/check][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         return result;
     }
+
+//    @PostMapping("/auth")
+//    public ResponseInfo authController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
+//        ResponseInfo result = new ResponseInfo();
+//        log.info("[Controller-UserEvent][/auth][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+//        log.info("[Controller-UserEvent][/auth][{}] BODY : {}",req.getAttribute("req_id"), userAuthInfo);
+//        log.info("[Controller-UserEvent][/auth][{}] Call UserSignupService....",req.getAttribute("req_id"));
+//        result = userManageService.auth(req, userAuthInfo);
+//        log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+//        return result;
+//    }
+//
+//    @GetMapping("/auth/check")
+//    public ResponseInfo authCheckController(HttpServletRequest req, @ModelAttribute UserAuthInfo userAuthInfo) throws ParseException {
+//        ResponseInfo result = new ResponseInfo();
+//        return result;
+//    }
+
+
 
 
     @RequestMapping("/test")
@@ -94,7 +112,7 @@ public class UserEventController {
 //        return "test";
         ResponseInfo result;
         log.info("[Controller-UserEvent][/test][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        result = apiCheckService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
+        result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
         if("-1".equals(result.getStatus())){
             result.setStatus("1");
             return result;

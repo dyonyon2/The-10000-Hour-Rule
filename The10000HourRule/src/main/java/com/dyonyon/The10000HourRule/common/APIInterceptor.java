@@ -95,6 +95,8 @@ public class APIInterceptor implements HandlerInterceptor {
                 // USERIDX 찾는 쿼리
                 if (userId != null) {
                     userIdx = logMapper.getUserIdx(userId);
+                    req.setAttribute("user_id",userId);
+                    req.setAttribute("user_idx",userIdx);
                 }
 
                 // REQUEST 정보 출력
@@ -184,7 +186,8 @@ public class APIInterceptor implements HandlerInterceptor {
         String url = String.valueOf(req.getRequestURL());
         String sessionId = req.getSession().getId();
         String reqId = String.valueOf(req.getAttribute("req_id"));
-        String userId = null; String userIdx = null; String reqData = null;
+        String userId = String.valueOf(req.getAttribute("user_id"));
+        String userIdx = String.valueOf(req.getAttribute("user_idx"));
         APICallLogInfo apiCallLogInfo = new APICallLogInfo();
         int result = isAPICall(url);
         int updateRes = -1;
@@ -197,21 +200,26 @@ public class APIInterceptor implements HandlerInterceptor {
             String responseBody = responseInfo.getRes_data()==null?"":responseInfo.getRes_data().toString();
             String responseMsg = responseInfo.getMsg()==null?"":responseInfo.getMsg();
             String responseStatus = responseInfo.getStatus();
+            String res_status = responseInfo.getRes_status();
+            String err_code = responseInfo.getErr_code();
 
             // RESPONSE 정보 출력
 //            log.info("[Interceptor-AfterCompletion][Response][{}] REQ_ID : {}", reqId);
             log.trace("[Interceptor-AfterCompletion][Response][{}] URL : {}", reqId, url);
             log.trace("[Interceptor-AfterCompletion][Response][{}] SESSION : {}", reqId, sessionId);;
-            log.trace("[Interceptor-AfterCompletion][Response][{}] STATUS : {}, {}", reqId, responseWrapper.getStatus(), responseStatus);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] STATUS : HTTP({}), STATUS({}), RES_STATUS({})", reqId, responseWrapper.getStatus(), responseStatus,res_status);
             log.trace("[Interceptor-AfterCompletion][Response][{}] MSG : {}", reqId, responseMsg);
             log.trace("[Interceptor-AfterCompletion][Response][{}] BODY : {}", reqId, responseBody);
             log.trace("[Interceptor-AfterCompletion][Response][{}] USER_ID : {}", reqId, userId);
             log.trace("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
+            log.trace("[Interceptor-AfterCompletion][Response][{}] ERR_CODE : {}", reqId, err_code);
 
             apiCallLogInfo.setReq_id(reqId);
             apiCallLogInfo.setRes_data(responseBody.replace("'",""));
             apiCallLogInfo.setStatus(responseStatus);
             apiCallLogInfo.setMsg(responseMsg);
+            apiCallLogInfo.setRes_status(res_status);
+            apiCallLogInfo.setErr_code(err_code);
 
             // LOG INSERT
             log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE : {}", reqId, apiCallLogInfo.toString());

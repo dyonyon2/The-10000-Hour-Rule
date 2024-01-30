@@ -14,13 +14,13 @@
         UPDATE USER_LOGIN_LOG SET STATUS = '${status}' WHERE REQ_ID = '${req_id}'
     </update>
     <update id="resetLoginAttempt" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginInfo" >
-        UPDATE USER_LOGIN_LOG SET ATTEMPT_FLAG = 'Y' WHERE USER_ID = '${user_id}' AND START_DT > SYSDATE - INTERVAL '30' MINUTE
+        UPDATE USER_LOGIN_LOG SET ATTEMPT_FLAG = 'Y' WHERE USER_ID = '${user_id}' AND START_DT > SYSDATE - INTERVAL '30' MINUTE AND ATTEMPT_FLAG != 'Y'
     </update>
     <select id="getLoginSessionId" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT SESSION_ID FROM USER_SESSION WHERE USER_ID = '${user_id}'
     </select>
     <update id="updateLoginSession" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginInfo" >
-        UPDATE USER_SESSION SET SESSION_ID = '${session_id}', CREATE_DT = SYSDATE, UPDATE_DT = SYSDATE, EXPIRE_DT = SYSDATE + INTERVAL '30' MINUTE WHERE USER_IDX = '${user_idx}'
+        UPDATE USER_SESSION SET SESSION_ID = '${session_id}', UPDATE_DT = SYSDATE, EXPIRE_DT = SYSDATE + INTERVAL '30' MINUTE WHERE USER_IDX = '${user_idx}'
     </update>
     <insert id="insertLoginSession" parameterType="com.dyonyon.The10000HourRule.domain.user.UserLoginInfo">
         INSERT INTO USER_SESSION (USER_IDX, USER_ID, SESSION_ID) VALUES ('${user_idx}', '${user_id}','${session_id}')
