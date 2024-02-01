@@ -4,10 +4,7 @@ import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
-import com.dyonyon.The10000HourRule.service.APIVerificationService;
-import com.dyonyon.The10000HourRule.service.UserLoginService;
-import com.dyonyon.The10000HourRule.service.UserManageService;
-import com.dyonyon.The10000HourRule.service.UserSignupService;
+import com.dyonyon.The10000HourRule.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +23,15 @@ public class UserEventController {
     private UserLoginService userLoginService;
     private UserSignupService userSignupService;
     private UserManageService userManageService;
+    private TestService testService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UserEventController(APIVerificationService apiVerificationService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService) {
+    public UserEventController(APIVerificationService apiVerificationService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService, TestService testService) {
         this.apiVerificationService = apiVerificationService;
         this.userLoginService = userLoginService;
         this.userSignupService = userSignupService;
         this.userManageService = userManageService;
+        this.testService = testService;
     }
 
 
@@ -90,7 +89,7 @@ public class UserEventController {
 //        log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
 //        return result;
 //    }
-//
+
 //    @GetMapping("/auth/check")
 //    public ResponseInfo authCheckController(HttpServletRequest req, @ModelAttribute UserAuthInfo userAuthInfo) throws ParseException {
 //        ResponseInfo result = new ResponseInfo();
@@ -101,7 +100,8 @@ public class UserEventController {
 
 
     @RequestMapping("/test")
-    public ResponseInfo testController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException, IOException {
+//    public ResponseInfo testController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException, IOException {
+    public ResponseInfo testController(HttpServletRequest req) throws ParseException, IOException {
 
 //        objectMapper 쓰는 방법
 //        ServletInputStream inputStream = req.getInputStream();
@@ -110,13 +110,19 @@ public class UserEventController {
 //        UserAuthInfo data = objectMapper.readValue(messageBody, UserAuthInfo.class);
 //        log.info("id={}, pw={}", data.getUser_id(), data.getPw());
 //        return "test";
+
+//        ResponseInfo result;
+//        log.info("[Controller-UserEvent][/test][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+//        result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
+//        if("-1".equals(result.getStatus())){
+//            result.setStatus("1");
+//            return result;
+//        }
+//        return result;
+
         ResponseInfo result;
         log.info("[Controller-UserEvent][/test][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
-        if("-1".equals(result.getStatus())){
-            result.setStatus("1");
-            return result;
-        }
+        result = testService.mailSend((String) req.getAttribute("req_id"), String.valueOf(req.getRequestURL()));
         return result;
     }
 }
