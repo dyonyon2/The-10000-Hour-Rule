@@ -1,11 +1,11 @@
-package com.dyonyon.The10000HourRule.service;
+package com.dyonyon.The10000HourRule.service.user;
 
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserInfo;
-import com.dyonyon.The10000HourRule.mapper.UserSignupMapper;
+import com.dyonyon.The10000HourRule.mapper.user.UserSignupMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

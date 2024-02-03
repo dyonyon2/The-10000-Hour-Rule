@@ -3,6 +3,9 @@ package com.dyonyon.The10000HourRule.util;
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 @Slf4j
 public class CommonUtil {
     public static boolean isNull(String key, Object param){
@@ -110,5 +113,13 @@ public class CommonUtil {
                 break;
         }
         return res;
+    }
+
+    public static String getAuthKey(){
+        Random random = new Random();
+        // 0부터 999999 사이의 임의의 6자리 숫자를 생성
+        int randomNumber = random.nextInt(1000000);
+        // 결과를 6자리로 만들기 위해 문자열로 변환하고, 앞에 0을 채웁니다.
+        return String.format("%06d", randomNumber);
     }
 }

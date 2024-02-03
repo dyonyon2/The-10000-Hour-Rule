@@ -2,7 +2,7 @@ package com.dyonyon.The10000HourRule.service;
 
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.mapper.UserLoginMapper;
+import com.dyonyon.The10000HourRule.mapper.user.UserLoginMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

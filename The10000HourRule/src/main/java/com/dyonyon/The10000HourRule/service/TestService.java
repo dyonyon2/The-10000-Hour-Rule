@@ -1,22 +1,13 @@
 package com.dyonyon.The10000HourRule.service;
 
-import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.mapper.UserLoginMapper;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.naming.factory.MailSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 
 // 로그인 이후, 필요한 공통 서비스
@@ -55,10 +46,12 @@ public class TestService {
             javaMailSender.send(m);
 
         } catch (Exception e){
-            e.printStackTrace();
-            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getLocalizedMessage());
-            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getStackTrace());
-            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-TestService][mailSend]["+req_id+"] Mail Send Fail : ERROR OCCURRED "+e);
+            log.error("[Service-TestService][mailSend]["+req_id+"] Mail Send Fail : ERROR OCCURRED ",e);
+//            e.printStackTrace();
+//            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getLocalizedMessage());
+//            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getStackTrace());
+//            log.error("[Service-TestService][mailSend][{}] Mail Send Fail : ERROR OCCURRED {}",req_id,e.getMessage());
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Mail Send Fail : Exception Occurred");

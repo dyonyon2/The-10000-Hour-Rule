@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.service;
+package com.dyonyon.The10000HourRule.service.user;
 
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.code.ResultCode;
@@ -6,7 +6,7 @@ import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
-import com.dyonyon.The10000HourRule.mapper.UserLoginMapper;
+import com.dyonyon.The10000HourRule.mapper.user.UserLoginMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -119,7 +119,7 @@ public class UserLoginService {
             resInfo.setMsg("Login Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setRes_data("[Service-UserLogin][Login][insertLoginLog] Login Log Insertion Fail : "+e.getMessage());
+            resInfo.setRes_data("[Service-UserLogin][Login][insertLoginLog] Login Log Insert Fail : "+e.getMessage());
             throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
         }
     }

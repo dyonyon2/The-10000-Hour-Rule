@@ -5,6 +5,9 @@ import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
 import com.dyonyon.The10000HourRule.service.*;
+import com.dyonyon.The10000HourRule.service.user.UserLoginService;
+import com.dyonyon.The10000HourRule.service.user.UserManageService;
+import com.dyonyon.The10000HourRule.service.user.UserSignupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -79,16 +82,16 @@ public class UserEventController {
         return result;
     }
 
-//    @PostMapping("/auth")
-//    public ResponseInfo authController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
-//        ResponseInfo result = new ResponseInfo();
-//        log.info("[Controller-UserEvent][/auth][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-//        log.info("[Controller-UserEvent][/auth][{}] BODY : {}",req.getAttribute("req_id"), userAuthInfo);
-//        log.info("[Controller-UserEvent][/auth][{}] Call UserSignupService....",req.getAttribute("req_id"));
-//        result = userManageService.auth(req, userAuthInfo);
-//        log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
-//        return result;
-//    }
+    @PostMapping("/auth")
+    public ResponseInfo authController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        log.info("[Controller-UserEvent][/auth][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+        log.info("[Controller-UserEvent][/auth][{}] BODY : {}",req.getAttribute("req_id"), userAuthInfo);
+        log.info("[Controller-UserEvent][/auth][{}] Call UserAuthSignupService....",req.getAttribute("req_id"));
+        result = userManageService.generateAndSendAuthKey(req, userAuthInfo);
+        log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        return result;
+    }
 
 //    @GetMapping("/auth/check")
 //    public ResponseInfo authCheckController(HttpServletRequest req, @ModelAttribute UserAuthInfo userAuthInfo) throws ParseException {

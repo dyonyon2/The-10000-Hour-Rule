@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.mapper;
+package com.dyonyon.The10000HourRule.mapper.user;
 
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
