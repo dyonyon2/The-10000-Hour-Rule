@@ -9,12 +9,21 @@ import com.dyonyon.The10000HourRule.mapper.user.UserSignupMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Service
 @Slf4j
+@Transactional
 public class UserSignupService {
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     private UserSignupMapper userSignupMapper;
 
@@ -86,6 +95,7 @@ public class UserSignupService {
             log.error("[Service-UserSignup][signup][{}] Signup Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
             log.error("[Service-UserSignup][signup][{}] Signup Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserSignup][signup]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Signup Fail : Exception Occurred");
@@ -98,7 +108,7 @@ public class UserSignupService {
     public boolean isDuplication(String req_id, String key, String value, ResponseInfo resInfo) throws FunctionException {
         boolean res = false;
         try {
-            int result = -1;
+            int result = -1;    // 중복 x
             switch (key){
                 case GlobalConstants.nickname:
                     result = userSignupMapper.checkProfileDuplication(key, value);
@@ -108,12 +118,13 @@ public class UserSignupService {
                     break;
             }
             log.info("[Service-UserSignup][signup][isDuplication][{}] Duplicate Check Select Success : {} = {} count({})",req_id,key,value,result);
-            if(result>0)
+            if(result>0)  // 중복 o
                 res = true;
-            else if(result < 0)
+            else if(result < 0) // 에러
                 throw new Exception("Result("+result+")");
-        } catch (Exception e) {
-            log.info("[Service-UserSignup][signup][isDuplication][{}] Duplicate Check Select Fail : {}",req_id,e.getMessage());
+        } catch (Exception e) { //에러
+            log.error("[Service-UserSignup][signup][isDuplication][{}] Duplicate Check Select Fail : {}",req_id,e.getMessage());
+            log.error("[Service-UserSignup][signup][isDuplication]["+req_id+"] Error PrintStack : ",e);
             resInfo.setMsg("Signup Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
@@ -123,17 +134,21 @@ public class UserSignupService {
         return res;
     }
 
-    @Transactional
     public void signupUser(String req_id, UserDetailInfo info, ResponseInfo resInfo) throws FunctionException {
         int result = -1;
         String res = null;
         UserInfo userInfo = new UserInfo();
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        TransactionStatus status = transactionManager.getTransaction(def);
+
         try {
             // insert 3개
             result = userSignupMapper.insertSignupUser(info);
             if(result==1){
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER Insert Success  : USER_ID({})",req_id, info.getUser_id());
-            } else {
+            } else {    // 에러
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER Insert Fail  : USER_ID({}), {}",req_id, info.getUser_id(),result);
                 throw new Exception("USER Insert Fail  : USER_ID("+info.getUser_id()+")");
             }
@@ -141,35 +156,39 @@ public class UserSignupService {
             if(res!=null){
                 log.info("[Service-UserSignup][signup][signupUser][{}] Signup USER_IDX Select Success  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(),res);
                 info.setUser_idx(res);
-            } else {
+            } else {    // 에러
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER_AUTH Insert Fail  : USER_ID({}), {}",req_id, info.getUser_id(),result);
                 throw new Exception("USER_AUTH Select Fail  : USER_ID("+info.getUser_id()+")");
             }
             result = userSignupMapper.insertSignupUserProfile(info);
             if(result==1){
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER_PROFILE Insert Success  : USER_ID({})",req_id, info.getUser_id());
-            } else {
+            } else {    // 에러
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER_PROFILE Insert Fail  : USER_ID({}), {}",req_id, info.getUser_id(),result);
                 throw new Exception("USER_PROFILE Insert Fail  : USER_ID("+info.getUser_id()+")");
             }
             result = userSignupMapper.insertSignupUserAuth(info);
             if(result==1){
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER_AUTH Insert Success  : USER_ID({})",req_id, info.getUser_id());
-            } else {
+            } else {    // 에러
                 log.info("[Service-UserSignup][signup][signupUser][{}] USER_AUTH Insert Fail  : USER_ID({}), {}",req_id, info.getUser_id(),result);
                 throw new Exception("USER_AUTH Insert Fail  : USER_ID("+info.getUser_id()+")");
             }
+            transactionManager.commit(status);
             log.info("[Service-UserSignup][signup][signupUser][{}] Signup Insert Success  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(), res);
             userInfo.setUser_id(info.getUser_id()); userInfo.setUser_idx(res); userInfo.setStatus("0");
             resInfo.setMsg("Signup Success");
             resInfo.setRes_data(userInfo);
-        } catch (Exception e) {
-            log.info("[Service-UserLogin][signup][signupUser][{}] Signup User Fail : {}",req_id,e.getMessage());
+        } catch (Exception e) { // 에러
+            log.error("[Service-UserLogin][signup][signupUser][{}] Signup User Fail : {}",req_id,e.getMessage());
+            log.error("[Service-UserSignup][signup][signupUser]["+req_id+"] Error PrintStack : ",e);
+            transactionManager.rollback(status);
             resInfo.setMsg("Signup Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserSignup][signup][signupUser] Signup Fail : "+e.getMessage());
-            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
+//            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
+            throw new RuntimeException("Login Log Insertion Fail : "+e.getMessage());
         }
     }
 }

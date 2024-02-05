@@ -78,6 +78,7 @@ public class APIVerificationService {
             log.error("[Service-UserLogin][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
             log.error("[Service-APICheck][checkLoginSession][{}] Login({}) Session Check Fail : ERROR OCCURRED {}",req_id,user_id,e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("API Validation Fail : Exception Occurred");
@@ -94,6 +95,7 @@ public class APIVerificationService {
             log.info("[Service-APICheck][checkLoginSession][getSessionId][{}] Login({}) Session Select Success : {}",req_id, user_id, result);
         } catch (Exception e) {
             log.error("[Service-APICheck][checkLoginSession][getSessionId][{}] Login({}) Session Select Fail : {}",req_id, user_id, e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession][getSessionId]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setMsg("API Validation Fail : Exception Occurred");
@@ -110,6 +112,7 @@ public class APIVerificationService {
             log.info("[Service-APICheck][checkLoginSession][getSessionEXP][{}] Login({}) Session EXP Select Success : {}",req_id, user_id, exp);
         } catch (Exception e) {
             log.error("[Service-APICheck][checkLoginSession][getSessionEXP][{}] Login({}) Session EXP Select Fail : {}",req_id, user_id, e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession][getSessionEXP]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setMsg("API Validation Fail : Exception Occurred");
@@ -129,6 +132,7 @@ public class APIVerificationService {
                 throw new Exception("Result("+result+")");
         } catch (Exception e) {
             log.error("[Service-APICheck][checkLoginSession][updateLoginSession][{}] Login({}) Session EXP Update Fail : {}",req_id, user_id, e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession][updateLoginSession]["+req_id+"] Error PrintStack : ",e);
             resInfo.setMsg("API Call Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");

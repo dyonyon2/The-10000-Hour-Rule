@@ -58,7 +58,7 @@ public class UserLoginService {
                     updateLogStatus(req_id, ResultCode.USER_LOGIN_SUCCESS, responseInfo, false);
 
                     // 5. 로그인 정보 테이블(USER_LOGIN_LOG) Flag update
-                    resetLoginAttempt(loginUserInfo.getUser_id(), responseInfo);
+                    resetLoginAttempt(req_id, loginUserInfo.getUser_id(), responseInfo);
 
                     // 6. 로그인 세션 정보 테이블(USER_SESSION) Insert
                     insertLoginSession(req_id, userLoginInfo, responseInfo);
@@ -75,6 +75,7 @@ public class UserLoginService {
             log.error("[Service-UserLogin][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
             log.error("[Service-UserLogin][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserLogin][login]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Login Fail : Exception Occurred");
@@ -82,6 +83,27 @@ public class UserLoginService {
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
+    }
+
+    // Insert Return 값이 1이면 정상, 그 이외는 비정상
+    public void insertLoginLog(String req_id, UserLoginInfo info, ResponseInfo resInfo) throws FunctionException {
+        int result = -1;
+        try {
+            result = userLoginMapper.insertLoginLog(info);
+            if(result == 1){
+                log.info("[Service-UserLogin][Login][insertLoginLog][{}] Login Log Insert Success : ID({})",req_id, info.getUser_id());
+            } else {    // 오류, 실패
+                throw new Exception("Result("+result+")");
+            }
+        } catch (Exception e) { // 오류, 실패
+            log.error("[Service-UserLogin][Login][insertLoginLog][{}] Login Log Insert Fail : ID({}) {}, {}",req_id,info.getUser_id(), result,e.getMessage());
+            log.error("[Service-UserLogin][login][insertLoginLog]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setMsg("Login Fail : Exception Occurred");
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setRes_data("[Service-UserLogin][Login][insertLoginLog] Login Log Insert Fail : "+e.getMessage());
+            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
+        }
     }
 
     public void updateLogStatus(String req_id, String status, ResponseInfo resInfo, boolean isError) throws FunctionException {
@@ -94,33 +116,14 @@ public class UserLoginService {
             }
         } catch (Exception e){
             log.error("[Service-UserLogin][login][updateLogStatus][{}] Login Log Status({}) Update Fail : {}", req_id, status, e.getMessage());
+            log.error("[Service-UserLogin][login][updateLogStatus]["+req_id+"] Error PrintStack : ",e);
             if(!isError) {
-                resInfo.setMsg("Login Fail : Exception Occurred");
                 resInfo.setStatus("-1");
                 resInfo.setRes_status("-1");
+                resInfo.setMsg("Login Fail : Exception Occurred");
                 resInfo.setRes_data("[Service-UserLogin][login][updateLogStatus] Login Log Status Update Fail : " + e.getMessage());
                 throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
             }
-        }
-    }
-
-    // Insert Return 값이 1이면 정상, 그 이외는 비정상
-    public void insertLoginLog(String req_id, UserLoginInfo info, ResponseInfo resInfo) throws FunctionException {
-        int result = -1;
-        try {
-            result = userLoginMapper.insertLoginLog(info);
-            if(result == 1){
-                log.info("[Service-UserLogin][Login][insertLoginLog][{}] Login Log Insert Success : ID({})",req_id, info.getUser_id());
-            } else {
-                throw new Exception("Result("+result+")");
-            }
-        } catch (Exception e) {
-            log.error("[Service-UserLogin][Login][insertLoginLog][{}] Login Log Insert Fail : ID({}) {}, {}",req_id,info.getUser_id(), result,e.getMessage());
-            resInfo.setMsg("Login Fail : Exception Occurred");
-            resInfo.setStatus("-1");
-            resInfo.setRes_status("-1");
-            resInfo.setRes_data("[Service-UserLogin][Login][insertLoginLog] Login Log Insert Fail : "+e.getMessage());
-            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
         }
     }
 
@@ -134,7 +137,8 @@ public class UserLoginService {
                 throw new Exception("Result("+result+")");
             }
         } catch (Exception e) {
-            log.info("[Service-UserLogin][login][checkLoginAttempt][{}] Login Attempt Select Fail : {}, {}",req_id,result,e.getMessage());
+            log.error("[Service-UserLogin][login][checkLoginAttempt][{}] Login Attempt Select Fail : {}, {}",req_id,result,e.getMessage());
+            log.error("[Service-UserLogin][login][checkLoginAttempt]["+req_id+"] Error PrintStack : ",e);
             resInfo.setRes_data("[Service-UserLogin][login][checkLoginAttempt] Login Attempt Select Fail : "+e.getMessage());
             resInfo.setMsg("Login Fail : Exception Occurred");
             resInfo.setStatus("-1");
@@ -162,6 +166,7 @@ public class UserLoginService {
             }
         } catch (Exception e) {
             log.error("[Service-UserLogin][login][getLoginResult][{}] Login Fail (SQL Fail) ID({}) PW({}) : {}", req_id, info.getUser_id(), info.getPw(), e.getMessage());
+            log.error("[Service-UserLogin][login][getLoginResult]["+req_id+"] Error PrintStack : ",e);
             resInfo.setMsg("Login Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
@@ -171,16 +176,17 @@ public class UserLoginService {
         return result;
     }
 
-    public void resetLoginAttempt(String user_id, ResponseInfo resInfo) throws FunctionException {
+    public void resetLoginAttempt(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
         try{
             int result = userLoginMapper.resetLoginAttempt(user_id);
             if(result >= 0){
-                log.info("[Service-UserLogin][login][resetLoginAttempt][{}] Login Log Flag Reset Success : {}",user_id,result);
+                log.info("[Service-UserLogin][login][resetLoginAttempt][{}] Login ID({}) Log Flag Reset Success : {}",req_id, user_id,result);
             } else {
                 throw new Exception("Result("+result+")");
             }
         } catch (Exception e){
-            log.error("[Service-UserLogin][login][resetLoginAttempt][{}] Login Log Flag Reset Fail : {}",user_id,e.getMessage());
+            log.error("[Service-UserLogin][login][resetLoginAttempt][{}] Login ID({}) Log Flag Reset Fail : {}",req_id, user_id,e.getMessage());
+            log.error("[Service-UserLogin][login][resetLoginAttempt]["+req_id+"] Error PrintStack : ",e);
             resInfo.setMsg("Login Fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
@@ -216,6 +222,7 @@ public class UserLoginService {
             }
         } catch (Exception e) {
             log.error("[Service-UserLogin][login][insertLoginSession][{}] Login Session Insert Fail : {}, {}",req_id, result, e.getMessage());
+            log.error("[Service-UserLogin][login][insertLoginSession]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setMsg("Login Fail : Exception Occurred");

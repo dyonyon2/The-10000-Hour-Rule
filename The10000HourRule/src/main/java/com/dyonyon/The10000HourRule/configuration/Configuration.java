@@ -2,6 +2,7 @@ package com.dyonyon.The10000HourRule.configuration;
 
 import com.dyonyon.The10000HourRule.common.APIInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
