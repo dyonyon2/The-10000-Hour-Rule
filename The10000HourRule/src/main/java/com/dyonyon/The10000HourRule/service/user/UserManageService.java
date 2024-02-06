@@ -4,6 +4,7 @@ import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
+import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.mapper.user.UserManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.mail.internet.MimeMessage;
@@ -35,6 +36,7 @@ public class UserManageService {
         this.userManageMapper = userManageMapper;
     }
 
+    // 유저(아이디, 닉네임, 이메일, 핸드폰) 중복 확인 기능 : 중복 확인(isDuplication)
     public ResponseInfo checkDuplication(HttpServletRequest req, String key, String value) {
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -46,6 +48,7 @@ public class UserManageService {
             log.info("[Service-UserManage][checkDuplication][{}] Check Started... : key({}) value({})", req_id, key, value);
 
             isDuplication(req_id, key, value, responseInfo);
+
         } catch (FunctionException e){
             log.error("[Service-UserManage][checkDuplication][{}] Check Failed : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
@@ -54,12 +57,13 @@ public class UserManageService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Duplication Check Failed : Exception Occurred");
-            responseInfo.setRes_data("Duplication Check Failed : "+e.getMessage());
+            responseInfo.setRes_data("[Service-UserManage][checkDuplication] Duplication Check Failed : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
     }
 
+    // 중복 확인 함수
     public void isDuplication(String req_id, String key, String value, ResponseInfo resInfo) throws FunctionException {
         try {
             int result = -1;
@@ -71,15 +75,18 @@ public class UserManageService {
                     result = userManageMapper.checkAuthDuplication(key, value);
                     break;
                 default:
-                    throw new Exception("Invalid Key("+key+") : Value("+value+")");
+                    resInfo.setRes_status("-1");
+                    resInfo.setMsg("Duplication Check : Invalid Key");
+                    resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Invalid Key("+key+") : Value("+value+")");
+                    throw new FunctionException("Invalid Key("+key+") : Value("+value+")");
             }
 
-            log.info("[Service-UserManage][checkDuplication][isDuplication][{}] Duplicate Check Successed : Key({}), Value({}), Count({})",req_id,key,value,result);
+            log.info("[Service-UserManage][checkDuplication][isDuplication][{}] Duplicate Check Success : Key({}), Value({}), Count({})",req_id,key,value,result);
 
             if(result>0) {  // 중복
                 resInfo.setRes_status("-1");
                 resInfo.setMsg("Duplication Check : Duplicated");
-                resInfo.setRes_data("Duplicated : Key("+key+") Value("+value+")");
+                resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Duplicated : Key("+key+") Value("+value+")");
             } else if (result < 0) {    // 에러
                 throw new Exception("Result(" + result + ")");
             } else {    // 중복 X
@@ -92,11 +99,12 @@ public class UserManageService {
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setMsg("Duplication Check Failed : Exception Occurred");
-            resInfo.setRes_data("Duplication Check Failed : "+e.getMessage());
+            resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Duplication Check Select Failed : "+e.getMessage());
             throw new FunctionException("Duplication Check Failed : "+e.getMessage());
         }
     }
 
+    // Auth Key 생성 및 전송(이메일) 기능 : 등록(updateAuthKey) -> 전송(sendAuthKey)
     public ResponseInfo generateAndSendAuthKey(HttpServletRequest req, UserAuthInfo userAuthInfo){
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -137,12 +145,13 @@ public class UserManageService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Auth Key Generate&Send Failed : Exception Occurred");
-            responseInfo.setRes_data("Auth Key Generate&Send Failed : "+e.getMessage());
+            responseInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey] Auth Key Generate&Send Failed : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
     }
 
+    // Auth Key 등록 함수
     public void updateAuthKey(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         int result = -1;
         try {
@@ -163,6 +172,7 @@ public class UserManageService {
         }
     }
 
+    // Auth Key 전송 함수
     public void sendAuthKey(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         try{
             String to;
@@ -201,6 +211,7 @@ public class UserManageService {
         }
     }
 
+    // Auth Key 검증 기능 : 유효성 확인(checkKeyValidation) -> 검증(verify)
     public ResponseInfo verifyAuthKey(HttpServletRequest req, UserAuthInfo userAuthInfo){
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -225,12 +236,13 @@ public class UserManageService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Auth Key Verify Failed : Exception Occurred");
-            responseInfo.setRes_data("Auth Key Verify Failed : "+e.getMessage());
+            responseInfo.setRes_data("[Service-UserManage][verifyAuthKey] Auth Key Verify Failed : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
     }
 
+    // Auth Key 유효성 확인 함수
     public void checkKeyValidation(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         String key = null;
         String method = null;
@@ -273,6 +285,7 @@ public class UserManageService {
         }
     }
 
+    // Auth Key 검증 함수
     public void verify(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         int result = -1;
         // User_id, Key가 동일해야하며, KEY_EXPIRED_TIME이 지나면 오류로 처리
@@ -287,7 +300,7 @@ public class UserManageService {
                 resInfo.setMsg("Auth Key Verify Failed : Invalid Data OR Expired Key");
                 resInfo.setRes_data("[Service-UserManage][verifyAuthKey][verify] Auth Key Verify Fail : Invalid Data OR Expired Key");
                 log.info("[Service-UserManage][verifyAuthKey][checkKeyValidation][{}] Auth Key Validate Fail : Invalid Data OR Expired Key. ID({}) Method({}) Key({})",req_id, info.getUser_id(),info.getMethod(), info.getKey());
-                throw new FunctionException("Invalid Data OR Expired Key. Result("+result+")");
+                throw new FunctionException("Auth Key Verify Fail : Invalid Data OR Expired Key. Result("+result+")");
             }
         } catch (Exception e) {
             log.error("[Service-UserManage][verifyAuthKey][verify][{}] Auth Key Verify Fail : ID({}) Key({}) {}, {}",req_id,info.getUser_id(), info.getKey(), result,e.getMessage());
@@ -300,4 +313,156 @@ public class UserManageService {
         }
     }
 
+
+    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 기능
+    public ResponseInfo changeUserInfo(HttpServletRequest req, UserDetailInfo userDetailInfo){
+
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+        String key=null; String value=null;
+        try{
+            log.info("[Service-UserManage][changeUserInfo][{}] User Info Change Started...", req_id);
+
+            // 1. 변경 대상 체크
+            // 2. 유효성 체크
+            // 3. 중복 확인
+            // 4. 변경
+
+            // 1. 변경 대상 체크
+            // 1-1. 닉네임 체크
+            if(userDetailInfo.getNickname()!=null&&!userDetailInfo.getNickname().isEmpty()){
+                key = GlobalConstants.nickname;
+                value = userDetailInfo.getNickname();
+            }
+            // 1-2. 비번 체크
+            else if(userDetailInfo.getPw()!=null&&!userDetailInfo.getPw().isEmpty()){
+                key = GlobalConstants.pw;
+                value = userDetailInfo.getPw();
+            }
+            // 1-3. 메일 체크
+            else if(userDetailInfo.getMail()!=null&&!userDetailInfo.getMail().isEmpty()){
+                key = GlobalConstants.mail;
+                value = userDetailInfo.getMail();
+            }
+            // 1-4. 핸드폰 체크
+            else if(userDetailInfo.getPhone()!=null&&!userDetailInfo.getPhone().isEmpty()){
+                key = GlobalConstants.phone;
+                value = userDetailInfo.getPhone();
+            }
+            else{
+                responseInfo.setRes_status("-1");
+                responseInfo.setMsg("User Info Change Failed : Empty Input Data");
+                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : Empty Input Data (nickname,pw,mail,phone)");
+                throw new FunctionException("Empty Input Data");
+            }
+
+            // 2. 유효성 체크
+            if(!CommonUtil.isFormat(key, value)){
+                responseInfo.setRes_status("-1");
+                responseInfo.setMsg("User Info Change Failed : Invalid Format");
+                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : Invalid Format Key("+key+") Value("+value+")");
+                throw new FunctionException("Invalid Format Key("+key+") Value("+value+")");
+            }
+
+            // 3. 중복 확인
+            isDuplication2(req_id, key, value, userDetailInfo.getUser_id(), responseInfo);
+
+            // 4. 변경
+            updateUserInfo(req_id, key, value, userDetailInfo.getUser_id(), responseInfo);
+
+            log.info("[Service-UserManage][changeUserInfo][{}] User Info Change Success...", req_id);
+        } catch (FunctionException e){
+            log.error("[Service-UserManage][changeUserInfo][{}] User Info Change Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-UserManage][changeUserInfo][{}] User Info Change : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][changeUserInfo]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("User Info Change Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+
+    public void isDuplication2(String req_id, String key, String value, String user_id, ResponseInfo resInfo) throws FunctionException {
+        try {
+            int result = -1;
+            switch (key){
+                case GlobalConstants.nickname:
+                    result = userManageMapper.checkProfileDuplication(key, value);
+                    break;
+                case GlobalConstants.mail, GlobalConstants.phone:
+                    result = userManageMapper.checkAuthDuplication(key, value);
+                    break;
+                case GlobalConstants.pw:
+                    result = userManageMapper.checkPwDuplication(key, value, user_id);
+                    break;
+                default:
+                    resInfo.setRes_status("-1");
+                    resInfo.setMsg("Duplication Check : Invalid Key");
+                    resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Invalid Key("+key+") : Value("+value+")");
+                    throw new FunctionException("Duplication Check Fail: Invalid Key("+key+") : Value("+value+")");
+            }
+
+            log.info("[Service-UserManage][changeUserInfo][isDuplication2][{}] Duplicate Check Success : Key({}), Value({}), Count({})",req_id,key,value,result);
+
+            if(result>0) {  // 중복
+                resInfo.setRes_status("-1");
+                resInfo.setMsg("User Info Change Failed : Duplicated Value");
+                resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Key("+key+") Value("+value+")");
+                if(GlobalConstants.pw.equals(key)){
+                    resInfo.setMsg("User Info Change Failed : Same PW As Prev PW");
+                    resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Same PW As Prev PW Key("+key+") Value("+value+")");
+                }
+                throw new FunctionException("Duplication Check : Duplicated Key("+key+") Value("+value+")");
+            } else if (result < 0) {    // 에러
+                throw new Exception("Result(" + result + ")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-UserManage][changeUserInfo][isDuplication2][{}] Duplication Check Select Fail : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][changeUserInfo][isDuplication2]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("User Info Change Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplication Check Select Fail : "+e.getMessage());
+            throw new FunctionException("Duplication Check Select Fail : "+e.getMessage());
+        }
+    }
+
+    public void updateUserInfo(String req_id, String key, String value, String user_id, ResponseInfo resInfo) throws FunctionException {
+        int result = -1;
+        try {
+            switch (key){
+                case GlobalConstants.nickname: // 정보 변경
+                    result = userManageMapper.updateProfile(key, value, user_id);
+                    break;
+                case GlobalConstants.pw, GlobalConstants.mail, GlobalConstants.phone: // 정보 변경 & 인증 상태 변경 (핸드폰, 메일)
+                    result = userManageMapper.updateAuth(key, value, user_id);
+                    break;
+                default:
+                    resInfo.setRes_status("-1");
+                    resInfo.setMsg("User Info Update : Invalid Key");
+                    resInfo.setRes_data("[Service-UserManage][changeUserInfo][updateUserInfo] Invalid Key("+key+") : Value("+value+")");
+                    throw new FunctionException("User Info Update Fail : Invalid Key("+key+") : Value("+value+")");
+            }
+
+            if(result==1) {
+                log.info("[Service-UserManage][changeUserInfo][updateUserInfo][{}] User Info Update Success : Key({}), Value({}), Count({})",req_id,key,value,result);
+                resInfo.setMsg("User Info Update : Success");
+            } else {
+                throw new Exception("Result(" + result + ")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-UserManage][changeUserInfo][updateUserInfo][{}] User Info Update Fail : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][changeUserInfo][updateUserInfo]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("User Info Update Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][changeUserInfo][updateUserInfo] User Info Update Fail : "+e.getMessage());
+            throw new FunctionException("UserInfo Update Failed : "+e.getMessage());
+        }
+
+    }
 }

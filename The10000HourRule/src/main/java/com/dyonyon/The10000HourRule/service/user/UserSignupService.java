@@ -50,7 +50,7 @@ public class UserSignupService {
                     CommonUtil.isNull(GlobalConstants.phone, userDetailInfo.getPhone())||CommonUtil.isNull(GlobalConstants.mail, userDetailInfo.getMail())){
                 log.info("[Service-UserSignup][signup][{}] Signup Fail : Required Data Is Missing", req_id);
                 responseInfo.setMsg("Signup Fail : Required Data Is Missing");
-                responseInfo.setRes_data("Required Data Is Missing");
+                responseInfo.setRes_data("[Service-UserSignup][signup] Required Data Is Missing");
                 responseInfo.setRes_status("-1");
             }
             // 2. 규칙 체크. 핸드폰/이메일은 인증해야해서 규칙을 무조건 지켜야함. (아이디, 닉네임, 이름, 핸드폰, 이메일, PW, 생일)
@@ -64,7 +64,7 @@ public class UserSignupService {
                         !CommonUtil.isFormat(GlobalConstants.pw,userDetailInfo.getPw())||!CommonUtil.isFormat(GlobalConstants.birth,userDetailInfo.getBirth())) {
                     log.info("[Service-UserSignup][signup][{}] Signup Fail : There Is Incorrect Format Data", req_id);
                     responseInfo.setMsg("Signup Fail : There Is Incorrect Format Data");
-                    responseInfo.setRes_data("Incorrect Format Data");
+                    responseInfo.setRes_data("[Service-UserSignup][signup] Incorrect Format Data");
                     responseInfo.setRes_status("-1");
                 }
                 // 3. 중복 체크 => 2중 체크! 원래 회원가입 페이지에서 사전 진행. (아이디, 핸드폰, 이메일, 닉네임)
@@ -78,7 +78,7 @@ public class UserSignupService {
                             isDuplication(req_id,GlobalConstants.nickname,userDetailInfo.getNickname(),responseInfo)){
                         log.info("[Service-UserSignup][signup][{}] Signup Fail : There Is Duplicate Data", req_id);
                         responseInfo.setMsg("Signup Fail : There Is Duplicate Data");
-                        responseInfo.setRes_data("Duplicate Data");
+                        responseInfo.setRes_data("[Service-UserSignup][signup] Duplicate Data");
                         responseInfo.setRes_status("-1");
                     }
                     // 4. 회원 정보 insert
@@ -99,7 +99,7 @@ public class UserSignupService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Signup Fail : Exception Occurred");
-            responseInfo.setRes_data("Signup Fail : "+e.getMessage());
+            responseInfo.setRes_data("[Service-UserSignup][signup] Signup Fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;

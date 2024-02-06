@@ -38,7 +38,7 @@ public class UserEventController {
     }
 
 
-    // 로그인
+    // 로그인 처리
     @PostMapping("/login")
     public ResponseInfo loginController(HttpServletRequest req, @RequestBody UserLoginInfo userLoginInfo) throws ParseException {
         ResponseInfo result;
@@ -50,7 +50,7 @@ public class UserEventController {
         return result;
     }
 
-    // 회원가입
+    // 회원가입 처리
     @PostMapping("/signup")
     public ResponseInfo signupController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
         ResponseInfo result;
@@ -62,7 +62,7 @@ public class UserEventController {
         return result;
     }
 
-    // 중복체크 (회원가입, 내 정보 수정)
+    // 유저 정보(아이디, 닉네임, 이메일, 핸드폰) 중복 확인 처리
     @GetMapping("/check")
     public ResponseInfo checkController(HttpServletRequest req) {
         ResponseInfo result;
@@ -82,6 +82,7 @@ public class UserEventController {
         return result;
     }
 
+    // Auth Key(핸드폰,이메일) 생성 및 전송 처리
     @PostMapping("/auth")
     public ResponseInfo authController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();
@@ -97,6 +98,7 @@ public class UserEventController {
         return result;
     }
 
+    // Auth Key 검증 처리
     @GetMapping("/auth/check")
     public ResponseInfo authCheckController(HttpServletRequest req, @ModelAttribute UserAuthInfo userAuthInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();
@@ -109,6 +111,22 @@ public class UserEventController {
         log.info("[Controller-UserEvent][/auth/check][{}] Call UserManageService....",req.getAttribute("req_id"));
         result = userManageService.verifyAuthKey(req, userAuthInfo);
         log.info("[Controller-UserEvent][/auth/check][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        return result;
+    }
+
+    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 처리
+    @PatchMapping("/change")
+    public ResponseInfo changeController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        log.info("[Controller-UserEvent][/change][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+        log.info("[Controller-UserEvent][/change][{}] BODY : {}",req.getAttribute("req_id"), userDetailInfo);
+        log.info("[Controller-UserEvent][/change][{}] Call API ApiVerificationService....",req.getAttribute("req_id"));
+        result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
+        if("-1".equals(result.getRes_status()))
+            return result;
+        log.info("[Controller-UserEvent][/change][{}] Call UserManageService....",req.getAttribute("req_id"));
+        result = userManageService.changeUserInfo(req, userDetailInfo);
+        log.info("[Controller-UserEvent][/change][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         return result;
     }
 

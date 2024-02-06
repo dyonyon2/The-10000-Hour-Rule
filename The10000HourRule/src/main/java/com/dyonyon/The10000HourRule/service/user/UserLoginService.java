@@ -42,7 +42,7 @@ public class UserLoginService {
             if(attempt >= GlobalConstants.LoginAttemptCount) {
                 log.info("[Service-UserLogin][login][{}] Log Attempts Exceeded : Attempt {} Is Over Than {}",req_id,attempt,GlobalConstants.LoginAttemptCount);
                 responseInfo.setMsg("Login Fail : Log Attempts Exceeded");
-                responseInfo.setRes_data("Log Attempts Exceeded");
+                responseInfo.setRes_data("[Service-UserLogin][login] Log Attempts Exceeded");
                 responseInfo.setRes_status("-1");
                 updateLogStatus(req_id, ResultCode.USER_LOGIN_ATTEMPT_OVER_ERROR, responseInfo, true);
             }
@@ -79,7 +79,7 @@ public class UserLoginService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("Login Fail : Exception Occurred");
-            responseInfo.setRes_data("Login Fail : "+e.getMessage());
+            responseInfo.setRes_data("[Service-UserLogin][login] Login Fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -162,7 +162,7 @@ public class UserLoginService {
                 log.info("[Service-UserLogin][login][getLoginResult][{}] Login Fail (Invalid ID/PW) ID({}) PW({})", req_id, info.getUser_id(), info.getPw());
                 resInfo.setMsg("Login Fail : Invalid ID/PW");
                 resInfo.setRes_status("-1");
-                resInfo.setRes_data("Invalid ID/PW : ID("+info.getUser_id()+") PW("+info.getPw()+")");
+                resInfo.setRes_data("[Service-UserLogin][login][getLoginResult] Invalid ID/PW : ID("+info.getUser_id()+") PW("+info.getPw()+")");
             }
         } catch (Exception e) {
             log.error("[Service-UserLogin][login][getLoginResult][{}] Login Fail (SQL Fail) ID({}) PW({}) : {}", req_id, info.getUser_id(), info.getPw(), e.getMessage());

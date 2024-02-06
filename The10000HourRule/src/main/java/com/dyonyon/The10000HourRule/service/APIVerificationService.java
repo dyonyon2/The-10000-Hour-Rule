@@ -58,6 +58,7 @@ public class APIVerificationService {
                         log.info("[Service-APICheck][checkLoginSession][{}] Login({}) Session Is Invalid : Session Is Expired", req_id, user_id);
                         responseInfo.setRes_status("-1");
                         responseInfo.setMsg("API Call Fail : Session Is Expired");
+                        responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Session Is Expired");
                     }
                 }
                 // 2-2. 세션이 다를 때
@@ -65,6 +66,7 @@ public class APIVerificationService {
                     log.info("[Service-APICheck][checkLoginSession][{}] Login({}) Session Is Invalid : Sessions Are Different", req_id, user_id);
                     responseInfo.setRes_status("-1");
                     responseInfo.setMsg("API Call Fail : Sessions Are Different");
+                    responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Sessions Are Different");
                 }
             }
             // 1-2. 아이디 세션 결과 없을 때 -> 로그인 필요
@@ -72,7 +74,7 @@ public class APIVerificationService {
                 log.info("[Service-APICheck][checkLoginSession][{}] Login({}) Session Is Invalid : Session Is Not Exist", req_id, user_id);
                 responseInfo.setRes_status("-1");
                 responseInfo.setMsg("API Call Fail : Session Is Not Exist");
-                responseInfo.setRes_data("Login Session Is Invalid : Session Is Not Exist");
+                responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Session Is Not Exist");
             }
         } catch (FunctionException e){
             log.error("[Service-UserLogin][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
@@ -82,7 +84,7 @@ public class APIVerificationService {
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
             responseInfo.setMsg("API Validation Fail : Exception Occurred");
-            responseInfo.setRes_data("[Service-APICheck][checkLoginSession][updateLoginSession] API Validation Fail : "+e.getMessage());
+            responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Session Check Fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
