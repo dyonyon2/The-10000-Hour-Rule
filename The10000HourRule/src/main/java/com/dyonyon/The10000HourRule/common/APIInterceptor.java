@@ -14,6 +14,7 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
@@ -73,22 +74,35 @@ public class APIInterceptor implements HandlerInterceptor {
             int result = isAPICall(url);
             int insertRes = -1;
 
+            String contentType = req.getContentType();
+
             // 정의된 Call만 처리
             if (result > 0) {
                 // Filter에서 attribute 세팅한 req_id를 get
                 reqId = String.valueOf(req.getAttribute("req_id"));
 
                 //POST, GET에 따라 USER_ID와 REQ_DATA 저장
-                ServletInputStream inputStream = req.getInputStream();
-                if ("GET".equals(method)) { // GET일 때는 쿼리스트링에서 데이터 GET
+                // GET일 때는 쿼리스트링에서 데이터 GET
+                if ("GET".equals(method)) {
                     reqData = req.getQueryString();
                     userId = req.getParameter("user_id");
-                } else {    // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
+                }
+                // Form-data인 경우는 File과 Body 따로 데이터 GET
+                else if(contentType!=null && contentType.contains("form-data")) {
+                    ServletInputStream inputStream = req.getInputStream();
+                    reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+                    log.info("req getParameterName reqData : " + reqData);
+                    return true;
+                }
+                // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
+                else {
+                    ServletInputStream inputStream = req.getInputStream();
                     reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
                 }
+                //86645
                 if(reqData!=null)
                     reqData=reqData.replace("\"","");
 
@@ -174,84 +188,90 @@ public class APIInterceptor implements HandlerInterceptor {
             }
             return true;
         } catch (Exception e){
-            log.error(e.getMessage());
+            log.error("[Interceptor-PreHandle][ERROR] "+e.getMessage());
+            log.error("[Interceptor-PreHandle][ERROR] Error PrintStack : ",e);
         }
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception ex) throws Exception {
+        try {
+            // 변수 세팅
+            String url = String.valueOf(req.getRequestURL());
+            String sessionId = req.getSession().getId();
+            String reqId = String.valueOf(req.getAttribute("req_id"));
+            String userId = String.valueOf(req.getAttribute("user_id"));
+            String userIdx = String.valueOf(req.getAttribute("user_idx"));
+            APICallLogInfo apiCallLogInfo = new APICallLogInfo();
+            int result = isAPICall(url);
+            int updateRes = -1;
 
-        // 변수 세팅
-        String url = String.valueOf(req.getRequestURL());
-        String sessionId = req.getSession().getId();
-        String reqId = String.valueOf(req.getAttribute("req_id"));
-        String userId = String.valueOf(req.getAttribute("user_id"));
-        String userIdx = String.valueOf(req.getAttribute("user_idx"));
-        APICallLogInfo apiCallLogInfo = new APICallLogInfo();
-        int result = isAPICall(url);
-        int updateRes = -1;
+            // 정의된 Call만 처리
+            if (result > 0) {
+                // 데이터 세팅
+                ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
+                ResponseInfo responseInfo = objectMapper.readValue(responseWrapper.getContentAsByteArray(), ResponseInfo.class);
+                String responseBody = responseInfo.getRes_data() == null ? "" : responseInfo.getRes_data().toString();
+                String responseMsg = responseInfo.getMsg() == null ? "" : responseInfo.getMsg();
+                String responseStatus = responseInfo.getStatus();
+                String res_status = responseInfo.getRes_status();
+                String err_code = responseInfo.getErr_code();
 
-        // 정의된 Call만 처리
-        if(result>0){
-            // 데이터 세팅
-            ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
-            ResponseInfo responseInfo = objectMapper.readValue(responseWrapper.getContentAsByteArray(),ResponseInfo.class);
-            String responseBody = responseInfo.getRes_data()==null?"":responseInfo.getRes_data().toString();
-            String responseMsg = responseInfo.getMsg()==null?"":responseInfo.getMsg();
-            String responseStatus = responseInfo.getStatus();
-            String res_status = responseInfo.getRes_status();
-            String err_code = responseInfo.getErr_code();
+                // RESPONSE 정보 출력
+                //            log.info("[Interceptor-AfterCompletion][Response][{}] REQ_ID : {}", reqId);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] URL : {}", reqId, url);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] SESSION : {}", reqId, sessionId);
+                ;
+                log.trace("[Interceptor-AfterCompletion][Response][{}] STATUS : HTTP({}), STATUS({}), RES_STATUS({})", reqId, responseWrapper.getStatus(), responseStatus, res_status);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] MSG : {}", reqId, responseMsg);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] BODY : {}", reqId, responseBody);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] USER_ID : {}", reqId, userId);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
+                log.trace("[Interceptor-AfterCompletion][Response][{}] ERR_CODE : {}", reqId, err_code);
 
-            // RESPONSE 정보 출력
-//            log.info("[Interceptor-AfterCompletion][Response][{}] REQ_ID : {}", reqId);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] URL : {}", reqId, url);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] SESSION : {}", reqId, sessionId);;
-            log.trace("[Interceptor-AfterCompletion][Response][{}] STATUS : HTTP({}), STATUS({}), RES_STATUS({})", reqId, responseWrapper.getStatus(), responseStatus,res_status);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] MSG : {}", reqId, responseMsg);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] BODY : {}", reqId, responseBody);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] USER_ID : {}", reqId, userId);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] USER_IDX : {}", reqId, userIdx);
-            log.trace("[Interceptor-AfterCompletion][Response][{}] ERR_CODE : {}", reqId, err_code);
+                apiCallLogInfo.setReq_id(reqId);
+                apiCallLogInfo.setRes_data(responseBody.replace("'", ""));
+                apiCallLogInfo.setStatus(responseStatus);
+                apiCallLogInfo.setMsg(responseMsg);
+                apiCallLogInfo.setRes_status(res_status);
+                apiCallLogInfo.setErr_code(err_code);
 
-            apiCallLogInfo.setReq_id(reqId);
-            apiCallLogInfo.setRes_data(responseBody.replace("'",""));
-            apiCallLogInfo.setStatus(responseStatus);
-            apiCallLogInfo.setMsg(responseMsg);
-            apiCallLogInfo.setRes_status(res_status);
-            apiCallLogInfo.setErr_code(err_code);
+                // LOG INSERT
+                log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE : {}", reqId, apiCallLogInfo.toString());
+                log.trace("[Interceptor-AfterCompletion][Response][{}] SWITCH : {}", reqId, result);
+                switch (result) {
+                    case 1: // /api/user
+                        updateRes = logMapper.updateResDataUserLog(apiCallLogInfo);
+                        break;
+                    case 2: // /api/memo
+                        updateRes = logMapper.updateResDataMemoLog(apiCallLogInfo);
+                        break;
+                    case 3: // /api/calender
+                        updateRes = logMapper.updateResDataCalenderLog(apiCallLogInfo);
+                        break;
+                    case 4: // /api/routine
+                        updateRes = logMapper.updateResDataRoutineLog(apiCallLogInfo);
+                        break;
+                    case 5: // /api/group
+                        updateRes = logMapper.updateResDataGroupLog(apiCallLogInfo);
+                        break;
+                    case 6: // /api/etc
+                        updateRes = logMapper.updateResDataEtcLog(apiCallLogInfo);
+                        break;
+                    default:
+                        break;
+                }
 
-            // LOG INSERT
-            log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE : {}", reqId, apiCallLogInfo.toString());
-            log.trace("[Interceptor-AfterCompletion][Response][{}] SWITCH : {}", reqId, result);
-            switch (result) {
-                case 1: // /api/user
-                    updateRes = logMapper.updateResDataUserLog(apiCallLogInfo);
-                    break;
-                case 2: // /api/memo
-                    updateRes = logMapper.updateResDataMemoLog(apiCallLogInfo);
-                    break;
-                case 3: // /api/calender
-                    updateRes = logMapper.updateResDataCalenderLog(apiCallLogInfo);
-                    break;
-                case 4: // /api/routine
-                    updateRes = logMapper.updateResDataRoutineLog(apiCallLogInfo);
-                    break;
-                case 5: // /api/group
-                    updateRes = logMapper.updateResDataGroupLog(apiCallLogInfo);
-                    break;
-                case 6: // /api/etc
-                    updateRes = logMapper.updateResDataEtcLog(apiCallLogInfo);
-                    break;
-                default:
-                    break;
+                if (updateRes > 0) {
+                    log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE SUCCESSED : {}", reqId, updateRes);
+                } else {
+                    log.error("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE FAILED : {}", reqId, updateRes);
+                }
             }
-
-            if (updateRes > 0) {
-                log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE SUCCESSED : {}", reqId, updateRes);
-            } else {
-                log.error("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE FAILED : {}", reqId, updateRes);
-            }
+        } catch (Exception e){
+            log.error("[Interceptor-AfterCompletion][ERROR] "+e.getMessage());
+            log.error("[Interceptor-AfterCompletion][ERROR] Error PrintStack : ",e);
         }
     }
 }

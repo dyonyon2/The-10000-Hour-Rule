@@ -79,8 +79,7 @@ public class APIFilter implements Filter {
                 chain.doFilter(request, response);
             }
             log.info("[Filter][ERROR] ERROR : {}", e.getMessage());
-
-
+            log.error("[Filter][ERROR] Error PrintStack : ",e);
         }
     }
 
