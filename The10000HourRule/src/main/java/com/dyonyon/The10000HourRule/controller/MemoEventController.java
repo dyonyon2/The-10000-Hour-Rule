@@ -11,6 +11,7 @@ import com.dyonyon.The10000HourRule.service.user.MemoCRUDService;
 import com.dyonyon.The10000HourRule.service.user.UserLoginService;
 import com.dyonyon.The10000HourRule.service.user.UserManageService;
 import com.dyonyon.The10000HourRule.service.user.UserSignupService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +51,14 @@ public class MemoEventController {
 
     // 메모 이미지 저장
     @PostMapping("/image")
-    public ResponseInfo memoImageController(HttpServletRequest req, @ModelAttribute MemoImageInfo memoImageInfo) throws ParseException {
+    public ResponseInfo memoImageController(HttpServletRequest req, MultipartFile file, String json) throws ParseException, JsonProcessingException {
         ResponseInfo result;
         log.info("[Controller-MemoEvent][/image][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        log.info("[Controller-MemoEvent][/image][{}] BODY : {}",req.getAttribute("req_id"), memoImageInfo);
+        log.info("[Controller-MemoEvent][/image][{}] BODY : file({}) json({})",req.getAttribute("req_id"), file!=null, json);
         log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
-
-        result = memoCRUDService.saveImageFile(req, memoImageInfo);
+        MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class);
+        data.setFile(file);
+        result = memoCRUDService.saveImageFile(req, data);
         log.info("[Controller-MemoEvent][/image][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         return result;
     }

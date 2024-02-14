@@ -41,7 +41,7 @@ public class MemoCRUDService {
 
         // 1. 중복 확인
         try{
-            log.info("[Service-MemoCRUD][saveImageFile][{}] Save Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
+//            log.info("[Service-MemoCRUD][saveImageFile][{}] Save Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
 
 //            isDuplication(req_id, key, value, responseInfo);
 

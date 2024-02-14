@@ -89,9 +89,11 @@ public class APIInterceptor implements HandlerInterceptor {
                 }
                 // Form-data인 경우는 File과 Body 따로 데이터 GET
                 else if(contentType!=null && contentType.contains("form-data")) {
-                    ServletInputStream inputStream = req.getInputStream();
-                    reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                     log.info("req getParameterName reqData : " + reqData);
+                    log.info("req getParameterName contentType : " + contentType);
+//                    ServletInputStream inputStream = req.getInputStream();
+//                    reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+//                    log.info("req getParameterName reqData : " + reqData);
                     return true;
                 }
                 // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
@@ -102,7 +104,7 @@ public class APIInterceptor implements HandlerInterceptor {
                     tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
                 }
-                //86645
+
                 if(reqData!=null)
                     reqData=reqData.replace("\"","");
 

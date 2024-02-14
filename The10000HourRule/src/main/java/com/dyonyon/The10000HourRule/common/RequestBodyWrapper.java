@@ -23,6 +23,7 @@ public class RequestBodyWrapper  extends HttpServletRequestWrapper {
 
     public RequestBodyWrapper(HttpServletRequest request) throws IOException {
         super(request);
+        request.getParameterMap();
         requestData = makeRequestData(request);
     }
 
