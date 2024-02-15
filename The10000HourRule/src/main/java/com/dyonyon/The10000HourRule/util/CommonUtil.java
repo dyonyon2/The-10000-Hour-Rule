@@ -3,7 +3,10 @@ package com.dyonyon.The10000HourRule.util;
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 @Slf4j
@@ -121,5 +124,17 @@ public class CommonUtil {
         int randomNumber = random.nextInt(1000000);
         // 결과를 6자리로 만들기 위해 문자열로 변환하고, 앞에 0을 채웁니다.
         return String.format("%06d", randomNumber);
+    }
+
+    public static String getReqId(){
+        SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Random random = new Random();
+        int randomNumber = random.nextInt(1000);
+        return now.format(new Date())+String.format("%03d", randomNumber);
+    }
+
+    public static String getImgPath(String basePath){
+        SimpleDateFormat now = new SimpleDateFormat("yyyyMMdd");
+        return basePath+ File.separator +now.format(new Date());
     }
 }

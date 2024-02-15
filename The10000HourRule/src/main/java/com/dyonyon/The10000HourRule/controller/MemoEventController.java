@@ -28,11 +28,13 @@ import java.util.Enumeration;
 public class MemoEventController {
 
     private MemoCRUDService memoCRUDService;
+    private APIVerificationService apiVerificationService;
     private TestService testService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public MemoEventController(MemoCRUDService memoCRUDService, TestService testService) {
+    public MemoEventController(MemoCRUDService memoCRUDService, APIVerificationService apiVerificationService, TestService testService) {
         this.memoCRUDService = memoCRUDService;
+        this.apiVerificationService = apiVerificationService;
         this.testService = testService;
     }
 
@@ -52,14 +54,31 @@ public class MemoEventController {
     // 메모 이미지 저장
     @PostMapping("/image")
     public ResponseInfo memoImageController(HttpServletRequest req, MultipartFile file, String json) throws ParseException, JsonProcessingException {
-        ResponseInfo result;
-        log.info("[Controller-MemoEvent][/image][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        log.info("[Controller-MemoEvent][/image][{}] BODY : file({}) json({})",req.getAttribute("req_id"), file!=null, json);
-        log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
-        MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class);
-        data.setFile(file);
-        result = memoCRUDService.saveImageFile(req, data);
-        log.info("[Controller-MemoEvent][/image][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-MemoEvent][/image][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
+            MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class);
+            data.setFile(file);
+            log.info("[Controller-MemoEvent][/image][{}] BODY : ({})", req.getAttribute("req_id"), data);
+            log.info("[Controller-MemoEvent][/image][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status()))
+                return result;
+            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status()))
+                return result;
+            log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....", req.getAttribute("req_id"));
+            result = memoCRUDService.saveImageFile(req, data);
+            log.info("[Controller-MemoEvent][/image][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-MemoEvent][/image][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/image]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Image Create Failed: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/image] Image Controller Failed : "+e.getMessage());
+            result.setErr_code("UN");
+        }
         return result;
     }
 

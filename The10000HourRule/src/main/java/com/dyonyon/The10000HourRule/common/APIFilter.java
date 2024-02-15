@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.common;
 
+import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,8 +57,7 @@ public class APIFilter implements Filter {
             int result = isAPICall(url);
             if(result>0){
                 RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest) request);
-                SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                String id = now.format(new Date());
+                String id = CommonUtil.getReqId();
                 reqWrapper.setAttribute("req_id",id);
 //                log.info("[Filter][Request][{}] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
                 log.info("[Filter][Request][{}] URL : {}", id, reqWrapper.getRequestURL());

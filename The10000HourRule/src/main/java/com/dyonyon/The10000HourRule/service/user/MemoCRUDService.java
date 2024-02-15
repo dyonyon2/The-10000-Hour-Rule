@@ -41,7 +41,13 @@ public class MemoCRUDService {
 
         // 1. 중복 확인
         try{
-//            log.info("[Service-MemoCRUD][saveImageFile][{}] Save Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
+            log.info("[Service-MemoCRUD][saveImageFile][{}] Save Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
+
+            memoImageInfo.setFile_name(req_id);
+            memoImageInfo.setPath(CommonUtil.getImgPath(imgPath)); // basePath/(user or group)/ID/file
+            log.info("[Service-MemoCRUD][saveImageFile][{}] File Name({}) Path({})", req_id, memoImageInfo.getFile_name(),memoImageInfo.getPath());
+            log.info("[Service-MemoCRUD][saveImageFile][{}] File Name({}) Path({})", req_id, memoImageInfo.getFile_name(),memoImageInfo.getPath());
+
 
 //            isDuplication(req_id, key, value, responseInfo);
 

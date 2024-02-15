@@ -77,7 +77,7 @@ public class APIVerificationService {
                 responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Session Is Not Exist");
             }
         } catch (FunctionException e){
-            log.error("[Service-UserLogin][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
             log.error("[Service-APICheck][checkLoginSession][{}] Login({}) Session Check Fail : ERROR OCCURRED {}",req_id,user_id,e.getMessage());
             log.error("[Service-APICheck][checkLoginSession]["+req_id+"] Error PrintStack : ",e);
@@ -146,5 +146,28 @@ public class APIVerificationService {
     // 서약 동의 여부
 
     // 핸드폰/이메일 인증 여부
+
+    // 권한 검증
+    public ResponseInfo verifyAuthority(String req_id, String user_id, String session_id){
+
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+
+        try {
+            log.info("[Service-APICheck][verifyAuthority][{}] Login({}) Session Check Started...", req_id, user_id);
+
+//        } catch (FunctionException e){
+//            log.error("[Service-APICheck][login][{}] Login Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-APICheck][checkLoginSession][{}] Login({}) Session Check Fail : ERROR OCCURRED {}",req_id,user_id,e.getMessage());
+            log.error("[Service-APICheck][checkLoginSession]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("API Validation Fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-APICheck][checkLoginSession] Session Check Fail : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
 
 }
