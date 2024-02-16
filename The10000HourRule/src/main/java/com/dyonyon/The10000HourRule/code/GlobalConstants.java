@@ -13,4 +13,13 @@ public class GlobalConstants {
     final public static String sex = "sex";
     final public static String birth = "birth";
     final public static String region = "region";
+
+    final public static String service_memo = "MEMO";
+    final public static String service_calender = "CALENDER";
+    final public static String service_routine = "ROUTINE";
+
+    final public static String content_type_user = "U";
+    final public static String content_type_group = "G";
+
+
 }

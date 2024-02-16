@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.controller;
 
+import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
@@ -64,7 +65,7 @@ public class MemoEventController {
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
             if ("-1".equals(result.getRes_status()))
                 return result;
-            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
+            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), GlobalConstants.service_memo, data);
             if ("-1".equals(result.getRes_status()))
                 return result;
             log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....", req.getAttribute("req_id"));

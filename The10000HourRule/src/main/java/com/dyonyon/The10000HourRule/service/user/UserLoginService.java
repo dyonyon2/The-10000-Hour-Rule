@@ -42,7 +42,7 @@ public class UserLoginService {
             if(attempt >= GlobalConstants.LoginAttemptCount) {
                 log.info("[Service-UserLogin][login][{}] Log Attempts Exceeded : Attempt {} Is Over Than {}",req_id,attempt,GlobalConstants.LoginAttemptCount);
                 responseInfo.setMsg("Login Fail : Log Attempts Exceeded");
-                responseInfo.setRes_data("[Service-UserLogin][login] Log Attempts Exceeded");
+                responseInfo.setRes_data("[Service-UserLogin][login] Log Attempts Exceeded  : Attempt "+attempt+" Is Over Than "+GlobalConstants.LoginAttemptCount);
                 responseInfo.setRes_status("-1");
                 updateLogStatus(req_id, ResultCode.USER_LOGIN_ATTEMPT_OVER_ERROR, responseInfo, true);
             }
