@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.domain.user;
+package com.dyonyon.The10000HourRule.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,11 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemoImageInfo {
-    MultipartFile file;
+public class ContentInfo {
+    String service;
     String user_id;
     String owner_id;
-    String memo_type;
-    String path;
-    String file_name;
+    String content_type;
+    String group_idx;
+    String group_name;
+    String content_idx;
 }

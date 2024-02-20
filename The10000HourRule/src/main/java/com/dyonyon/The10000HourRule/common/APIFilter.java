@@ -59,7 +59,6 @@ public class APIFilter implements Filter {
                 RequestBodyWrapper reqWrapper = new RequestBodyWrapper((HttpServletRequest) request);
                 String id = CommonUtil.getReqId();
                 reqWrapper.setAttribute("req_id",id);
-//                log.info("[Filter][Request][{}] REQ_ID : {}", reqWrapper.getAttribute("req_id"));
                 log.info("[Filter][Request][{}] URL : {}", id, reqWrapper.getRequestURL());
                 log.info("[Filter][Request][{}] BODY : {}", id, reqWrapper.getRequestData());
                 ContentCachingResponseWrapper resCaching = new ContentCachingResponseWrapper((HttpServletResponse) response);

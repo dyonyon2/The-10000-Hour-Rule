@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.common;
 
+import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.domain.APICallLogInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.mapper.LogMapper;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
@@ -89,12 +91,14 @@ public class APIInterceptor implements HandlerInterceptor {
                 }
                 // Form-data인 경우는 File과 Body 따로 데이터 GET
                 else if(contentType!=null && contentType.contains("form-data")) {
-                    log.info("req getParameterName reqData : " + reqData);
                     log.info("req getParameterName contentType : " + contentType);
-//                    ServletInputStream inputStream = req.getInputStream();
-//                    reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-//                    log.info("req getParameterName reqData : " + reqData);
-                    return true;
+                    for(Part part : req.getParts()){
+                        if(part.getName()!=null && part.getName().equals(GlobalConstants.file)){
+                            reqData = "File("+part.getSubmittedFileName()+")";
+                        }
+                    }
+                    reqData = reqData + ", Json("+req.getParameter(GlobalConstants.json)+")";
+                    log.info("reqData = {}",reqData);
                 }
                 // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
                 else {
@@ -142,6 +146,8 @@ public class APIInterceptor implements HandlerInterceptor {
                     case 2: // /api/memo
                         if ("GET".equals(method))
                             apiCallLogInfo.setMemo_idx(req.getParameter("memo_idx"));
+                        else if(contentType!=null && contentType.contains("form-data"))
+                            apiCallLogInfo.setMemo_idx(null);
                         else
                             apiCallLogInfo.setMemo_idx(tmp.getMemo_idx());
                         insertRes = logMapper.insertMemoLog(apiCallLogInfo);

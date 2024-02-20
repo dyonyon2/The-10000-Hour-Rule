@@ -3,21 +3,15 @@ package com.dyonyon.The10000HourRule.service.user;
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.domain.user.MemoImageInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.mapper.user.UserManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Service
 @Slf4j
@@ -39,26 +33,44 @@ public class MemoCRUDService {
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
 
-        // 1. 중복 확인
         try{
-            log.info("[Service-MemoCRUD][saveImageFile][{}] Save Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
+            if(memoImageInfo.getFile()!=null) {
+                log.info("[Service-MemoCRUD][saveImageFile][{}] Save File Started... : {}", req_id, memoImageInfo.getFile().getOriginalFilename());
 
-            memoImageInfo.setFile_name(req_id);
-            memoImageInfo.setPath(CommonUtil.getImgPath(imgPath)); // basePath/(user or group)/ID/file
-            log.info("[Service-MemoCRUD][saveImageFile][{}] File Name({}) Path({})", req_id, memoImageInfo.getFile_name(),memoImageInfo.getPath());
+                String orgFileName = memoImageInfo.getFile().getOriginalFilename();
+                String fileExtension = ".txt";
+                int lastIndex = orgFileName.lastIndexOf('.');
+                if (lastIndex >= 0) {
+                    fileExtension = "."+orgFileName.substring(lastIndex);
+                }
+                memoImageInfo.setFile_name(req_id);
+                memoImageInfo.setPath(CommonUtil.getImgPath(imgPath)); // setPath = basePath/YYYYMMDD/HH
+                File folder = new File(memoImageInfo.getPath());
+                if(!folder.exists())
+                    folder.mkdirs();
+                log.info("[Service-MemoCRUD][saveImageFile][{}] File Name({}) Path({})", req_id, memoImageInfo.getFile_name(), memoImageInfo.getPath());
 
+                File dest = new File(memoImageInfo.getPath() + File.separator + memoImageInfo.getFile_name() + fileExtension);
+                memoImageInfo.getFile().transferTo(dest);
 
-//            isDuplication(req_id, key, value, responseInfo);
-
-//        } catch (FunctionException e){
-//            log.error("[Service-MemoCRUD][saveImageFile][{}] Check Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+                responseInfo.setMsg("Save File Success : File Name("+memoImageInfo.getFile_name()+")");
+                responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] Save File Success : File Name("+memoImageInfo.getFile_name()+") Path("+memoImageInfo.getPath()+")");
+                log.info("[Service-MemoCRUD][saveImageFile][{}] Save File Success...", req_id);
+            } else {
+                log.info("[Service-MemoCRUD][saveImageFile][{}] Save File Started... : {}", req_id, memoImageInfo.getFile());
+                log.info("[Service-MemoCRUD][saveImageFile][{}] Save File Failed : File Is Null",req_id);
+                responseInfo.setRes_status("-1");
+                responseInfo.setMsg("Save File Failed : File Is Null");
+                responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] Save File Failed : File Is Null");
+                responseInfo.setErr_code("UN");
+            }
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][saveImageFile][{}] Check Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][saveImageFile][{}]  Save File Failed : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][saveImageFile]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Duplication Check Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] Duplication Check Failed : "+e.getMessage());
+            responseInfo.setMsg("Save File Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] Save File Failed : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;

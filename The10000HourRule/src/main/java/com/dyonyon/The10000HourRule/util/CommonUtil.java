@@ -134,7 +134,7 @@ public class CommonUtil {
     }
 
     public static String getImgPath(String basePath){
-        SimpleDateFormat now = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat now = new SimpleDateFormat("yyyyMMdd/HH");
         return basePath+ File.separator +now.format(new Date());
     }
 }

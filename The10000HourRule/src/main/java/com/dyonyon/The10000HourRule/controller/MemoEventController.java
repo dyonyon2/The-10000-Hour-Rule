@@ -1,17 +1,13 @@
 package com.dyonyon.The10000HourRule.controller;
 
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
+import com.dyonyon.The10000HourRule.domain.ContentInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.domain.user.MemoImageInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
 import com.dyonyon.The10000HourRule.service.APIVerificationService;
 import com.dyonyon.The10000HourRule.service.TestService;
 import com.dyonyon.The10000HourRule.service.user.MemoCRUDService;
-import com.dyonyon.The10000HourRule.service.user.UserLoginService;
-import com.dyonyon.The10000HourRule.service.user.UserManageService;
-import com.dyonyon.The10000HourRule.service.user.UserSignupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 @RestController
 @Slf4j
@@ -58,16 +53,19 @@ public class MemoEventController {
         ResponseInfo result = new ResponseInfo();
         try {
             log.info("[Controller-MemoEvent][/image][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
-            MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class);
-            data.setFile(file);
+            MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class); data.setFile(file);
             log.info("[Controller-MemoEvent][/image][{}] BODY : ({})", req.getAttribute("req_id"), data);
             log.info("[Controller-MemoEvent][/image][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            // 로그인 세션 확인
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
             if ("-1".equals(result.getRes_status()))
                 return result;
-            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), GlobalConstants.service_memo, data);
-            if ("-1".equals(result.getRes_status()))
-                return result;
+            // 권한 확인
+//            ContentInfo verifyInfo = new ContentInfo(GlobalConstants.service_memo, data.getUser_id(),data.getOwner_id(),data.getMemo_type(),data.getGroup_idx(),data.getGroup_name(),null);
+//            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
+//            if ("-1".equals(result.getRes_status()))
+//                return result;
+            // 이미지 저장
             log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....", req.getAttribute("req_id"));
             result = memoCRUDService.saveImageFile(req, data);
             log.info("[Controller-MemoEvent][/image][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());

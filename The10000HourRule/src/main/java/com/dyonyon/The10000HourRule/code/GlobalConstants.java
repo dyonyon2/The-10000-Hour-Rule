@@ -21,5 +21,8 @@ public class GlobalConstants {
     final public static String content_type_user = "U";
     final public static String content_type_group = "G";
 
+    final public static String file = "file";
+    final public static String json = "json";
+
 
 }
