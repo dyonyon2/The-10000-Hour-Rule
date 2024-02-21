@@ -72,6 +72,7 @@ public class APIInterceptor implements HandlerInterceptor {
             String reqId; String userId = null; String userIdx = null; String reqData = null;
             APICallLogInfo apiCallLogInfo = new APICallLogInfo();
             APICallLogInfo tmp = null;
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             int result = isAPICall(url);
             int insertRes = -1;
@@ -91,20 +92,22 @@ public class APIInterceptor implements HandlerInterceptor {
                 }
                 // Form-data인 경우는 File과 Body 따로 데이터 GET
                 else if(contentType!=null && contentType.contains("form-data")) {
-                    log.info("req getParameterName contentType : " + contentType);
+//                    log.info("req getParameterName contentType : " + contentType);
                     for(Part part : req.getParts()){
                         if(part.getName()!=null && part.getName().equals(GlobalConstants.file)){
                             reqData = "File("+part.getSubmittedFileName()+")";
                         }
                     }
                     reqData = reqData + ", Json("+req.getParameter(GlobalConstants.json)+")";
-                    log.info("reqData = {}",reqData);
+                    tmp = objectMapper.readValue(req.getParameter(GlobalConstants.json), APICallLogInfo.class);
+                    userId = tmp.getUser_id();
+//                    log.info("tmp = {}",tmp);
+//                    log.info("reqData = {}",reqData);
                 }
                 // POST, PATCH, PUT, DELETE일 때는 BODY에서 데이터 GET
                 else {
                     ServletInputStream inputStream = req.getInputStream();
                     reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
                 }
