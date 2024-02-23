@@ -4,13 +4,20 @@ import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoCRUDMapper;
 import com.dyonyon.The10000HourRule.mapper.user.UserManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.File;
 
@@ -18,6 +25,8 @@ import java.io.File;
 @Slf4j
 public class MemoCRUDService {
 
+    @Autowired
+    private PlatformTransactionManager transactionManager;
     private UserManageMapper userManageMapper;
     private MemoCRUDMapper memoCRUDMapper;
 
@@ -27,6 +36,72 @@ public class MemoCRUDService {
     public MemoCRUDService(UserManageMapper userManageMapper, MemoCRUDMapper memoCRUDMapper){
         this.userManageMapper = userManageMapper;
         this.memoCRUDMapper = memoCRUDMapper;
+    }
+
+    public ResponseInfo createMemo(HttpServletRequest req, MemoInfo memoInfo) {
+
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+
+        try{
+            log.info("[Service-MemoCRUD][createMemo][{}] Create Memo Started...", req_id);
+
+            // owner_idx 세팅
+            setOwnerIdx(req_id, memoInfo, responseInfo);
+
+            // 메모 생성
+            createMemoAndGetMemoIdx(req_id, memoInfo, responseInfo);
+
+            log.info("[Service-MemoCRUD][createMemo][{}] Create Memo Success...: Memo({})", req_id, memoInfo.getMemo_idx());
+        } catch (FunctionException e){
+            log.error("[Service-MemoCRUD][createMemo][{}] Create Memo Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-MemoCRUD][createMemo][{}]  Create Memo Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][createMemo]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("Create Memo Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][createMemo] Create Memo Failed : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+
+    public void createMemoAndGetMemoIdx(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+        try {
+            int memoIdx = -1; int result = -1; int result2 = -1;
+            memoIdx = memoCRUDMapper.getMemoIdx();
+            if(memoIdx > 0){
+                info.setMemo_idx(Integer.toString(memoIdx));
+                result = memoCRUDMapper.insertMemo(info);
+                if(result==1){
+                    result2 = memoCRUDMapper.insertMemoDetail(info);
+                    if(result2==1){
+                        log.info("[Service-UserManage][createMemo][createMemoAndGetMemoIdx][{}] Memo Create Success : Memo Idx({})",req_id, info.getMemo_idx());
+                        transactionManager.commit(status);
+                    } else {
+                        throw new Exception("MemoDetail Create Result("+result2+")");
+                    }
+                } else {
+                    throw new Exception("Memo Create Result("+result+")");
+                }
+            } else {
+                throw new Exception("MemoIdx Select Result("+memoIdx+")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-UserManage][createMemo][createMemoAndGetMemoIdx][{}] Insert DB Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][createMemo][createMemoAndGetMemoIdx]["+req_id+"] Error PrintStack : ",e);
+            transactionManager.rollback(status);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Insert DB Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][createMemo][createMemoAndGetMemoIdx] Insert DB Failed : "+e.getMessage());
+            throw new FunctionException("Insert DB Failed : "+e.getMessage());
+        }
     }
 
     // 이미지 파일 저장
@@ -111,18 +186,18 @@ public class MemoCRUDService {
             int result = -1;
             result = memoCRUDMapper.insertMemoImage(info);
             if(result == 1){
-                log.info("[Service-UserManage][saveImageFile][insertImageInfo][{}] Insert DB Success : File Name({}) Path({})",req_id, info.getFile_name(), info.getPath());
+                log.info("[Service-UserManage][saveImageFile][insertImageInfo][{}] Image Info DB Insert Success : File Name({}) Path({})",req_id, info.getFile_name(), info.getPath());
             } else {
                 throw new Exception("Result("+result+")");
             }
         } catch (Exception e) {
-            log.error("[Service-UserManage][saveImageFile][insertImageInfo][{}] Insert DB Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][saveImageFile][insertImageInfo][{}] Image Info DB Insert Failed : {}",req_id,e.getMessage());
             log.error("[Service-UserManage][saveImageFile][insertImageInfo]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Insert DB Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-UserManage][saveImageFile][insertImageInfo] Insert DB Failed : "+e.getMessage());
-            throw new FunctionException("Insert DB Failed : "+e.getMessage());
+            resInfo.setMsg("Image Info DB Insert Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][saveImageFile][insertImageInfo] Image Info DB Insert Failed : "+e.getMessage());
+            throw new FunctionException("Image Info DB Insert Failed : "+e.getMessage());
         }
     }
 }

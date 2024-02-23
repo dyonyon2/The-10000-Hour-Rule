@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ContentInfo {
     String service;
+    String access;
     String user_id;
     String owner_id;
     String content_type;

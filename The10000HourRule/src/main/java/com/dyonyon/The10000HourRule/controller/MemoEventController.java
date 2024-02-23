@@ -4,6 +4,7 @@ import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.domain.ContentInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
 import com.dyonyon.The10000HourRule.service.APIVerificationService;
 import com.dyonyon.The10000HourRule.service.TestService;
@@ -37,14 +38,35 @@ public class MemoEventController {
 
     // 메모 생성
     @PostMapping("")
-    public void memoController(HttpServletRequest req, @RequestBody UserLoginInfo userLoginInfo) throws ParseException {
-        ResponseInfo result;
-        log.info("[Controller-MemoEvent][/][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        log.info("[Controller-MemoEvent][/][{}] BODY : {}",req.getAttribute("req_id"), userLoginInfo);
-        log.info("[Controller-MemoEvent][/][{}] Call UserLoginService....",req.getAttribute("req_id"));
-//        result = userLoginService.login(req, userLoginInfo);
-//        log.info("[Controller-MemoEvent][/][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
-//        return result;
+    public ResponseInfo memoCreateController(HttpServletRequest req, @RequestBody MemoInfo memoInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-MemoEvent][/][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+            if(req.getAttribute("user_idx")!=null) memoInfo.setUser_idx((String) req.getAttribute("user_idx"));
+            log.info("[Controller-MemoEvent][/][{}] BODY : {}",req.getAttribute("req_id"), memoInfo);
+            log.info("[Controller-MemoEvent][/image][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            // 로그인 세션 확인
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoInfo.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status()))
+                return result;
+            // 권한 확인
+            ContentInfo verifyInfo = new ContentInfo(GlobalConstants.service_memo, GlobalConstants.access_create, memoInfo.getUser_id(),memoInfo.getOwner_id(),memoInfo.getMemo_type(),memoInfo.getOwner_idx(),memoInfo.getOwner_id(),null);
+            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
+            if ("-1".equals(result.getRes_status()))
+                return result;
+            log.info("[Controller-MemoEvent][/][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
+            result = memoCRUDService.createMemo(req, memoInfo);
+            log.info("[Controller-MemoEvent][/][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-MemoEvent][/image][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/image]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Image Create Failed: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/image] Image Controller Failed : "+e.getMessage());
+            result.setErr_code("UN");
+        }
+        return result;
     }
 
     // 메모 이미지 저장
@@ -56,6 +78,7 @@ public class MemoEventController {
             MemoImageInfo data = objectMapper.readValue(json, MemoImageInfo.class); data.setFile(file);
             log.info("[Controller-MemoEvent][/image][{}] BODY : ({})", req.getAttribute("req_id"), data);
             log.info("[Controller-MemoEvent][/image][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            if(req.getAttribute("user_idx")!=null) data.setUser_idx((String) req.getAttribute("user_idx"));
             // 로그인 세션 확인
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), data.getUser_id(), req.getSession().getId());
             if ("-1".equals(result.getRes_status()))

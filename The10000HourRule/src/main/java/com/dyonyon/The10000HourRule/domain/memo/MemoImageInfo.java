@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemoImageInfo {
     MultipartFile file;
     String user_id;
+    String user_idx;
     String owner_id;
     String group_idx;
     String group_name;

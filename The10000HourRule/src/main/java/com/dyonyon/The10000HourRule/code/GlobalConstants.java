@@ -24,5 +24,11 @@ public class GlobalConstants {
     final public static String file = "file";
     final public static String json = "json";
 
+    final public static String access_all = "CRUD";
+    final public static String access_create = "C";
+    final public static String access_read = "R";
+    final public static String access_update = "U";
+    final public static String access_delete = "D";
+
 
 }
