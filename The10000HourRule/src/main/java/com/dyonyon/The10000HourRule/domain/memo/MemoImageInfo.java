@@ -10,12 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class MemoImageInfo {
     MultipartFile file;
+    String memo_idx;
+    String memo_type;
     String user_id;
     String user_idx;
     String owner_id;
+    String owner_idx;
     String group_idx;
     String group_name;
-    String memo_type;
     String path;
     String file_name;
 }

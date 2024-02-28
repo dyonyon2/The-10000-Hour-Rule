@@ -182,17 +182,31 @@ public class APIVerificationService {
 
     public void checkParams(String req_id, ContentInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
+            // CRUD 필수 값
             String service = info.getService(); String access = info.getAccess();
-            String user_id = info.getUser_id(); String owner_id = info.getOwner_id();
-            String type = info.getContent_type();
+            String user_id = info.getUser_id(); String owner_id = info.getOwner_id(); String type = info.getContent_type();
+            // RUD 필수 값
+            String content_idx = info.getContent_idx();
             if(user_id!=null&&owner_id!=null&&service!=null&&type!=null&&access!=null){
-                log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Type({}) User({}) Owner({})", req_id, service, type, user_id, owner_id);
+                log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
+                if(GlobalConstants.access_read_update_delete.contains(access)){
+                    if(content_idx!=null){
+                        log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Content_idx({})", req_id, content_idx);
+                    }
+                    else{
+                        log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Content_idx({})", req_id, content_idx);
+                        resInfo.setRes_status("-1");
+                        resInfo.setMsg("API Validation Fail : Required Data Is Missing");
+                        resInfo.setRes_data("[Service-APICheck][verifyAuthority][checkParams] Required Data Is Missing : Content_idx("+content_idx+")");
+                        throw new FunctionException("Required Data Is Missing");
+                    }
+                }
             }
             else{
-                log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Service({}) Type({}) User({}) Owner({})", req_id, service, type, user_id, owner_id);
+                log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
                 resInfo.setRes_status("-1");
                 resInfo.setMsg("API Validation Fail : Required Data Is Missing");
-                resInfo.setRes_data("[Service-APICheck][verifyAuthority][checkParams] Required Data Is Missing : Service({}) Type({}) User({}) Owner({})");
+                resInfo.setRes_data("[Service-APICheck][verifyAuthority][checkParams] Required Data Is Missing : Service("+service+") Access("+access+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
                 throw new FunctionException("Required Data Is Missing");
             }
         } catch (Exception e) {
@@ -210,14 +224,14 @@ public class APIVerificationService {
         try {
             String service = info.getService(); String access = info.getAccess();
             String user_id = info.getUser_id(); String owner_id = info.getOwner_id();
-            String type = info.getContent_type();
+            String type = info.getContent_type(); String content_idx = info.getContent_idx();
 
+            // True (권한 있음), False (권한 없음)
             // 권한 검증(대상 Content ID가 없을 때) => Content 생성, Content 목록 조회
-            if(info.getContent_idx()==null){
-                // True (권한 있음), False (권한 없음)
-                // 1. Content(개인) 의 소유자 => Create, Read
+            if(content_idx==null){
+                // 1. Content(개인) 의 소유자
                 if(!checkContentOwner(req_id, info, resInfo)) {
-                    // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인 => Create, Read
+                    // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인
                     if (!checkOwnerFollower(req_id, info, resInfo)){
                         // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
                         if (!checkContentFollower(req_id, info, resInfo)){
@@ -230,9 +244,22 @@ public class APIVerificationService {
                     }
                 }
             }
-            // 권한 검증(대상 Content ID가 있을 때)
+            // 권한 검증(대상 Content ID가 있을 때) => Content 조회, 수정, 삭제
             else{
-
+                // 1. Content(개인) 의 소유자 => Create, Read
+                if(!checkContentOwner(req_id, info, resInfo)) {
+                    // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인 => Create, Read
+                    if (!checkOwnerFollower(req_id, info, resInfo)){
+                        // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
+                        if (!checkContentFollower(req_id, info, resInfo)){
+                            log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Authorized : Service({}) Content_ID({}) Type({}) User({}) Owner({})", req_id, service, content_idx,type, user_id, owner_id);
+                            resInfo.setRes_status("-1");
+                            resInfo.setMsg("API Validation Fail : Not Authorized");
+                            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Not Authorized : Service("+service+") Content_ID("+content_idx+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
+                            throw new FunctionException("Not Authorized");
+                        }
+                    }
+                }
             }
         } catch (FunctionException e){
             log.error("[Service-APICheck][verifyAuthority][verify][{}] Authority Verify Fail : ERROR OCCURRED {}",req_id,e.getMessage());
@@ -257,6 +284,9 @@ public class APIVerificationService {
                 resInfo.setRes_data(GlobalConstants.access_all);
                 return true;
             }
+        }
+        else if(GlobalConstants.content_type_group.equals(type)){
+
         }
         return false;
     }

@@ -70,6 +70,7 @@ public class APIInterceptor implements HandlerInterceptor {
             String method = req.getMethod();
             String sessionId = req.getSession().getId();
             String reqId; String userId = null; String userIdx = null; String reqData = null;
+            String ownerId=null; String ownerIdx=null;
             APICallLogInfo apiCallLogInfo = new APICallLogInfo();
             APICallLogInfo tmp = null;
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -89,6 +90,7 @@ public class APIInterceptor implements HandlerInterceptor {
                 if ("GET".equals(method)) {
                     reqData = req.getQueryString();
                     userId = req.getParameter("user_id");
+                    ownerId = req.getParameter("owner_id");
                 }
                 // Form-data인 경우는 File과 Body 따로 데이터 GET
                 else if(contentType!=null && contentType.contains("form-data")) {
@@ -101,6 +103,7 @@ public class APIInterceptor implements HandlerInterceptor {
                     reqData = reqData + ", Json("+req.getParameter(GlobalConstants.json)+")";
                     tmp = objectMapper.readValue(req.getParameter(GlobalConstants.json), APICallLogInfo.class);
                     userId = tmp.getUser_id();
+                    ownerId = tmp.getOwner_id();
 //                    log.info("tmp = {}",tmp);
 //                    log.info("reqData = {}",reqData);
                 }
@@ -110,6 +113,7 @@ public class APIInterceptor implements HandlerInterceptor {
                     reqData = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                     tmp = objectMapper.readValue(reqData, APICallLogInfo.class);
                     userId = tmp.getUser_id();
+                    ownerId = tmp.getOwner_id();
                 }
 
                 if(reqData!=null)

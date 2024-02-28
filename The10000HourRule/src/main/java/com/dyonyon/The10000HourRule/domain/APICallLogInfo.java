@@ -27,5 +27,7 @@ public class APICallLogInfo {
     String routine_idx;
     String target_idx;
     String target_type;
+    String owner_id;
+    String owner_idx;
 
 }
