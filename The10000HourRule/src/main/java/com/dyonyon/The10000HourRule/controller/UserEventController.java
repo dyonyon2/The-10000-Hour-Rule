@@ -45,7 +45,7 @@ public class UserEventController {
         try {
             log.info("[Controller-UserEvent][/login][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
             log.info("[Controller-UserEvent][/login][{}] BODY : {}", req.getAttribute("req_id"), userLoginInfo);
-            log.info("[Controller-UserEvent][/login][{}] Call UserLoginService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/login][{}] Call UserLoginService...", req.getAttribute("req_id"));
             result = userLoginService.login(req, userLoginInfo);
             log.info("[Controller-UserEvent][/login][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
         } catch (Exception e){
@@ -67,7 +67,7 @@ public class UserEventController {
         try {
             log.info("[Controller-UserEvent][/signup][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
             log.info("[Controller-UserEvent][/signup][{}] BODY : {}", req.getAttribute("req_id"), userDetailInfo);
-            log.info("[Controller-UserEvent][/signup][{}] Call UserSignupService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/signup][{}] Call UserSignupService...", req.getAttribute("req_id"));
             result = userSignupService.signup(req, userDetailInfo);
             log.info("[Controller-UserEvent][/signup][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
         } catch (Exception e){
@@ -97,7 +97,7 @@ public class UserEventController {
                 log.info("[Controller-UserEvent][/check][{}] QUERY STRING KEY : {}", req.getAttribute("req_id"), key);
                 log.info("[Controller-UserEvent][/check][{}] QUERY STRING VALUE : {}", req.getAttribute("req_id"), value);
             }
-            log.info("[Controller-UserEvent][/check][{}] Call UserManageService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/check][{}] Call UserManageService...", req.getAttribute("req_id"));
             result = userManageService.checkDuplication(req, key, value);
             log.info("[Controller-UserEvent][/check][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
         } catch (Exception e){
@@ -119,11 +119,13 @@ public class UserEventController {
         try {
             log.info("[Controller-UserEvent][/auth][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
             log.info("[Controller-UserEvent][/auth][{}] BODY : {}", req.getAttribute("req_id"), userAuthInfo);
-            log.info("[Controller-UserEvent][/auth][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/auth][{}] Call API ApiVerificationService...", req.getAttribute("req_id"));
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userAuthInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-UserEvent][/auth][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
-            log.info("[Controller-UserEvent][/auth][{}] Call UserManageService....", req.getAttribute("req_id"));
+            }
+            log.info("[Controller-UserEvent][/auth][{}] Call UserManageService...", req.getAttribute("req_id"));
             result = userManageService.generateAndSendAuthKey(req, userAuthInfo);
             log.info("[Controller-UserEvent][/auth][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
         } catch (Exception e){
@@ -145,11 +147,13 @@ public class UserEventController {
         try {
             log.info("[Controller-UserEvent][/auth/check][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
             log.info("[Controller-UserEvent][/auth/check][{}] BODY : {}", req.getAttribute("req_id"), userAuthInfo);
-            log.info("[Controller-UserEvent][/auth/check][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/auth/check][{}] Call API ApiVerificationService...", req.getAttribute("req_id"));
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userAuthInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-UserEvent][/auth/check][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
-            log.info("[Controller-UserEvent][/auth/check][{}] Call UserManageService....", req.getAttribute("req_id"));
+            }
+            log.info("[Controller-UserEvent][/auth/check][{}] Call UserManageService...", req.getAttribute("req_id"));
             result = userManageService.verifyAuthKey(req, userAuthInfo);
             log.info("[Controller-UserEvent][/auth/check][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
         } catch (Exception e){
@@ -171,10 +175,12 @@ public class UserEventController {
         try {
             log.info("[Controller-UserEvent][/change][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
             log.info("[Controller-UserEvent][/change][{}] BODY : {}", req.getAttribute("req_id"), userDetailInfo);
-            log.info("[Controller-UserEvent][/change][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            log.info("[Controller-UserEvent][/change][{}] Call API ApiVerificationService...", req.getAttribute("req_id"));
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-UserEvent][/change][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
+            }
             log.info("[Controller-UserEvent][/change][{}] Call UserManageService....", req.getAttribute("req_id"));
             result = userManageService.changeUserInfo(req, userDetailInfo);
             log.info("[Controller-UserEvent][/change][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());

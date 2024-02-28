@@ -4,8 +4,7 @@ import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ContentInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
-import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
-import com.dyonyon.The10000HourRule.mapper.user.UserLoginMapper;
+import com.dyonyon.The10000HourRule.mapper.APIVerificationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +16,10 @@ import java.util.Date;
 @Slf4j
 public class APIVerificationService {
 
-    private UserLoginMapper userLoginMapper;
+    private APIVerificationMapper apiVerificationMapper;
 
-    public APIVerificationService(UserLoginMapper userLoginMapper) {
-        this.userLoginMapper = userLoginMapper;
+    public APIVerificationService(APIVerificationMapper apiVerificationMapper) {
+        this.apiVerificationMapper = apiVerificationMapper;
     }
 
     // 세션 유효/만료 체크
@@ -96,7 +95,7 @@ public class APIVerificationService {
     public String getSessionId(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
         String result = null;
         try {
-            result = userLoginMapper.getLoginSessionId(user_id);
+            result = apiVerificationMapper.getLoginSessionId(user_id);
             log.info("[Service-APICheck][checkLoginSession][getSessionId][{}] Login({}) Session Select Success : {}",req_id, user_id, result);
         } catch (Exception e) {
             log.error("[Service-APICheck][checkLoginSession][getSessionId][{}] Login({}) Session Select Fail : {}",req_id, user_id, e.getMessage());
@@ -113,7 +112,7 @@ public class APIVerificationService {
     public Date getSessionEXP(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
         Date exp = null;
         try {
-            exp = userLoginMapper.getLoginSessionEXP(user_id);
+            exp = apiVerificationMapper.getLoginSessionEXP(user_id);
             log.info("[Service-APICheck][checkLoginSession][getSessionEXP][{}] Login({}) Session EXP Select Success : {}",req_id, user_id, exp);
         } catch (Exception e) {
             log.error("[Service-APICheck][checkLoginSession][getSessionEXP][{}] Login({}) Session EXP Select Fail : {}",req_id, user_id, e.getMessage());
@@ -130,7 +129,7 @@ public class APIVerificationService {
     // 세션 UPDATE_DT, EXPIRE_DT UPDATE
     public void updateLoginSession(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
         try {
-            int result = userLoginMapper.updateSessionTime(user_id);
+            int result = apiVerificationMapper.updateSessionTime(user_id);
             if(result>0)
                 log.info("[Service-APICheck][checkLoginSession][updateLoginSession][{}] Login({}) Session EXP Update Success : {}",req_id, user_id, result);
             else
@@ -146,10 +145,6 @@ public class APIVerificationService {
         }
     }
 
-    // 서약 동의 여부
-
-    // 핸드폰/이메일 인증 여부
-
     // 권한 검증
     public ResponseInfo verifyAuthority(String req_id, ContentInfo verifyInfo) {
 
@@ -157,7 +152,7 @@ public class APIVerificationService {
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
 
         try {
-            log.info("[Service-APICheck][verifyAuthority][{}] Authority Verify Started...", req_id);
+            log.info("[Service-APICheck][verifyAuthority][{}] Authority Verify Started... : checkParams -> verify", req_id);
 
             // 데이터 존재 여부
             checkParams(req_id, verifyInfo, responseInfo);
@@ -165,7 +160,7 @@ public class APIVerificationService {
             // 권한 인증
             verify(req_id, verifyInfo, responseInfo);
 
-            log.info("[Service-APICheck][verifyAuthority][{}] Authority Verify Success... : Verify({})", req_id,responseInfo.getRes_data()==null?"NONE":responseInfo.getRes_data());
+            log.info("[Service-APICheck][verifyAuthority][{}] Authority Verify Success...", req_id);
         } catch (FunctionException e){
             log.error("[Service-APICheck][verifyAuthority][{}] Authority Verify Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
@@ -191,7 +186,7 @@ public class APIVerificationService {
                 log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
                 if(GlobalConstants.access_read_update_delete.contains(access)){
                     if(content_idx!=null){
-                        log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Content_idx({})", req_id, content_idx);
+                        log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Content_idx({})", req_id, content_idx);
                     }
                     else{
                         log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Required Data Is Missing : Content_idx({})", req_id, content_idx);
@@ -225,68 +220,94 @@ public class APIVerificationService {
             String service = info.getService(); String access = info.getAccess();
             String user_id = info.getUser_id(); String owner_id = info.getOwner_id();
             String type = info.getContent_type(); String content_idx = info.getContent_idx();
+            log.info("[Service-APICheck][verifyAuthority][verify][{}] verify Owner & Owner Follow & Content Follow", req_id);
+            // True (권한 있음), False (권한 없음), Res_data에 권한 내용 작성
+            // 1. Content(개인) 의 소유자
+            if(!checkContentOwner(req_id, info, resInfo)) {
+                // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인 => Create, Read
+                if (!checkOwnerFollower(req_id, info, resInfo)){
+                    // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
+                    if (!checkContentFollower(req_id, info, resInfo)){
+                        log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Authorized : Service({}) Content_ID({}) Type({}) User({}) Owner({})", req_id, service, content_idx,type, user_id, owner_id);
+                        resInfo.setRes_status("-1");
+                        resInfo.setMsg("API Validation Fail : Not Authorized");
+                        resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Not Authorized : Service("+service+") Content_ID("+content_idx+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
+                        throw new FunctionException("Not Authorized");
+                    }
+                }
+            }
 
-            // True (권한 있음), False (권한 없음)
-            // 권한 검증(대상 Content ID가 없을 때) => Content 생성, Content 목록 조회
-            if(content_idx==null){
-                // 1. Content(개인) 의 소유자
-                if(!checkContentOwner(req_id, info, resInfo)) {
-                    // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인
-                    if (!checkOwnerFollower(req_id, info, resInfo)){
-                        // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
-                        if (!checkContentFollower(req_id, info, resInfo)){
-                            log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Authorized : Service({}) Type({}) User({}) Owner({})", req_id, service, type, user_id, owner_id);
-                            resInfo.setRes_status("-1");
-                            resInfo.setMsg("API Validation Fail : Not Authorized");
-                            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Not Authorized : Service("+service+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
-                            throw new FunctionException("Not Authorized");
-                        }
-                    }
-                }
+            // 필요한 권한(access)과 현재 권한(res_data)을 비교
+            if(resInfo.getRes_data()!=null && resInfo.getRes_data().toString().contains(access)){
+                log.info("[Service-APICheck][verifyAuthority][verify][{}] Meet Authority : Required({}), Own({})", req_id, access, resInfo.getRes_data());
             }
-            // 권한 검증(대상 Content ID가 있을 때) => Content 조회, 수정, 삭제
+            // 권한 없음
             else{
-                // 1. Content(개인) 의 소유자 => Create, Read
-                if(!checkContentOwner(req_id, info, resInfo)) {
-                    // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인 => Create, Read
-                    if (!checkOwnerFollower(req_id, info, resInfo)){
-                        // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
-                        if (!checkContentFollower(req_id, info, resInfo)){
-                            log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Authorized : Service({}) Content_ID({}) Type({}) User({}) Owner({})", req_id, service, content_idx,type, user_id, owner_id);
-                            resInfo.setRes_status("-1");
-                            resInfo.setMsg("API Validation Fail : Not Authorized");
-                            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Not Authorized : Service("+service+") Content_ID("+content_idx+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
-                            throw new FunctionException("Not Authorized");
-                        }
-                    }
-                }
+                log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Meet Authority : Required({}), Own({})", req_id, access, resInfo.getRes_data());
+                resInfo.setRes_status("-1");
+                resInfo.setMsg("API Validation Fail : Not Authorized");
+                resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Not Authorized : Required("+access+"), Own("+resInfo.getRes_data()+") : Service("+service+") Content_ID("+content_idx+") Type("+type+") User("+user_id+") Owner("+owner_id+")");
+                throw new FunctionException("Not Authorized");
             }
-        } catch (FunctionException e){
-            log.error("[Service-APICheck][verifyAuthority][verify][{}] Authority Verify Fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e) {
-            log.error("[Service-APICheck][verifyAuthority][verify][{}] Check Parameters Fail : {}",req_id, e.getMessage());
+            log.error("[Service-APICheck][verifyAuthority][verify][{}] Authority Verify Fail : {}",req_id, e.getMessage());
             log.error("[Service-APICheck][verifyAuthority][verify]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setMsg("API Validation Fail : Exception Occurred");
-            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Check Parameters Fail : " + e.getMessage());
-            throw new FunctionException("Check Parameters Fail : "+e.getMessage());
+            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify] Authority Verify Fail : " + e.getMessage());
+            throw new FunctionException("Authority Verify Fail : "+e.getMessage());
         }
     }
 
-    // True (권한 있음), False (권한 없음)
+    // True (권한 있음), False (권한 없음), Res_data에 권한 내용 작성
+    // Content의 Owner는 CRUD 권한을 다 가지고 있음
     public boolean checkContentOwner(String req_id, ContentInfo info, ResponseInfo resInfo) throws FunctionException {
-        String service = info.getService(); String user_id = info.getUser_id(); String owner_id = info.getOwner_id(); String type = info.getContent_type();
-        if(GlobalConstants.content_type_user.equals(type)){
-            // user 와 owner 가 동일 => 권한 있음
-            if(user_id.equals(owner_id)) {
-                log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}) User({}) = Owner({})", req_id, service, type, user_id, owner_id);
-                resInfo.setRes_data(GlobalConstants.access_all);
-                return true;
+        String service = info.getService(); String user_id = info.getUser_id();String owner_id = info.getOwner_id(); String type = info.getContent_type();
+        String content_idx = info.getContent_idx(); String groupOwnerId = null;
+        try {
+            if (GlobalConstants.content_type_user.equals(type)) {   // User 소유의 content일 때
+                if (user_id.equals(owner_id)) { // 1차 비교 : user 와 owner 비교
+                    if(content_idx!=null){  // Content_idx가 있는 경우 2차 비교
+                        String tmp = apiVerificationMapper.getContentOwnerId(info); // Content_idx의 owner_id 가져오기
+                        if(user_id.equals(tmp)){ // 2차 비교 : user와 content의 owner 비교
+                            log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}, {}) User({}) = Owner({})", req_id, service, content_idx, type, user_id, owner_id);
+                            resInfo.setRes_data(GlobalConstants.access_all);
+                            return true;
+                        }
+                    }
+                    else{   // Content_idx가 없는 경우 권한 확인 완료
+                        log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}) User({}) = Owner({})", req_id, service, type, user_id, owner_id);
+                        resInfo.setRes_data(GlobalConstants.access_all);
+                        return true;   
+                    }
+                }
+            } else if (GlobalConstants.content_type_group.equals(type)) {   // Group 소유의 content일 때, user가 전달하는 owner_id는 group의 아이디이다.
+                groupOwnerId = apiVerificationMapper.getGroupOwnerId(info); // owner_id(group_id)로 실제 group의 owner_id 가져오기
+                if(user_id.equals(groupOwnerId)){   // 1차 비교 : user와 group의 owner 비교
+                    if(content_idx!=null){  // Content_idx가 있는 경우 2차 비교
+                        String tmp = apiVerificationMapper.getContentOwnerId(info); // Content_idx의 owner_id 가져오기
+                        if(user_id.equals(tmp)){    // 2차 비교 : user와 content의 owner 비교
+                            log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}, {}) User({}) = Group({})'s Owner({})", req_id, service, content_idx, type, user_id, owner_id, groupOwnerId);
+                            resInfo.setRes_data(GlobalConstants.access_all);
+                            return true;
+                        }
+                    }
+                    else{   // Content_idx가 없는 경우 권한 확인 완료
+                        log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}) User({}) = Group({})'s Owner({})", req_id, service, type, user_id, owner_id, groupOwnerId);
+                        resInfo.setRes_data(GlobalConstants.access_all);
+                        return true;
+                    }
+                }
             }
-        }
-        else if(GlobalConstants.content_type_group.equals(type)){
-
+        } catch (Exception e) {
+            log.error("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Check Content Owner Fail : {}",req_id, e.getMessage());
+            log.error("[Service-APICheck][verifyAuthority][verify][checkContentOwner]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("API Validation Fail : Exception Occurred");
+            resInfo.setRes_data("[Service-APICheck][verifyAuthority][verify][checkContentOwner] Check Content Owner Fail : " + e.getMessage());
+            throw new FunctionException("check Content Owner Fail : "+e.getMessage());
         }
         return false;
     }
@@ -297,7 +318,9 @@ public class APIVerificationService {
         return false;
     }
 
-    // 권한 검증(대상 Content ID가 있을 때)
-    // 각 content follow 확인
+
+    // 서약 동의 여부
+
+    // 핸드폰/이메일 인증 여부
 
 }

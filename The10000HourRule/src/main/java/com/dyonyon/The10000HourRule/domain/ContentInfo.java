@@ -14,7 +14,7 @@ public class ContentInfo {
     String user_id;
     String owner_id;
     String content_type;
+    String content_idx;
     String group_idx;
     String group_id;
-    String content_idx;
 }

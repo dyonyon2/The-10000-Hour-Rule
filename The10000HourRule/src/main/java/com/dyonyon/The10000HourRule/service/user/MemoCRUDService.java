@@ -161,8 +161,8 @@ public class MemoCRUDService {
             String ownerIdx = null;
             ownerIdx = memoCRUDMapper.getOwnerIdx2(info);
             if(ownerIdx!=null && !ownerIdx.isEmpty()){
-                log.info("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
                 info.setOwner_idx(ownerIdx);
+                log.info("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
             }
             else {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
@@ -188,7 +188,7 @@ public class MemoCRUDService {
                 if(orgFileName!=null) {
                     int lastIndex = orgFileName.lastIndexOf('.');
                     if (lastIndex >= 0) {
-                        fileExtension = "." + orgFileName.substring(lastIndex);
+                        fileExtension = orgFileName.substring(lastIndex);
                     }
                 }
                 info.setFile_name(req_id+fileExtension);

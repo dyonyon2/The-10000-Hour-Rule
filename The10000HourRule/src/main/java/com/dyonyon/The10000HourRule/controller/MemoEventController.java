@@ -44,17 +44,21 @@ public class MemoEventController {
             log.info("[Controller-MemoEvent][/][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
             if(req.getAttribute("user_idx")!=null) memoInfo.setUser_idx((String) req.getAttribute("user_idx"));
             log.info("[Controller-MemoEvent][/][{}] BODY : {}",req.getAttribute("req_id"), memoInfo);
-            log.info("[Controller-MemoEvent][/image][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            log.info("[Controller-MemoEvent][/][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
             // 로그인 세션 확인
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
+            }
             // 권한 확인
             ContentInfo verifyInfo = new ContentInfo();
             verifyInfo.setService(GlobalConstants.service_memo); verifyInfo.setAccess(GlobalConstants.access_create); verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
             result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
                 return result;
+            }
             log.info("[Controller-MemoEvent][/][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
             result = memoCRUDService.createMemo(req, memoInfo);
             log.info("[Controller-MemoEvent][/][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
@@ -82,14 +86,18 @@ public class MemoEventController {
             if(req.getAttribute("user_idx")!=null) memoImageInfo.setUser_idx((String) req.getAttribute("user_idx"));
             // 로그인 세션 확인
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoImageInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/image][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
+            }
             // 권한 확인
             ContentInfo verifyInfo = new ContentInfo();
             verifyInfo.setService(GlobalConstants.service_memo); verifyInfo.setAccess(GlobalConstants.access_update); verifyInfo.setContent_idx(memoImageInfo.getMemo_idx()); verifyInfo.setContent_type(memoImageInfo.getMemo_type());             verifyInfo.setUser_id(memoImageInfo.getUser_id()); verifyInfo.setOwner_id(memoImageInfo.getOwner_id()); verifyInfo.setGroup_id(memoImageInfo.getOwner_id());
             result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
-            if ("-1".equals(result.getRes_status()))
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/image][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
                 return result;
+            }
             // 이미지 저장
             log.info("[Controller-MemoEvent][/image][{}] Call MemoCRUDService....", req.getAttribute("req_id"));
             result = memoCRUDService.saveImageFile(req, memoImageInfo);
