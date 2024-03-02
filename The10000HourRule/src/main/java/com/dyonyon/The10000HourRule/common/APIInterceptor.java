@@ -228,6 +228,7 @@ public class APIInterceptor implements HandlerInterceptor {
                 ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) res;
                 ResponseInfo responseInfo = objectMapper.readValue(responseWrapper.getContentAsByteArray(), ResponseInfo.class);
                 String responseBody = responseInfo.getRes_data() == null ? "" : responseInfo.getRes_data().toString();
+                responseBody = responseBody.substring(0, Math.min(responseBody.length(), GlobalConstants.MaxDataLength));
                 String responseMsg = responseInfo.getMsg() == null ? "" : responseInfo.getMsg();
                 String responseStatus = responseInfo.getStatus();
                 String res_status = responseInfo.getRes_status();

@@ -3,6 +3,7 @@ package com.dyonyon.The10000HourRule.controller;
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.domain.ContentInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
@@ -53,7 +54,7 @@ public class MemoEventController {
             }
             // 권한 확인
             ContentInfo verifyInfo = new ContentInfo();
-            verifyInfo.setService(GlobalConstants.service_memo); verifyInfo.setAccess(GlobalConstants.access_create); verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
+            verifyInfo.setService(GlobalConstants.service_memo); verifyInfo.setAccess(GlobalConstants.access_update); verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
             result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
             if ("-1".equals(result.getRes_status())) {
                 log.info("[Controller-MemoEvent][/][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
@@ -63,12 +64,12 @@ public class MemoEventController {
             result = memoCRUDService.createMemo(req, memoInfo);
             log.info("[Controller-MemoEvent][/][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         } catch (Exception e){
-            log.error("[Controller-MemoEvent][/image][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
-            log.error("[Controller-MemoEvent][/image]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            log.error("[Controller-MemoEvent][/][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Image Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/image] Image Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Create Failed: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/] Memo Controller Failed : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -109,6 +110,44 @@ public class MemoEventController {
             result.setRes_status("-1");
             result.setMsg("Image Create Failed: Exception Occurred");
             result.setRes_data("[Controller-MemoEvent][/image] Image Controller Failed : "+e.getMessage());
+            result.setErr_code("UN");
+        }
+        return result;
+    }
+
+    // 메모 수정
+    @PatchMapping("/update")
+    public ResponseInfo memoUpdateController(HttpServletRequest req, @RequestBody MemoDetailInfo memoDetailInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-MemoEvent][/update][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+            if(req.getAttribute("user_idx")!=null) memoDetailInfo.setUser_idx((String) req.getAttribute("user_idx"));
+            log.info("[Controller-MemoEvent][/update][{}] BODY : {}",req.getAttribute("req_id"), memoDetailInfo);
+            log.info("[Controller-MemoEvent][/update][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            // 로그인 세션 확인
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoDetailInfo.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/update][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
+                return result;
+            }
+            // 권한 확인
+            ContentInfo verifyInfo = new ContentInfo();
+            verifyInfo.setService(GlobalConstants.service_memo); verifyInfo.setAccess(GlobalConstants.access_create); verifyInfo.setContent_type(memoDetailInfo.getMemo_type()); verifyInfo.setUser_id(memoDetailInfo.getUser_id()); verifyInfo.setOwner_id(memoDetailInfo.getOwner_id()); verifyInfo.setGroup_id(memoDetailInfo.getOwner_id());
+            result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/update][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
+                return result;
+            }
+            log.info("[Controller-MemoEvent][/update][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
+            result = memoCRUDService.updateMemo(req, memoDetailInfo);
+            log.info("[Controller-MemoEvent][/update][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-MemoEvent][/update][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/update]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Image Create Failed: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/update] Image Controller Failed : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;

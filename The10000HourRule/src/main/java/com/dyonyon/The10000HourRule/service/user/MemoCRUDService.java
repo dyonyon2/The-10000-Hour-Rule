@@ -2,6 +2,7 @@ package com.dyonyon.The10000HourRule.service.user;
 
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoCRUDMapper;
@@ -33,8 +34,9 @@ public class MemoCRUDService {
         this.memoCRUDMapper = memoCRUDMapper;
     }
 
+    //메모 생성 : setOwnerIdx, createMemoAndGetMemoIdx
     public ResponseInfo createMemo(HttpServletRequest req, MemoInfo memoInfo) {
-
+        // owner_idx 세팅 -> 메모 생성 및 메모 IDX 세팅
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
@@ -65,11 +67,10 @@ public class MemoCRUDService {
         }
         return responseInfo;
     }
-
     public void setOwnerIdx(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
             String ownerIdx = null;
-            ownerIdx = memoCRUDMapper.getOwnerIdx(info);
+            ownerIdx = memoCRUDMapper.getOwnerIdx(info.getMemo_type(), info.getOwner_id());
             if(ownerIdx!=null && !ownerIdx.isEmpty()){
                 log.info("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
                 info.setOwner_idx(ownerIdx);
@@ -87,7 +88,6 @@ public class MemoCRUDService {
             throw new FunctionException("Insert DB Failed : "+e.getMessage());
         }
     }
-
     public void createMemoAndGetMemoIdx(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -124,9 +124,10 @@ public class MemoCRUDService {
         }
     }
 
-    // 이미지 파일 저장
-    public ResponseInfo saveImageFile(HttpServletRequest req, MemoImageInfo memoImageInfo) {
 
+    // 이미지 파일 저장 : setOwnerIdx, saveImage,insertImageInfo
+    public ResponseInfo saveImageFile(HttpServletRequest req, MemoImageInfo memoImageInfo) {
+        // owner_idx 세팅 -> 이미지 파일 저장 -> 이미지 파일 정보 DB 저장
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
@@ -155,11 +156,10 @@ public class MemoCRUDService {
         }
         return responseInfo;
     }
-
     public void setOwnerIdx(String req_id, MemoImageInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
             String ownerIdx = null;
-            ownerIdx = memoCRUDMapper.getOwnerIdx2(info);
+            ownerIdx = memoCRUDMapper.getOwnerIdx(info.getMemo_type(), info.getOwner_id());
             if(ownerIdx!=null && !ownerIdx.isEmpty()){
                 info.setOwner_idx(ownerIdx);
                 log.info("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
@@ -177,8 +177,6 @@ public class MemoCRUDService {
             throw new FunctionException("Insert DB Failed : "+e.getMessage());
         }
     }
-
-    // 중복 확인 함수
     public void saveImage(String req_id, MemoImageInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
             // 이미지 데이터가 존재할 때
@@ -242,6 +240,79 @@ public class MemoCRUDService {
             resInfo.setMsg("Image Info DB Insert Failed : Exception Occurred");
             resInfo.setRes_data("[Service-UserManage][saveImageFile][insertImageInfo] Image Info DB Insert Failed : "+e.getMessage());
             throw new FunctionException("Image Info DB Insert Failed : "+e.getMessage());
+        }
+    }
+
+
+    //메모 수정(update)
+    public ResponseInfo updateMemo(HttpServletRequest req, MemoDetailInfo memoDetailInfo) {
+        // owner_idx 세팅, 메모 수정
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+
+        try{
+            log.info("[Service-MemoCRUD][updateMemo][{}] Memo Update Started...", req_id);
+
+            // owner_idx 세팅
+            setOwnerIdx(req_id, memoDetailInfo, responseInfo);
+
+            // 메모 수정 update
+            updateMemo(req_id, memoDetailInfo, responseInfo);
+
+            log.info("[Service-MemoCRUD][updateMemo][{}] Memo Update Success...: Memo({})", req_id, memoDetailInfo.getMemo_idx());
+            responseInfo.setMsg("Memo Update Success");
+        } catch (FunctionException e){
+            log.error("[Service-MemoCRUD][updateMemo][{}] Memo Update Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-MemoCRUD][updateMemo][{}]  Memo Update Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("Update Memo Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][updateMemo] Memo Update Failed : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+    public void setOwnerIdx(String req_id, MemoDetailInfo info, ResponseInfo resInfo) throws FunctionException {
+        try {
+            String ownerIdx = null;
+            ownerIdx = memoCRUDMapper.getOwnerIdx(info.getMemo_type(), info.getOwner_id());
+            if(ownerIdx!=null && !ownerIdx.isEmpty()){
+                info.setOwner_idx(ownerIdx);
+                log.info("[Service-MemoCRUD][updateMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
+            }
+            else {
+                throw new Exception("Owner IDX Get Result("+ownerIdx+")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][updateMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Create Memo Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
+            throw new FunctionException("Insert DB Failed : "+e.getMessage());
+        }
+    }
+    public void updateMemo(String req_id, MemoDetailInfo info, ResponseInfo resInfo) throws FunctionException {
+        try {
+            int result = memoCRUDMapper.updateMemo(info);
+            if(result==1){
+                log.info("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Info Update Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
+            }
+            else {
+                throw new Exception("Update Memo Result("+result+")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Info Update Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][updateMemo]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo Update Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][updateMemo] Memo Info Update Failed : "+e.getMessage());
+            throw new FunctionException("Update DB Failed : "+e.getMessage());
         }
     }
 }

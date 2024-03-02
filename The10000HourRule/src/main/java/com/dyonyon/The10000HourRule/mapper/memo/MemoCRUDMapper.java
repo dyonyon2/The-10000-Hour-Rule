@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.mapper.memo;
 
+import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
@@ -11,6 +12,6 @@ public interface MemoCRUDMapper {
     int insertMemo(MemoInfo info);
     int insertMemoDetail(MemoInfo info);
     int insertMemoImage(MemoImageInfo info);
-    String getOwnerIdx(MemoInfo info);
-    String getOwnerIdx2(MemoImageInfo info);
+    String getOwnerIdx(String memo_type, String owner_id);
+    int updateMemo(MemoDetailInfo info);
 }
