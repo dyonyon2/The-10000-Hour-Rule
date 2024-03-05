@@ -14,4 +14,5 @@ public interface MemoCRUDMapper {
     int insertMemoImage(MemoImageInfo info);
     String getOwnerIdx(String memo_type, String owner_id);
     int updateMemo(MemoDetailInfo info);
+    MemoDetailInfo readMemo(MemoInfo info);
 }

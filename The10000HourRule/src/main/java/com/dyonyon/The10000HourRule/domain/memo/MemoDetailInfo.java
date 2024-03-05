@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemoDetailInfo {
+    String req_id;
     String memo_idx;
     String memo_type;
     String owner_id;

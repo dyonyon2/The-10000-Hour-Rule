@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemoInfo {
+    String req_id;
     String memo_idx;
     String memo_type;   // 생성시 필요한 데이터
     String user_id;     // 생성시 필요한 데이터
