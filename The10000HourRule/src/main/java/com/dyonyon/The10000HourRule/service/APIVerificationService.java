@@ -184,7 +184,7 @@ public class APIVerificationService {
             String content_idx = info.getContent_idx();
             if(user_id!=null&&owner_id!=null&&service!=null&&type!=null&&access!=null){
                 log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
-                if(GlobalConstants.access_read_update_delete.contains(access)){
+                if(GlobalConstants.ACCESS_READ_UPDATE_DELETE.contains(access)){
                     if(content_idx!=null){
                         log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Content_idx({})", req_id, content_idx);
                     }
@@ -266,36 +266,36 @@ public class APIVerificationService {
         String service = info.getService(); String user_id = info.getUser_id();String owner_id = info.getOwner_id(); String type = info.getContent_type();
         String content_idx = info.getContent_idx(); String groupOwnerId = null;
         try {
-            if (GlobalConstants.content_type_user.equals(type)) {   // User 소유의 content일 때
+            if (GlobalConstants.CONTENT_TYPE_USER.equals(type)) {   // User 소유의 content일 때
                 if (user_id.equals(owner_id)) { // 1차 비교 : user 와 owner 비교
                     if(content_idx!=null){  // Content_idx가 있는 경우 2차 비교
                         String tmp = apiVerificationMapper.getContentOwnerId(info); // Content_idx의 owner_id 가져오기
                         if(user_id.equals(tmp)){ // 2차 비교 : user와 content의 owner 비교
                             log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}, {}) User({}) = Owner({})", req_id, service, content_idx, type, user_id, owner_id);
-                            resInfo.setRes_data(GlobalConstants.access_all);
+                            resInfo.setRes_data(GlobalConstants.ACCESS_ALL);
                             return true;
                         }
                     }
                     else{   // Content_idx가 없는 경우 권한 확인 완료
                         log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}) User({}) = Owner({})", req_id, service, type, user_id, owner_id);
-                        resInfo.setRes_data(GlobalConstants.access_all);
+                        resInfo.setRes_data(GlobalConstants.ACCESS_ALL);
                         return true;   
                     }
                 }
-            } else if (GlobalConstants.content_type_group.equals(type)) {   // Group 소유의 content일 때, user가 전달하는 owner_id는 group의 아이디이다.
+            } else if (GlobalConstants.CONTENT_TYPE_GROUP.equals(type)) {   // Group 소유의 content일 때, user가 전달하는 owner_id는 group의 아이디이다.
                 groupOwnerId = apiVerificationMapper.getGroupOwnerId(info); // owner_id(group_id)로 실제 group의 owner_id 가져오기
                 if(user_id.equals(groupOwnerId)){   // 1차 비교 : user와 group의 owner 비교
                     if(content_idx!=null){  // Content_idx가 있는 경우 2차 비교
                         String tmp = apiVerificationMapper.getContentOwnerId(info); // Content_idx의 owner_id 가져오기
                         if(user_id.equals(tmp)){    // 2차 비교 : user와 content의 owner 비교
                             log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}, {}) User({}) = Group({})'s Owner({})", req_id, service, content_idx, type, user_id, owner_id, groupOwnerId);
-                            resInfo.setRes_data(GlobalConstants.access_all);
+                            resInfo.setRes_data(GlobalConstants.ACCESS_ALL);
                             return true;
                         }
                     }
                     else{   // Content_idx가 없는 경우 권한 확인 완료
                         log.info("[Service-APICheck][verifyAuthority][verify][checkContentOwner][{}] Authorized : {}({}) User({}) = Group({})'s Owner({})", req_id, service, type, user_id, owner_id, groupOwnerId);
-                        resInfo.setRes_data(GlobalConstants.access_all);
+                        resInfo.setRes_data(GlobalConstants.ACCESS_ALL);
                         return true;
                     }
                 }

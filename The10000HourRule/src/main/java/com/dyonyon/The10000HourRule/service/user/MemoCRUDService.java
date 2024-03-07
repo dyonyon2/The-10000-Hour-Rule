@@ -1,5 +1,6 @@
 package com.dyonyon.The10000HourRule.service.user;
 
+import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
@@ -388,6 +389,78 @@ public class MemoCRUDService {
             resInfo.setMsg("Memo Read Failed : Exception Occurred");
             resInfo.setRes_data("[Service-MemoCRUD][readMemo][readMemoDetail] Memo Read Failed : "+e.getMessage());
             throw new FunctionException("Memo Read Failed : "+e.getMessage());
+        }
+    }
+
+    //메모 삭제 : setOwnerIdx, deleteMemo
+    public ResponseInfo deleteMemo(HttpServletRequest req, MemoInfo memoInfo) {
+        // owner_idx 세팅, 메모 수정
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+
+        try{
+            log.info("[Service-MemoCRUD][deleteMemo][{}] Memo Delete Started...", req_id);
+
+            // owner_idx 세팅
+            setOwnerIdx3(req_id, memoInfo, responseInfo);
+
+            // 메모 삭제 (Status값 변경 => -1)
+            deleteMemo(req_id, memoInfo, responseInfo);
+
+            log.info("[Service-MemoCRUD][deleteMemo][{}] Memo Delete Success...: Memo({})", req_id, memoInfo.getMemo_idx());
+            responseInfo.setMsg("Memo Delete Success");
+        } catch (FunctionException e){
+            log.error("[Service-MemoCRUD][deleteMemo][{}] Memo Delete Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-MemoCRUD][deleteMemo][{}]  Memo Delete Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("Memo Delete Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][deleteMemo] Memo Delete Failed : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+    public void setOwnerIdx3(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
+        try {
+            String ownerIdx = null;
+            ownerIdx = memoCRUDMapper.getOwnerIdx(info.getMemo_type(), info.getOwner_id());
+            if(ownerIdx!=null && !ownerIdx.isEmpty()){
+                log.info("[Service-MemoCRUD][deleteMemo][setOwnerIdx][{}] Owner IDX Get Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
+                info.setOwner_idx(ownerIdx);
+            }
+            else {
+                throw new Exception("Owner IDX Get Result("+ownerIdx+")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][deleteMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo Delete Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+        }
+    }
+    public void deleteMemo(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
+        try {
+            info.setStatus(GlobalConstants.CONTENT_STATUS_DELETE);
+            int result = memoCRUDMapper.updateStatusMemo(info);
+            if(result==1)
+                log.info("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete Success : Idx ({}) Type({})",req_id, info.getMemo_idx(),info.getMemo_type());
+            else
+                throw new Exception("Memo Status Update Result("+result+")");
+            resInfo.setRes_data(info);
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo Delete Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][updateStatusMemo] Memo Delete Failed : "+e.getMessage());
+            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
         }
     }
 }

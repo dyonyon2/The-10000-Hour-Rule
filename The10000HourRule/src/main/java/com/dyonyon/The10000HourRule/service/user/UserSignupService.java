@@ -43,11 +43,11 @@ public class UserSignupService {
             // 체크 : 필수 값, 규칙 체크, 중복 체크
             // 1. 필수 값 체크
             // isNull => true (null), false(null X)
-            if(CommonUtil.isNull(GlobalConstants.user_id, userDetailInfo.getUser_id())||
-                    CommonUtil.isNull(GlobalConstants.pw, userDetailInfo.getPw())||CommonUtil.isNull(GlobalConstants.name, userDetailInfo.getName())||
-                    CommonUtil.isNull(GlobalConstants.nickname, userDetailInfo.getNickname())||CommonUtil.isNull(GlobalConstants.sex, userDetailInfo.getSex())||
-                    CommonUtil.isNull(GlobalConstants.birth, userDetailInfo.getBirth())||CommonUtil.isNull(GlobalConstants.region, userDetailInfo.getRegion())||
-                    CommonUtil.isNull(GlobalConstants.phone, userDetailInfo.getPhone())||CommonUtil.isNull(GlobalConstants.mail, userDetailInfo.getMail())){
+            if(CommonUtil.isNull(GlobalConstants.USER_ID, userDetailInfo.getUser_id())||
+                    CommonUtil.isNull(GlobalConstants.PW, userDetailInfo.getPw())||CommonUtil.isNull(GlobalConstants.NAME, userDetailInfo.getName())||
+                    CommonUtil.isNull(GlobalConstants.NICKNAME, userDetailInfo.getNickname())||CommonUtil.isNull(GlobalConstants.SEX, userDetailInfo.getSex())||
+                    CommonUtil.isNull(GlobalConstants.BIRTH, userDetailInfo.getBirth())||CommonUtil.isNull(GlobalConstants.REGION, userDetailInfo.getRegion())||
+                    CommonUtil.isNull(GlobalConstants.PHONE, userDetailInfo.getPhone())||CommonUtil.isNull(GlobalConstants.MAIL, userDetailInfo.getMail())){
                 log.info("[Service-UserSignup][signup][{}] Signup Fail : Required Data Is Missing", req_id);
                 responseInfo.setMsg("Signup Fail : Required Data Is Missing");
                 responseInfo.setRes_data("[Service-UserSignup][signup] Required Data Is Missing");
@@ -58,10 +58,10 @@ public class UserSignupService {
                 log.info("[Service-UserSignup][signup][{}] Signup Check 1 Success(Required Data)", req_id);
 
                 // isFormat => true (포맷), false (포맷 X)
-                if(!CommonUtil.isFormat(GlobalConstants.user_id,userDetailInfo.getUser_id())||    // true : 포맷 안맞음, false : 포맷임
-                        !CommonUtil.isFormat(GlobalConstants.nickname,userDetailInfo.getNickname())||!CommonUtil.isFormat(GlobalConstants.name,userDetailInfo.getName())||
-                        !CommonUtil.isFormat(GlobalConstants.phone,userDetailInfo.getPhone())||!CommonUtil.isFormat(GlobalConstants.mail,userDetailInfo.getMail())||
-                        !CommonUtil.isFormat(GlobalConstants.pw,userDetailInfo.getPw())||!CommonUtil.isFormat(GlobalConstants.birth,userDetailInfo.getBirth())) {
+                if(!CommonUtil.isFormat(GlobalConstants.USER_ID,userDetailInfo.getUser_id())||    // true : 포맷 안맞음, false : 포맷임
+                        !CommonUtil.isFormat(GlobalConstants.NICKNAME,userDetailInfo.getNickname())||!CommonUtil.isFormat(GlobalConstants.NAME,userDetailInfo.getName())||
+                        !CommonUtil.isFormat(GlobalConstants.PHONE,userDetailInfo.getPhone())||!CommonUtil.isFormat(GlobalConstants.MAIL,userDetailInfo.getMail())||
+                        !CommonUtil.isFormat(GlobalConstants.PW,userDetailInfo.getPw())||!CommonUtil.isFormat(GlobalConstants.BIRTH,userDetailInfo.getBirth())) {
                     log.info("[Service-UserSignup][signup][{}] Signup Fail : There Is Incorrect Format Data", req_id);
                     responseInfo.setMsg("Signup Fail : There Is Incorrect Format Data");
                     responseInfo.setRes_data("[Service-UserSignup][signup] Incorrect Format Data");
@@ -72,10 +72,10 @@ public class UserSignupService {
                     log.info("[Service-UserSignup][signup][{}] Signup Check 2 Success(Data Format)", req_id);
 
                     // duplicateCheck => true (중복), false(중복X)
-                    if(isDuplication(req_id,GlobalConstants.user_id,userDetailInfo.getUser_id(),responseInfo)||
-                            isDuplication(req_id,GlobalConstants.phone,userDetailInfo.getPhone(),responseInfo)||
-                            isDuplication(req_id,GlobalConstants.mail,userDetailInfo.getMail(),responseInfo)||
-                            isDuplication(req_id,GlobalConstants.nickname,userDetailInfo.getNickname(),responseInfo)){
+                    if(isDuplication(req_id,GlobalConstants.USER_ID,userDetailInfo.getUser_id(),responseInfo)||
+                            isDuplication(req_id,GlobalConstants.PHONE,userDetailInfo.getPhone(),responseInfo)||
+                            isDuplication(req_id,GlobalConstants.MAIL,userDetailInfo.getMail(),responseInfo)||
+                            isDuplication(req_id,GlobalConstants.NICKNAME,userDetailInfo.getNickname(),responseInfo)){
                         log.info("[Service-UserSignup][signup][{}] Signup Fail : There Is Duplicate Data", req_id);
                         responseInfo.setMsg("Signup Fail : There Is Duplicate Data");
                         responseInfo.setRes_data("[Service-UserSignup][signup] Duplicate Data");
@@ -110,7 +110,7 @@ public class UserSignupService {
         try {
             int result = -1;    // 중복 x
             switch (key){
-                case GlobalConstants.nickname:
+                case GlobalConstants.NICKNAME:
                     result = userSignupMapper.checkProfileDuplication(key, value);
                     break;
                 default:

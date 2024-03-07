@@ -68,10 +68,10 @@ public class UserManageService {
         try {
             int result = -1;
             switch (key){
-                case GlobalConstants.nickname:
+                case GlobalConstants.NICKNAME:
                     result = userManageMapper.checkProfileDuplication(key, value);
                     break;
-                case GlobalConstants.user_id, GlobalConstants.mail, GlobalConstants.phone:
+                case GlobalConstants.USER_ID, GlobalConstants.MAIL, GlobalConstants.PHONE:
                     result = userManageMapper.checkAuthDuplication(key, value);
                     break;
                 default:
@@ -115,10 +115,10 @@ public class UserManageService {
             log.info("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generation&Send Started...", req_id);
 
             // 핸드폰 인증 번호 생성
-            if(GlobalConstants.phone.equals(userAuthInfo.getMethod())&&userAuthInfo.getPhone()!=null&&!userAuthInfo.getPhone().isEmpty())
+            if(GlobalConstants.PHONE.equals(userAuthInfo.getMethod())&&userAuthInfo.getPhone()!=null&&!userAuthInfo.getPhone().isEmpty())
                 authKey = "P" + CommonUtil.getAuthKey();
             // 메일 인증 번호 생성
-            else if(GlobalConstants.mail.equals(userAuthInfo.getMethod())&&userAuthInfo.getMail()!=null&&!userAuthInfo.getMail().isEmpty())
+            else if(GlobalConstants.MAIL.equals(userAuthInfo.getMethod())&&userAuthInfo.getMail()!=null&&!userAuthInfo.getMail().isEmpty())
                 authKey = "M" + CommonUtil.getAuthKey();
             // 그 외의 요청 에러
             else {
@@ -177,10 +177,10 @@ public class UserManageService {
         try{
             String to;
             switch (info.getMethod()){
-                case GlobalConstants.phone:
+                case GlobalConstants.PHONE:
                     to = info.getPhone();
                     break;
-                case GlobalConstants.mail:
+                case GlobalConstants.MAIL:
                     to = info.getMail();
                     MimeMessage m = javaMailSender.createMimeMessage();
                     MimeMessageHelper h = new MimeMessageHelper(m,"UTF-8");
@@ -251,11 +251,11 @@ public class UserManageService {
 
             if(key!=null&&(!key.isEmpty())) {
                 if(key.contains("P")) {
-                    method = GlobalConstants.phone;
+                    method = GlobalConstants.PHONE;
                     info.setMethod(method);
                 }
                 else if(key.contains("M")) {
-                    method = GlobalConstants.mail;
+                    method = GlobalConstants.MAIL;
                     info.setMethod(method);
                 }
                 else {
@@ -332,22 +332,22 @@ public class UserManageService {
             // 1. 변경 대상 체크
             // 1-1. 닉네임 체크
             if(userDetailInfo.getNickname()!=null&&!userDetailInfo.getNickname().isEmpty()){
-                key = GlobalConstants.nickname;
+                key = GlobalConstants.NICKNAME;
                 value = userDetailInfo.getNickname();
             }
             // 1-2. 비번 체크
             else if(userDetailInfo.getPw()!=null&&!userDetailInfo.getPw().isEmpty()){
-                key = GlobalConstants.pw;
+                key = GlobalConstants.PW;
                 value = userDetailInfo.getPw();
             }
             // 1-3. 메일 체크
             else if(userDetailInfo.getMail()!=null&&!userDetailInfo.getMail().isEmpty()){
-                key = GlobalConstants.mail;
+                key = GlobalConstants.MAIL;
                 value = userDetailInfo.getMail();
             }
             // 1-4. 핸드폰 체크
             else if(userDetailInfo.getPhone()!=null&&!userDetailInfo.getPhone().isEmpty()){
-                key = GlobalConstants.phone;
+                key = GlobalConstants.PHONE;
                 value = userDetailInfo.getPhone();
             }
             else{
@@ -390,13 +390,13 @@ public class UserManageService {
         try {
             int result = -1;
             switch (key){
-                case GlobalConstants.nickname:
+                case GlobalConstants.NICKNAME:
                     result = userManageMapper.checkProfileDuplication(key, value);
                     break;
-                case GlobalConstants.mail, GlobalConstants.phone:
+                case GlobalConstants.MAIL, GlobalConstants.PHONE:
                     result = userManageMapper.checkAuthDuplication(key, value);
                     break;
-                case GlobalConstants.pw:
+                case GlobalConstants.PW:
                     result = userManageMapper.checkPwDuplication(key, value, user_id);
                     break;
                 default:
@@ -412,7 +412,7 @@ public class UserManageService {
                 resInfo.setRes_status("-1");
                 resInfo.setMsg("User Info Change Failed : Duplicated Value");
                 resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Key("+key+") Value("+value+")");
-                if(GlobalConstants.pw.equals(key)){
+                if(GlobalConstants.PW.equals(key)){
                     resInfo.setMsg("User Info Change Failed : Same PW As Prev PW");
                     resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Same PW As Prev PW Key("+key+") Value("+value+")");
                 }
@@ -435,10 +435,10 @@ public class UserManageService {
         int result = -1;
         try {
             switch (key){
-                case GlobalConstants.nickname: // 정보 변경
+                case GlobalConstants.NICKNAME: // 정보 변경
                     result = userManageMapper.updateProfile(key, value, user_id);
                     break;
-                case GlobalConstants.pw, GlobalConstants.mail, GlobalConstants.phone: // 정보 변경 & 인증 상태 변경 (핸드폰, 메일)
+                case GlobalConstants.PW, GlobalConstants.MAIL, GlobalConstants.PHONE: // 정보 변경 & 인증 상태 변경 (핸드폰, 메일)
                     result = userManageMapper.updateAuth(key, value, user_id);
                     break;
                 default:

@@ -7,37 +7,40 @@ public class GlobalConstants {
     final public static int MaxDataLength = 1024;
 
     // Table Column Name
-    final public static String user_id = "user_id";
-    final public static String pw = "pw";
-    final public static String name = "name";
-    final public static String phone = "phone";
-    final public static String mail = "mail";
-    final public static String nickname = "nickname";
-    final public static String sex = "sex";
-    final public static String birth = "birth";
-    final public static String region = "region";
+    final public static String USER_ID = "user_id";
+    final public static String PW = "pw";
+    final public static String NAME = "name";
+    final public static String PHONE = "phone";
+    final public static String MAIL = "mail";
+    final public static String NICKNAME = "nickname";
+    final public static String SEX = "sex";
+    final public static String BIRTH = "birth";
+    final public static String REGION = "region";
 
     // Service Name
-    final public static String service_memo = "MEMO";
-    final public static String service_calender = "CALENDER";
-    final public static String service_routine = "ROUTINE";
+    final public static String SERVICE_MEMO = "MEMO";
+    final public static String SERVICE_CALENDER = "CALENDER";
+    final public static String SERVICE_ROUTINE = "ROUTINE";
 
     // Content type (개인, 그룹)
-    final public static String content_type_user = "U";
-    final public static String content_type_group = "G";
+    final public static String CONTENT_TYPE_USER = "U";
+    final public static String CONTENT_TYPE_GROUP = "G";
 
     // Memo Form-Data 전달 받을 때 사용하는 값
-    final public static String file = "file";
-    final public static String json = "json";
+    final public static String FILE = "file";
+    final public static String JSON = "json";
 
     // 권한 값
-    final public static String access_all = "CRUD";
-    final public static String access_create = "C";
-    final public static String access_read = "R";
-    final public static String access_update = "U";
-    final public static String access_delete = "D";
-    final public static String access_read_update = "RU";
-    final public static String access_read_update_delete = "RUD";
+    final public static String ACCESS_ALL = "CRUD";
+    final public static String ACCESS_CREATE = "C";
+    final public static String ACCESS_READ = "R";
+    final public static String ACCESS_UPDATE = "U";
+    final public static String ACCESS_DELETE = "D";
+    final public static String ACCESS_READ_UPDATE = "RU";
+    final public static String ACCESS_READ_UPDATE_DELETE = "RUD";
 
-
+    // Status
+    final public static String CONTENT_STATUS_DELETE = "-1";
+    final public static String CONTENT_STATUS_NORMAL = "1";
+    final public static String CONTENT_STATUS_LOCK = "2";
 }

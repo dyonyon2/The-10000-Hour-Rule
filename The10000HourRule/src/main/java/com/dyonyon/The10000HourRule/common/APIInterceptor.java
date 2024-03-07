@@ -16,7 +16,6 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
@@ -96,12 +95,12 @@ public class APIInterceptor implements HandlerInterceptor {
                 else if(contentType!=null && contentType.contains("form-data")) {
 //                    log.info("req getParameterName contentType : " + contentType);
                     for(Part part : req.getParts()){
-                        if(part.getName()!=null && part.getName().equals(GlobalConstants.file)){
+                        if(part.getName()!=null && part.getName().equals(GlobalConstants.FILE)){
                             reqData = "File("+part.getSubmittedFileName()+")";
                         }
                     }
-                    reqData = reqData + ", Json("+req.getParameter(GlobalConstants.json)+")";
-                    tmp = objectMapper.readValue(req.getParameter(GlobalConstants.json), APICallLogInfo.class);
+                    reqData = reqData + ", Json("+req.getParameter(GlobalConstants.JSON)+")";
+                    tmp = objectMapper.readValue(req.getParameter(GlobalConstants.JSON), APICallLogInfo.class);
                     userId = tmp.getUser_id();
                     ownerId = tmp.getOwner_id();
 //                    log.info("tmp = {}",tmp);
