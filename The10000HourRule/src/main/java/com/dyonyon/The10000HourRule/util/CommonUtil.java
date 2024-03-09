@@ -10,6 +10,8 @@ import java.util.Random;
 
 @Slf4j
 public class CommonUtil {
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
     public static boolean isNull(String key, Object param){
         boolean result = (param == null);
         if(result)
@@ -135,5 +137,17 @@ public class CommonUtil {
     public static String getImgPath(String basePath){
         SimpleDateFormat now = new SimpleDateFormat("yyyyMMdd/HH");
         return basePath+ File.separator +now.format(new Date());
+    }
+
+    public static String getSharedKey() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 15; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+
+        return sb.toString();
     }
 }

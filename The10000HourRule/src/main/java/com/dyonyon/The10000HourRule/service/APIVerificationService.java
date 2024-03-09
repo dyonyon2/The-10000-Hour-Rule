@@ -184,7 +184,7 @@ public class APIVerificationService {
             String content_idx = info.getContent_idx();
             if(user_id!=null&&owner_id!=null&&service!=null&&type!=null&&access!=null){
                 log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
-                if(GlobalConstants.ACCESS_READ_UPDATE_DELETE.contains(access)){
+                if(access.contains(GlobalConstants.ACCESS_READ)||access.contains(GlobalConstants.ACCESS_UPDATE)||access.contains(GlobalConstants.ACCESS_DELETE)){
                     if(content_idx!=null){
                         log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Content_idx({})", req_id, content_idx);
                     }

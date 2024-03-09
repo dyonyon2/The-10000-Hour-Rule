@@ -7,21 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemoDetailInfo {
-    String req_id;
+public class MemoListInfo {
     String memo_idx;
     String memo_type;
-    String owner_id;
-    String owner_idx;
-    String user_id;
-    String user_idx;
-    String last_edit_user_idx;
-    String version;
+    String owner_id;    // 생성시 필요한 데이터
     String title;
-    String content;
-    String category_no;
-    String favorites;
     String create_dt;
     String update_dt;
-    String shared_key;
 }

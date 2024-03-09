@@ -36,9 +36,9 @@ public class UserManageService {
         this.userManageMapper = userManageMapper;
     }
 
-    // 유저(아이디, 닉네임, 이메일, 핸드폰) 중복 확인 기능 : 중복 확인(isDuplication)
-    public ResponseInfo checkDuplication(HttpServletRequest req, String key, String value) {
 
+    // 유저(아이디, 닉네임, 이메일, 핸드폰) 중복 확인 기능 : isDuplication(중복 확인 함수)
+    public ResponseInfo checkDuplication(HttpServletRequest req, String key, String value) {
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
@@ -62,8 +62,6 @@ public class UserManageService {
         }
         return responseInfo;
     }
-
-    // 중복 확인 함수
     public void isDuplication(String req_id, String key, String value, ResponseInfo resInfo) throws FunctionException {
         try {
             int result = -1;
@@ -100,11 +98,12 @@ public class UserManageService {
             resInfo.setRes_status("-1");
             resInfo.setMsg("Duplication Check Failed : Exception Occurred");
             resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Duplication Check Select Failed : "+e.getMessage());
-            throw new FunctionException("Duplication Check Failed : "+e.getMessage());
+            throw new FunctionException("Duplication Check Fail : "+e.getMessage());
         }
     }
 
-    // Auth Key 생성 및 전송(이메일) 기능 : 등록(updateAuthKey) -> 전송(sendAuthKey)
+
+    // Auth Key 생성 및 전송(이메일) 기능 : updateAuthKey(Auth Key 등록 함수) -> sendAuthKey(Auth Key 전송 함수)
     public ResponseInfo generateAndSendAuthKey(HttpServletRequest req, UserAuthInfo userAuthInfo){
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -150,8 +149,6 @@ public class UserManageService {
         }
         return responseInfo;
     }
-
-    // Auth Key 등록 함수
     public void updateAuthKey(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         int result = -1;
         try {
@@ -171,8 +168,6 @@ public class UserManageService {
             throw new FunctionException("Auth Key Insert Fail : "+e.getMessage());
         }
     }
-
-    // Auth Key 전송 함수
     public void sendAuthKey(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         try{
             String to;
@@ -211,7 +206,8 @@ public class UserManageService {
         }
     }
 
-    // Auth Key 검증 기능 : 유효성 확인(checkKeyValidation) -> 검증(verify)
+
+    // Auth Key 검증 기능 : checkKeyValidation(Auth Key 유효성 확인 함수) -> verify(Auth Key 검증 함수)
     public ResponseInfo verifyAuthKey(HttpServletRequest req, UserAuthInfo userAuthInfo){
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -241,8 +237,6 @@ public class UserManageService {
         }
         return responseInfo;
     }
-
-    // Auth Key 유효성 확인 함수
     public void checkKeyValidation(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         String key = null;
         String method = null;
@@ -284,8 +278,6 @@ public class UserManageService {
             throw new FunctionException("Auth Key Validate Fail : "+e.getMessage());
         }
     }
-
-    // Auth Key 검증 함수
     public void verify(String req_id, UserAuthInfo info, ResponseInfo resInfo) throws FunctionException{
         int result = -1;
         // User_id, Key가 동일해야하며, KEY_EXPIRED_TIME이 지나면 오류로 처리
@@ -314,7 +306,7 @@ public class UserManageService {
     }
 
 
-    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 기능
+    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 기능 : isDuplication2(중복 확인 함수) -> updateUserInfo(정보 업데이트 함수)
     public ResponseInfo changeUserInfo(HttpServletRequest req, UserDetailInfo userDetailInfo){
 
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -385,7 +377,6 @@ public class UserManageService {
         }
         return responseInfo;
     }
-
     public void isDuplication2(String req_id, String key, String value, String user_id, ResponseInfo resInfo) throws FunctionException {
         try {
             int result = -1;
@@ -430,7 +421,6 @@ public class UserManageService {
             throw new FunctionException("Duplication Check Select Fail : "+e.getMessage());
         }
     }
-
     public void updateUserInfo(String req_id, String key, String value, String user_id, ResponseInfo resInfo) throws FunctionException {
         int result = -1;
         try {

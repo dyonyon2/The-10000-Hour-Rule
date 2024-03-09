@@ -26,15 +26,13 @@ public class UserEventController {
     private UserLoginService userLoginService;
     private UserSignupService userSignupService;
     private UserManageService userManageService;
-    private TestService testService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UserEventController(APIVerificationService apiVerificationService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService, TestService testService) {
+    public UserEventController(APIVerificationService apiVerificationService, UserLoginService userLoginService, UserSignupService userSignupService, UserManageService userManageService) {
         this.apiVerificationService = apiVerificationService;
         this.userLoginService = userLoginService;
         this.userSignupService = userSignupService;
         this.userManageService = userManageService;
-        this.testService = testService;
     }
 
 
@@ -112,6 +110,7 @@ public class UserEventController {
         return result;
     }
 
+
     // Auth Key(핸드폰,이메일) 생성 및 전송 처리 : API 처리 전 로그인 세션 확인
     @PostMapping("/auth")
     public ResponseInfo authController(HttpServletRequest req, @RequestBody UserAuthInfo userAuthInfo) throws ParseException {
@@ -139,6 +138,7 @@ public class UserEventController {
         }
         return result;
     }
+
 
     // Auth Key 검증 처리
     @GetMapping("/auth/check")
@@ -168,6 +168,7 @@ public class UserEventController {
         return result;
     }
 
+
     // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 처리
     @PatchMapping("/change")
     public ResponseInfo changeController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
@@ -193,36 +194,6 @@ public class UserEventController {
             result.setRes_data("[Controller-UserEvent][/change] Change Controller Failed : "+e.getMessage());
             result.setErr_code("UN");
         }
-        return result;
-    }
-
-
-
-
-    @RequestMapping("/test")
-//    public ResponseInfo testController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException, IOException {
-    public ResponseInfo testController(HttpServletRequest req) throws ParseException, IOException {
-
-//        objectMapper 쓰는 방법
-//        ServletInputStream inputStream = req.getInputStream();
-//        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-//        log.info("messageBody={}", messageBody);
-//        UserAuthInfo data = objectMapper.readValue(messageBody, UserAuthInfo.class);
-//        log.info("id={}, pw={}", data.getUser_id(), data.getPw());
-//        return "test";
-
-//        ResponseInfo result;
-//        log.info("[Controller-UserEvent][/test][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-//        result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(),req.getSession().getId());
-//        if("-1".equals(result.getStatus())){
-//            result.setStatus("1");
-//            return result;
-//        }
-//        return result;
-
-        ResponseInfo result;
-        log.info("[Controller-UserEvent][/test][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
-        result = testService.mailSend((String) req.getAttribute("req_id"), String.valueOf(req.getRequestURL()));
         return result;
     }
 }

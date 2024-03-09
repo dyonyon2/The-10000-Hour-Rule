@@ -43,4 +43,11 @@ public class GlobalConstants {
     final public static String CONTENT_STATUS_DELETE = "-1";
     final public static String CONTENT_STATUS_NORMAL = "1";
     final public static String CONTENT_STATUS_LOCK = "2";
+
+    // List Type
+    final public static String CONTENT_LIST_OWN = "own";
+    final public static String CONTENT_LIST_GROUP = "group";
+    final public static String CONTENT_LIST_FOLLOW = "follow";
+
+
 }

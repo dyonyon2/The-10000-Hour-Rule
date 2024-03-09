@@ -3,6 +3,7 @@ package com.dyonyon.The10000HourRule.mapper.memo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoListInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +17,7 @@ public interface MemoCRUDMapper {
     int updateMemo(MemoDetailInfo info);
     MemoDetailInfo readMemo(MemoInfo info);
     int updateStatusMemo(MemoInfo info);
+    MemoListInfo[] readOwnMemoList(String user_id);
+    MemoListInfo[] readGroupMemoList(String user_id);
+    MemoListInfo[] readFollowMemoList(String user_id);
 }

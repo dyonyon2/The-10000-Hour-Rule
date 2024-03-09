@@ -1,4 +1,4 @@
-package com.dyonyon.The10000HourRule.service.user;
+package com.dyonyon.The10000HourRule.service.memo;
 
 import com.dyonyon.The10000HourRule.code.GlobalConstants;
 import com.dyonyon.The10000HourRule.common.FunctionException;
@@ -6,6 +6,7 @@ import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoImageInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
+import com.dyonyon.The10000HourRule.domain.memo.MemoListInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoCRUDMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +36,8 @@ public class MemoCRUDService {
         this.memoCRUDMapper = memoCRUDMapper;
     }
 
-    //메모 생성 : setOwnerIdx, createMemoAndGetMemoIdx
+
+    // 메모 생성 : setOwnerIdx, createMemoAndGetMemoIdx
     public ResponseInfo createMemo(HttpServletRequest req, MemoInfo memoInfo) {
         // owner_idx 세팅 -> 메모 생성 및 메모 IDX 세팅
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -245,7 +247,7 @@ public class MemoCRUDService {
     }
 
 
-    //메모 수정 : setOwnerIdx, updateMemo
+    // 메모 수정 : setOwnerIdx, updateMemo
     public ResponseInfo updateMemo(HttpServletRequest req, MemoDetailInfo memoDetailInfo) {
         // owner_idx 세팅, 메모 수정
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -303,6 +305,7 @@ public class MemoCRUDService {
             int result = memoCRUDMapper.updateMemo(info);
             if(result==1){
                 log.info("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Update Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
+                resInfo.setRes_data(info);
             }
             else {
                 throw new Exception("Memo Update Result("+result+")");
@@ -319,7 +322,7 @@ public class MemoCRUDService {
     }
 
 
-    //메모 읽기 : setOwnerIdx, readMemoDetail
+    // 메모 읽기 : setOwnerIdx, readMemoDetail
     public ResponseInfo readMemo(HttpServletRequest req, MemoInfo memoInfo) {
         // owner_idx 세팅, 메모 수정
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -392,7 +395,8 @@ public class MemoCRUDService {
         }
     }
 
-    //메모 삭제 : setOwnerIdx, deleteMemo
+
+    // 메모 삭제 : setOwnerIdx, deleteMemo
     public ResponseInfo deleteMemo(HttpServletRequest req, MemoInfo memoInfo) {
         // owner_idx 세팅, 메모 수정
         String req_id = String.valueOf(req.getAttribute("req_id"));
@@ -460,6 +464,107 @@ public class MemoCRUDService {
             resInfo.setRes_status("-1");
             resInfo.setMsg("Memo Delete Failed : Exception Occurred");
             resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][updateStatusMemo] Memo Delete Failed : "+e.getMessage());
+            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+        }
+    }
+
+
+    //메모 목록 읽기 : readOwn/Group/FollowMemoList
+    public ResponseInfo readMemoList(HttpServletRequest req, String user_id, String target) {
+        // owner_idx 세팅, 메모 수정
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+
+        try{
+            log.info("[Service-MemoCRUD][readMemoList][{}] Memo List Read Started... User ({}) Target({})", req_id, user_id, target);
+            // 메모 정보를 Array로 담아서 전달
+            switch (target){
+                // 1. 내 소유 메모 목록
+                case GlobalConstants.CONTENT_LIST_OWN:
+                    readOwnMemoList(req_id, user_id, responseInfo);
+                    break;
+                // 2. 내 그룹 메모 목록
+                case GlobalConstants.CONTENT_LIST_GROUP:
+                    readGroupMemoList(req_id, user_id, responseInfo);
+                    break;
+                // 3. 내가 팔로우한 메모 목록
+                case GlobalConstants.CONTENT_LIST_FOLLOW:
+                    readFollowMemoList(req_id, user_id, responseInfo);
+                    break;
+                default:
+                    responseInfo.setRes_status("-1");
+                    responseInfo.setMsg("Invalid Target : "+ target);
+                    responseInfo.setRes_data("[Service-MemoCRUD][readMemoList] Invalid Target("+target+")");
+                    throw new FunctionException("Invalid Target("+target+")");
+            }
+
+            log.info("[Service-MemoCRUD][readMemoList][{}] Memo List Read Success...", req_id);
+            responseInfo.setMsg("Memo List Read Success");
+        } catch (FunctionException e){
+            log.error("[Service-MemoCRUD][readMemoList][{}] Memo List Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-MemoCRUD][readMemoList][{}]  Memo List Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("Memo List Read Failed : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][readMemoList] Memo List Read Failed : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+    public void readOwnMemoList(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
+        try {
+            MemoListInfo[] list = memoCRUDMapper.readOwnMemoList(user_id);
+            if(list!=null)
+                log.info("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
+            else
+                throw new Exception("Memo List Read Result("+list+")");
+            resInfo.setRes_data(list);
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readOwnMemoList] Memo List Read Failed : "+e.getMessage());
+            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+        }
+    }
+    public void readGroupMemoList(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
+        try {
+            MemoListInfo[] list = memoCRUDMapper.readGroupMemoList(user_id);
+            if(list!=null)
+                log.info("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
+            else
+                throw new Exception("Memo List Read Result("+list+")");
+            resInfo.setRes_data(list);
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readGroupMemoList] Memo List Read Failed : "+e.getMessage());
+            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+        }
+    }
+    public void readFollowMemoList(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
+        try {
+            MemoListInfo[] list = memoCRUDMapper.readFollowMemoList(user_id);
+            if(list!=null)
+                log.info("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
+            else
+                throw new Exception("Memo List Read Result("+list+")");
+            resInfo.setRes_data(list);
+        } catch (Exception e) {
+            log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readFollowMemoList] Memo List Read Failed : "+e.getMessage());
             throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
         }
     }
