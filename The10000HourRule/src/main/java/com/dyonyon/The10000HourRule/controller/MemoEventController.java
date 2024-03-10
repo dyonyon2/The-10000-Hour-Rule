@@ -65,12 +65,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/] Memo Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Create fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/] Memo Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 이미지 저장
     @PostMapping("/image")
@@ -105,12 +106,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/image]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Image Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/image] Image Controller Failed : "+e.getMessage());
+            result.setMsg("Image Create fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/image] Image Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 수정
     @PatchMapping("/update")
@@ -144,12 +146,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/update]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Update Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/update] Memo Update Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Update fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/update] Memo Update Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 읽기
     @GetMapping("/read")
@@ -183,12 +186,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/read]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Read Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/read] Memo Read Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Read fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/read] Memo Read Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 삭제
     @DeleteMapping("/delete")
@@ -222,12 +226,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/delete]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Delete Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/delete] Memo Delete Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Delete fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/delete] Memo Delete Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 목록 읽기 (own, group, follow)
     @GetMapping("/list")
@@ -251,12 +256,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/list]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo List Read Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/list] Memo List Read Controller Failed : "+e.getMessage());
+            result.setMsg("Memo List Read fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/list] Memo List Read Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 공유키 생성 (소유자만 가능)
     @PostMapping("/share/create")
@@ -282,7 +288,7 @@ public class MemoEventController {
                 log.info("[Controller-MemoEvent][/share/create][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
                 return result;
             }
-            log.info("[Controller-MemoEvent][/share/create][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
+            log.info("[Controller-MemoEvent][/share/create][{}] Call MemoManageService....",req.getAttribute("req_id"));
             result = memoManageService.updateKey(req, memoDetailInfo);
             log.info("[Controller-MemoEvent][/share/create][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         } catch (Exception e){
@@ -290,12 +296,13 @@ public class MemoEventController {
             log.error("[Controller-MemoEvent][/share/create]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Shared Key Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/share/create] Memo Shared Key Create Failed : "+e.getMessage());
+            result.setMsg("Memo Shared Key Create fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/share/create] Memo Shared Key Create fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
+
 
     // 메모 공유키 삭제 (소유자만 가능)
     @DeleteMapping("/share/delete")
@@ -321,54 +328,87 @@ public class MemoEventController {
                 log.info("[Controller-MemoEvent][/share/delete][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
                 return result;
             }
-            log.info("[Controller-MemoEvent][/share/delete][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
+            log.info("[Controller-MemoEvent][/share/delete][{}] Call MemoManageService....",req.getAttribute("req_id"));
             result = memoManageService.deleteSharedKey(req, memoDetailInfo);
             log.info("[Controller-MemoEvent][/share/delete][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         } catch (Exception e){
-            log.error("[Controller-MemoEvent][/][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
-            log.error("[Controller-MemoEvent][/]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            log.error("[Controller-MemoEvent][/share/delete[{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/share/delete]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/] Memo Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Create fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/share/delete] Memo Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
     }
 
+
     // 공유 메모 읽기
     @GetMapping("/share/read")
-    public ResponseInfo memoSharedReadController(HttpServletRequest req, @RequestBody MemoInfo memoInfo) throws ParseException {
+    public ResponseInfo memoSharedReadController(HttpServletRequest req, @ModelAttribute MemoInfo memoInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();
         try {
-            log.info("[Controller-MemoEvent][/][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+            log.info("[Controller-MemoEvent][/share/read][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
             if(req.getAttribute("user_idx")!=null) memoInfo.setUser_idx((String) req.getAttribute("user_idx"));
-            log.info("[Controller-MemoEvent][/][{}] BODY : {}",req.getAttribute("req_id"), memoInfo);
-            log.info("[Controller-MemoEvent][/][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            log.info("[Controller-MemoEvent][/share/read][{}] BODY : {}",req.getAttribute("req_id"), memoInfo);
+            log.info("[Controller-MemoEvent][/share/read][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
             // 로그인 세션 확인
             result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoInfo.getUser_id(), req.getSession().getId());
             if ("-1".equals(result.getRes_status())) {
-                log.info("[Controller-MemoEvent][/][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
+                log.info("[Controller-MemoEvent][/share/read][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
+                return result;
+            }
+            log.info("[Controller-MemoEvent][/share/read][{}] Call MemoManageService....",req.getAttribute("req_id"));
+            result = memoManageService.readSharedMemo(req, memoInfo);
+            log.info("[Controller-MemoEvent][/share/read][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-MemoEvent][/share/read][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/share/read]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Memo Create fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/share/read] Memo Controller fail : "+e.getMessage());
+            result.setErr_code("UN");
+        }
+        return result;
+    }
+
+
+    // 메모 정보(상태, 권한, 카테고리, 즐겨찾기) 변경
+    @PatchMapping("/change")
+    public ResponseInfo memoInfoChangeController(HttpServletRequest req, @RequestBody MemoInfo memoInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-MemoEvent][/change][{}] URL : {}",req.getAttribute("req_id"), req.getRequestURL());
+            if(req.getAttribute("user_idx")!=null) memoInfo.setUser_idx((String) req.getAttribute("user_idx"));
+            log.info("[Controller-MemoEvent][/change][{}] BODY : {}",req.getAttribute("req_id"), memoInfo);
+            log.info("[Controller-MemoEvent][/change][{}] Call API ApiVerificationService....", req.getAttribute("req_id"));
+            // 로그인 세션 확인
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), memoInfo.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-MemoEvent][/change][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
                 return result;
             }
             // 권한 확인
             ContentInfo verifyInfo = new ContentInfo();
-            verifyInfo.setService(GlobalConstants.SERVICE_MEMO); verifyInfo.setAccess(GlobalConstants.ACCESS_CREATE); verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
+            verifyInfo.setService(GlobalConstants.SERVICE_MEMO); verifyInfo.setAccess(GlobalConstants.ACCESS_UPDATE); verifyInfo.setContent_idx(memoInfo.getMemo_idx());
+            verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
             result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
             if ("-1".equals(result.getRes_status())) {
-                log.info("[Controller-MemoEvent][/][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
+                log.info("[Controller-MemoEvent][/change][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));
                 return result;
             }
-            log.info("[Controller-MemoEvent][/][{}] Call MemoCRUDService....",req.getAttribute("req_id"));
-//            result = memoManageService.createMemo(req, memoInfo);
-            log.info("[Controller-MemoEvent][/][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
+            log.info("[Controller-MemoEvent][/change][{}] Call MemoManageService....",req.getAttribute("req_id"));
+            result = memoManageService.changeMemoInfo(req, memoInfo);
+            log.info("[Controller-MemoEvent][/change][{}] RESULT : STATUS({}) RES_STATUS({})",req.getAttribute("req_id"),result.getStatus(),result.getRes_status());
         } catch (Exception e){
-            log.error("[Controller-MemoEvent][/][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
-            log.error("[Controller-MemoEvent][/]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            log.error("[Controller-MemoEvent][/change][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-MemoEvent][/change]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Memo Create Failed: Exception Occurred");
-            result.setRes_data("[Controller-MemoEvent][/] Memo Controller Failed : "+e.getMessage());
+            result.setMsg("Memo Info Change fail: Exception Occurred");
+            result.setRes_data("[Controller-MemoEvent][/change] Memo Info Change Controller fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;

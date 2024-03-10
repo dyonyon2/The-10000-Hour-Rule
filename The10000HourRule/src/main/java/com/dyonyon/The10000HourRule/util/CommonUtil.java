@@ -111,6 +111,35 @@ public class CommonUtil {
                     }
                 }
                 break;
+            case GlobalConstants.ACCESS, GlobalConstants.STATUS: // 숫자, 특수기호(-)
+                for (char c : value.toCharArray()) {
+                    if(Character.isDigit(c)) {
+                    } else if('-' == c) {
+                    } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
+                        res = false;
+                        break;
+                    }
+                }
+                break;
+            case GlobalConstants.CATEGORY_NO: // 숫자
+                for (char c : value.toCharArray()) {
+                    if(Character.isDigit(c)) {
+                    } else {
+                        log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
+                        res = false;
+                        break;
+                    }
+                }
+                break;
+            case GlobalConstants.FAVORITES: // 영어 (대문자) Y, N
+                if("Y".equals(value)){
+                } else if("N".equals(value)){
+                } else {
+                    log.error("[CommonUtil-isFormat] {}({}) Is Wrong Format",key,value);
+                    res = false;
+                }
+                break;
             default:
                 log.error("[CommonUtil-isFormat] {}({}) Is Unknown Case",key,value);
                 res = false;

@@ -12,4 +12,7 @@ public interface MemoManageMapper {
     String getGroupOwnerId(MemoDetailInfo info);
     int updateSharedKey(MemoDetailInfo info);
     int deleteSharedKey(MemoDetailInfo info);
+    MemoDetailInfo readSharedMemo(MemoInfo info);
+    int updateMemoInfo(String key, String value, String memo_idx, String memo_type);
+    int updateMemoDetailInfo(String key, String value, String memo_idx, String memo_type);
 }

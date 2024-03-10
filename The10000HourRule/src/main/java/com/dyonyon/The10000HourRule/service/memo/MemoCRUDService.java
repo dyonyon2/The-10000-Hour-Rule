@@ -59,14 +59,14 @@ public class MemoCRUDService {
             responseInfo.setRes_data(memoInfo);
             responseInfo.setMsg("Memo Create Success");
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][createMemo][{}] Memo Create Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][createMemo][{}] Memo Create fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][createMemo][{}]  Memo Create Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][createMemo][{}] Memo Create fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][createMemo]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Memo Create Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][createMemo] Memo Create Failed : "+e.getMessage());
+            responseInfo.setMsg("Memo Create fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][createMemo] Memo Create fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -83,13 +83,13 @@ public class MemoCRUDService {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][createMemo][setOwnerIdx][{}] Owner IDX Get fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][createMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Create Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][createMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
-            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Create fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][createMemo][setOwnerIdx] Owner IDX Get fail : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get fail : "+e.getMessage());
         }
     }
     public void createMemoAndGetMemoIdx(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -117,14 +117,14 @@ public class MemoCRUDService {
                 throw new Exception("MemoIdx Select Result("+memoIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-UserManage][createMemo][createMemoAndGetMemoIdx][{}] Memo Insert Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][createMemo][createMemoAndGetMemoIdx][{}] Memo Insert fail : {}",req_id,e.getMessage());
             log.error("[Service-UserManage][createMemo][createMemoAndGetMemoIdx]["+req_id+"] Error PrintStack : ",e);
             transactionManager.rollback(status);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Create Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-UserManage][createMemo][createMemoAndGetMemoIdx] Memo Insert Failed : "+e.getMessage());
-            throw new FunctionException("Memo Insert Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Create fail : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][createMemo][createMemoAndGetMemoIdx] Memo Insert fail : "+e.getMessage());
+            throw new FunctionException("Memo Insert fail : "+e.getMessage());
         }
     }
 
@@ -148,14 +148,14 @@ public class MemoCRUDService {
 
             log.info("[Service-MemoCRUD][saveImageFile][{}] File Save & Insert Success...", req_id);
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][saveImageFile][{}] File Save & Insert Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][saveImageFile][{}] File Save & Insert fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][saveImageFile][{}] File Save & Insert Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][saveImageFile][{}] File Save & Insert fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][saveImageFile]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Image File Save Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] File Save & Insert Failed : "+e.getMessage());
+            responseInfo.setMsg("Image File Save fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][saveImageFile] File Save & Insert fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -172,13 +172,13 @@ public class MemoCRUDService {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][saveImageFile][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][saveImageFile][setOwnerIdx][{}] Owner IDX Get fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][saveImageFile][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Image File Save Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][saveImageFile][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
-            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+            resInfo.setMsg("Image File Save fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][saveImageFile][setOwnerIdx] Owner IDX Get fail : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get fail : "+e.getMessage());
         }
     }
     public void saveImage(String req_id, MemoImageInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -209,21 +209,21 @@ public class MemoCRUDService {
             }
             // 이미지 데이터가 존재하지 않을 때
             else {
-                log.info("[Service-MemoCRUD][saveImageFile][saveImage][{}] File Save Failed : File Is Null",req_id);
+                log.info("[Service-MemoCRUD][saveImageFile][saveImage][{}] File Save fail : File Is Null",req_id);
                 resInfo.setRes_status("-1");
-                resInfo.setMsg("Image File Save Failed : File Is Null");
-                resInfo.setRes_data("[Service-MemoCRUD][saveImageFile][saveImage] Save File Failed : File Is Null");
+                resInfo.setMsg("Image File Save fail : File Is Null");
+                resInfo.setRes_data("[Service-MemoCRUD][saveImageFile][saveImage] Save File fail : File Is Null");
                 resInfo.setErr_code("UN");
-                throw new FunctionException("File Save Failed : File Is Null");
+                throw new FunctionException("File Save fail : File Is Null");
             }
         } catch (Exception e) {
-            log.error("[Service-UserManage][saveImageFile][saveImage][{}] File Save Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][saveImageFile][saveImage][{}] File Save fail : {}",req_id,e.getMessage());
             log.error("[Service-UserManage][saveImageFile][saveImage]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Image File Save Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-UserManage][saveImageFile][saveImage] File Save Failed : "+e.getMessage());
-            throw new FunctionException("File Save Failed : "+e.getMessage());
+            resInfo.setMsg("Image File Save fail : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][saveImageFile][saveImage] File Save fail : "+e.getMessage());
+            throw new FunctionException("File Save fail : "+e.getMessage());
         }
     }
     public void insertImageInfo(String req_id, MemoImageInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -236,13 +236,13 @@ public class MemoCRUDService {
                 throw new Exception("Result("+result+")");
             }
         } catch (Exception e) {
-            log.error("[Service-UserManage][saveImageFile][insertImageInfo][{}] Image Info DB Insert Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][saveImageFile][insertImageInfo][{}] Image Info DB Insert fail : {}",req_id,e.getMessage());
             log.error("[Service-UserManage][saveImageFile][insertImageInfo]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Image File Save Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-UserManage][saveImageFile][insertImageInfo] Image Info DB Insert Failed : "+e.getMessage());
-            throw new FunctionException("Image Info Insert Failed : "+e.getMessage());
+            resInfo.setMsg("Image File Save fail : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][saveImageFile][insertImageInfo] Image Info DB Insert fail : "+e.getMessage());
+            throw new FunctionException("Image Info Insert fail : "+e.getMessage());
         }
     }
 
@@ -267,14 +267,14 @@ public class MemoCRUDService {
             log.info("[Service-MemoCRUD][updateMemo][{}] Memo Update Success...: Memo({})", req_id, memoDetailInfo.getMemo_idx());
             responseInfo.setMsg("Memo Update Success");
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][updateMemo][{}] Memo Update Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][{}] Memo Update fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][updateMemo][{}]  Memo Update Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][{}] Memo Update fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][updateMemo]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Memo Update Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][updateMemo] Memo Update Failed : "+e.getMessage());
+            responseInfo.setMsg("Memo Update fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][updateMemo] Memo Update fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -291,13 +291,13 @@ public class MemoCRUDService {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][updateMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][setOwnerIdx][{}] Owner IDX Get fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][updateMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Update Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
-            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Update fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][setOwnerIdx] Owner IDX Get fail : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get fail : "+e.getMessage());
         }
     }
     public void updateMemo(String req_id, MemoDetailInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -311,13 +311,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo Update Result("+result+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Update Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Update fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][updateMemo][updateMemo]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Update Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][updateMemo] Memo Update Failed : "+e.getMessage());
-            throw new FunctionException("Memo Update Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Update fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][updateMemo][updateMemo] Memo Update fail : "+e.getMessage());
+            throw new FunctionException("Memo Update fail : "+e.getMessage());
         }
     }
 
@@ -341,14 +341,14 @@ public class MemoCRUDService {
             log.info("[Service-MemoCRUD][readMemo][{}] Memo Read Success...: Memo({})", req_id, memoInfo.getMemo_idx());
             responseInfo.setMsg("Memo Read Success");
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][readMemo][{}] Memo Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemo][{}] Memo Read fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][readMemo][{}]  Memo Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemo][{}] Memo Read fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemo]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Memo Read Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][readMemo] Memo Read Failed : "+e.getMessage());
+            responseInfo.setMsg("Memo Read fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][readMemo] Memo Read fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -365,13 +365,13 @@ public class MemoCRUDService {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][readMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemo][setOwnerIdx][{}] Owner IDX Get fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Read Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][readMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
-            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Read fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemo][setOwnerIdx] Owner IDX Get fail : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get fail : "+e.getMessage());
         }
     }
     public void readMemoDetail(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -385,13 +385,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo Read Result("+memoDetailInfo+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][readMemo][readMemoDetail][{}] Memo Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemo][readMemoDetail][{}] Memo Read fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemo][readMemoDetail]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Read Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][readMemo][readMemoDetail] Memo Read Failed : "+e.getMessage());
-            throw new FunctionException("Memo Read Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Read fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemo][readMemoDetail] Memo Read fail : "+e.getMessage());
+            throw new FunctionException("Memo Read fail : "+e.getMessage());
         }
     }
 
@@ -415,14 +415,14 @@ public class MemoCRUDService {
             log.info("[Service-MemoCRUD][deleteMemo][{}] Memo Delete Success...: Memo({})", req_id, memoInfo.getMemo_idx());
             responseInfo.setMsg("Memo Delete Success");
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][deleteMemo][{}] Memo Delete Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][{}] Memo Delete fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][deleteMemo][{}]  Memo Delete Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][{}] Memo Delete fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][deleteMemo]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Memo Delete Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][deleteMemo] Memo Delete Failed : "+e.getMessage());
+            responseInfo.setMsg("Memo Delete fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][deleteMemo] Memo Delete fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -439,13 +439,13 @@ public class MemoCRUDService {
                 throw new Exception("Owner IDX Get Result("+ownerIdx+")");
             }
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][deleteMemo][setOwnerIdx][{}] Owner IDX Get Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][setOwnerIdx][{}] Owner IDX Get fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][deleteMemo][setOwnerIdx]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Delete Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][setOwnerIdx] Owner IDX Get Failed : "+e.getMessage());
-            throw new FunctionException("Owner IDX Get Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Delete fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][setOwnerIdx] Owner IDX Get fail : "+e.getMessage());
+            throw new FunctionException("Owner IDX Get fail : "+e.getMessage());
         }
     }
     public void deleteMemo(String req_id, MemoInfo info, ResponseInfo resInfo) throws FunctionException {
@@ -458,13 +458,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo Status Update Result("+result+")");
             resInfo.setRes_data(info);
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo Delete Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][updateStatusMemo] Memo Delete Failed : "+e.getMessage());
-            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+            resInfo.setMsg("Memo Delete fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][deleteMemo][updateStatusMemo] Memo Delete fail : "+e.getMessage());
+            throw new FunctionException("Memo Status Update fail : "+e.getMessage());
         }
     }
 
@@ -502,14 +502,14 @@ public class MemoCRUDService {
             log.info("[Service-MemoCRUD][readMemoList][{}] Memo List Read Success...", req_id);
             responseInfo.setMsg("Memo List Read Success");
         } catch (FunctionException e){
-            log.error("[Service-MemoCRUD][readMemoList][{}] Memo List Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][{}] Memo List Read fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-MemoCRUD][readMemoList][{}]  Memo List Read Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][{}] Memo List Read fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Memo List Read Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-MemoCRUD][readMemoList] Memo List Read Failed : "+e.getMessage());
+            responseInfo.setMsg("Memo List Read fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-MemoCRUD][readMemoList] Memo List Read fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -523,13 +523,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo List Read Result("+list+")");
             resInfo.setRes_data(list);
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readOwnMemoList] Memo List Read Failed : "+e.getMessage());
-            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+            resInfo.setMsg("Memo List Read fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readOwnMemoList] Memo List Read fail : "+e.getMessage());
+            throw new FunctionException("Memo Status Update fail : "+e.getMessage());
         }
     }
     public void readGroupMemoList(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
@@ -541,13 +541,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo List Read Result("+list+")");
             resInfo.setRes_data(list);
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readGroupMemoList] Memo List Read Failed : "+e.getMessage());
-            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+            resInfo.setMsg("Memo List Read fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readGroupMemoList] Memo List Read fail : "+e.getMessage());
+            throw new FunctionException("Memo Status Update fail : "+e.getMessage());
         }
     }
     public void readFollowMemoList(String req_id, String user_id, ResponseInfo resInfo) throws FunctionException {
@@ -559,13 +559,13 @@ public class MemoCRUDService {
                 throw new Exception("Memo List Read Result("+list+")");
             resInfo.setRes_data(list);
         } catch (Exception e) {
-            log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read Failed : {}",req_id,e.getMessage());
+            log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Memo List Read Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readFollowMemoList] Memo List Read Failed : "+e.getMessage());
-            throw new FunctionException("Memo Status Update Failed : "+e.getMessage());
+            resInfo.setMsg("Memo List Read fail : Exception Occurred");
+            resInfo.setRes_data("[Service-MemoCRUD][readMemoList][readFollowMemoList] Memo List Read fail : "+e.getMessage());
+            throw new FunctionException("Memo Status Update fail : "+e.getMessage());
         }
     }
 }

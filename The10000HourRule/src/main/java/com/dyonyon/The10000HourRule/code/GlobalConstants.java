@@ -16,6 +16,10 @@ public class GlobalConstants {
     final public static String SEX = "sex";
     final public static String BIRTH = "birth";
     final public static String REGION = "region";
+    final public static String ACCESS = "access";
+    final public static String STATUS = "status";
+    final public static String CATEGORY_NO = "category_no";
+    final public static String FAVORITES = "favorites";
 
     // Service Name
     final public static String SERVICE_MEMO = "MEMO";

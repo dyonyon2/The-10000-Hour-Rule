@@ -50,14 +50,14 @@ public class UserManageService {
             isDuplication(req_id, key, value, responseInfo);
 
         } catch (FunctionException e){
-            log.error("[Service-UserManage][checkDuplication][{}] Check Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][checkDuplication][{}] Check fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-UserManage][checkDuplication][{}] Check Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][checkDuplication][{}] Check fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-UserManage][checkDuplication]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Duplication Check Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-UserManage][checkDuplication] Duplication Check Failed : "+e.getMessage());
+            responseInfo.setMsg("Duplication Check fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserManage][checkDuplication] Duplication Check fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -92,12 +92,12 @@ public class UserManageService {
                 resInfo.setRes_data("Not Duplicated : Key("+key+") Value("+value+")");
             }
         } catch (Exception e) {
-            log.error("[Service-UserManage][checkDuplication][isDuplication][{}] Duplication Check Select Failed : {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][checkDuplication][isDuplication][{}] Duplication Check Select fail : {}",req_id,e.getMessage());
             log.error("[Service-UserManage][checkDuplication][isDuplication]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("Duplication Check Failed : Exception Occurred");
-            resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Duplication Check Select Failed : "+e.getMessage());
+            resInfo.setMsg("Duplication Check fail : Exception Occurred");
+            resInfo.setRes_data("[Service-UserManage][checkDuplication][isDuplication] Duplication Check Select fail : "+e.getMessage());
             throw new FunctionException("Duplication Check Fail : "+e.getMessage());
         }
     }
@@ -137,14 +137,14 @@ public class UserManageService {
                 log.info("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generate&Send Success...: ID({})", req_id, userAuthInfo.getUser_id());
             }
         } catch (FunctionException e){
-            log.error("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generate&Send Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generate&Send fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generate&Send Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][generateAndSendAuthKey][{}] Auth Key Generate&Send fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-UserManage][generateAndSendAuthKey]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Auth Key Generate&Send Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey] Auth Key Generate&Send Failed : "+e.getMessage());
+            responseInfo.setMsg("Auth Key Generate&Send fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey] Auth Key Generate&Send fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -161,7 +161,7 @@ public class UserManageService {
         } catch (Exception e) {
             log.error("[Service-UserManage][generateAndSendAuthKey][insertAuthKey][{}] Auth Key Insert Fail : ID({}) {}, {}",req_id,info.getUser_id(), result,e.getMessage());
             log.error("[Service-UserManage][generateAndSendAuthKey][insertAuthKey]["+req_id+"] Error PrintStack : ",e);
-            resInfo.setMsg("Auth Key Generate&Send Failed : Exception Occurred");
+            resInfo.setMsg("Auth Key Generate&Send fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey][insertAuthKey] Auth Key Insert Fail : "+e.getMessage());
@@ -188,7 +188,7 @@ public class UserManageService {
                     break;
                 default:
                     resInfo.setRes_status("-1");
-                    resInfo.setMsg("Auth Key Generate&Send Failed : Invalid Method("+info.getMethod()+")");
+                    resInfo.setMsg("Auth Key Generate&Send fail : Invalid Method("+info.getMethod()+")");
                     resInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey][sendAuthKey] Auth Key Send Fail : Invalid Method("+info.getMethod()+")");
                     throw new FunctionException("Auth Key Send Fail : Invalid Method("+info.getMethod()+")");
             }
@@ -198,7 +198,7 @@ public class UserManageService {
         } catch (Exception e){
             log.error("[Service-UserManage][generateAndSendAuthKey][sendAuthKey][{}] Auth Key Send Fail : ID({}) Method({}) Key({}), {}",req_id,info.getUser_id(), info.getMethod(),info.getKey(), e.getMessage());
             log.error("[Service-UserManage][generateAndSendAuthKey][sendAuthKey]["+req_id+"] Error PrintStack : ",e);
-            resInfo.setMsg("Auth Key Generate&Send Failed : Exception Occurred");
+            resInfo.setMsg("Auth Key Generate&Send fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserManage][generateAndSendAuthKey][sendAuthKey] Auth Key Send Fail : "+e.getMessage());
@@ -225,14 +225,14 @@ public class UserManageService {
 
             log.info("[Service-UserManage][verifyAuthKey][{}] Auth Key Verify Success...", req_id);
         } catch (FunctionException e){
-            log.error("[Service-UserManage][verifyAuthKey][{}] Auth Key Verify Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][verifyAuthKey][{}] Auth Key Verify fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
-            log.error("[Service-UserManage][verifyAuthKey][{}] Auth Key Verify Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][verifyAuthKey][{}] Auth Key Verify fail : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-UserManage][verifyAuthKey]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("Auth Key Verify Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-UserManage][verifyAuthKey] Auth Key Verify Failed : "+e.getMessage());
+            responseInfo.setMsg("Auth Key Verify fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserManage][verifyAuthKey] Auth Key Verify fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -254,7 +254,7 @@ public class UserManageService {
                 }
                 else {
                     resInfo.setRes_status("-1");
-                    resInfo.setMsg("Auth Key Validate Failed : Invalid Key(" + key + ")");
+                    resInfo.setMsg("Auth Key Validate fail : Invalid Key(" + key + ")");
                     resInfo.setRes_data("[Service-UserManage][verifyAuthKey][checkKeyValidation] Auth Key Validate Fail : Invalid Key(" + key + ")");
                     log.info("[Service-UserManage][verifyAuthKey][checkKeyValidation][{}] Auth Key Validate Fail : Invalid Key. ID({}) Method({}) Key({})",req_id, info.getUser_id(),info.getMethod(), info.getKey());
                     throw new FunctionException("Auth Key Validate Fail : Invalid Key(" + key + ")");
@@ -262,7 +262,7 @@ public class UserManageService {
             }
             else {
                 resInfo.setRes_status("-1");
-                resInfo.setMsg("Auth Key Validate Failed : Invalid Key(" + key + ")");
+                resInfo.setMsg("Auth Key Validate fail : Invalid Key(" + key + ")");
                 resInfo.setRes_data("[Service-UserManage][verifyAuthKey][checkKeyValidation] Auth Key Validate Fail : Invalid Key(" + key + ")");
                 log.info("[Service-UserManage][verifyAuthKey][checkKeyValidation][{}] Auth Key Validate Fail : Invalid Key. ID({}) Method({}) Key({})",req_id, info.getUser_id(),info.getMethod(), info.getKey());
                 throw new FunctionException("Auth Key Validate Fail : Invalid Key(" + key + ")");
@@ -271,7 +271,7 @@ public class UserManageService {
         } catch (Exception e) {
             log.error("[Service-UserManage][verifyAuthKey][checkKeyValidation][{}] Auth Key Validate Fail : ID({}) Key({}) {}",req_id,info.getUser_id(), info.getKey(), e.getMessage());
             log.error("[Service-UserManage][verifyAuthKey][checkKeyValidation]["+req_id+"] Error PrintStack : ",e);
-            resInfo.setMsg("Auth Key Validate Failed : Exception Occurred");
+            resInfo.setMsg("Auth Key Validate fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserManage][verifyAuthKey][checkKeyValidation] Auth Key Validate Fail : "+e.getMessage());
@@ -289,7 +289,7 @@ public class UserManageService {
                 resInfo.setRes_data(info);
             } else {
                 resInfo.setRes_status("-1");
-                resInfo.setMsg("Auth Key Verify Failed : Invalid Data OR Expired Key");
+                resInfo.setMsg("Auth Key Verify fail : Invalid Data OR Expired Key");
                 resInfo.setRes_data("[Service-UserManage][verifyAuthKey][verify] Auth Key Verify Fail : Invalid Data OR Expired Key");
                 log.info("[Service-UserManage][verifyAuthKey][checkKeyValidation][{}] Auth Key Validate Fail : Invalid Data OR Expired Key. ID({}) Method({}) Key({})",req_id, info.getUser_id(),info.getMethod(), info.getKey());
                 throw new FunctionException("Auth Key Verify Fail : Invalid Data OR Expired Key. Result("+result+")");
@@ -297,7 +297,7 @@ public class UserManageService {
         } catch (Exception e) {
             log.error("[Service-UserManage][verifyAuthKey][verify][{}] Auth Key Verify Fail : ID({}) Key({}) {}, {}",req_id,info.getUser_id(), info.getKey(), result,e.getMessage());
             log.error("[Service-UserManage][verifyAuthKey][verify]["+req_id+"] Error PrintStack : ",e);
-            resInfo.setMsg("Auth Key Verify Failed : Exception Occurred");
+            resInfo.setMsg("Auth Key Verify fail : Exception Occurred");
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserManage][verifyAuthKey][verify] Auth Key Verify Fail : "+e.getMessage());
@@ -344,16 +344,16 @@ public class UserManageService {
             }
             else{
                 responseInfo.setRes_status("-1");
-                responseInfo.setMsg("User Info Change Failed : Empty Input Data");
-                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : Empty Input Data (nickname,pw,mail,phone)");
+                responseInfo.setMsg("User Info Change fail : Empty Input Data");
+                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change fail : Empty Input Data (nickname,pw,mail,phone)");
                 throw new FunctionException("Empty Input Data");
             }
 
             // 2. 유효성 체크
             if(!CommonUtil.isFormat(key, value)){
                 responseInfo.setRes_status("-1");
-                responseInfo.setMsg("User Info Change Failed : Invalid Format");
-                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : Invalid Format Key("+key+") Value("+value+")");
+                responseInfo.setMsg("User Info Change fail : Invalid Format");
+                responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change fail : Invalid Format Key("+key+") Value("+value+")");
                 throw new FunctionException("Invalid Format Key("+key+") Value("+value+")");
             }
 
@@ -365,14 +365,14 @@ public class UserManageService {
 
             log.info("[Service-UserManage][changeUserInfo][{}] User Info Change Success...", req_id);
         } catch (FunctionException e){
-            log.error("[Service-UserManage][changeUserInfo][{}] User Info Change Failed : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserManage][changeUserInfo][{}] User Info Change fail : ERROR OCCURRED {}",req_id,e.getMessage());
         } catch (Exception e){
             log.error("[Service-UserManage][changeUserInfo][{}] User Info Change : ERROR OCCURRED {}",req_id,e.getMessage());
             log.error("[Service-UserManage][changeUserInfo]["+req_id+"] Error PrintStack : ",e);
             responseInfo.setStatus("-1");
             responseInfo.setRes_status("-1");
-            responseInfo.setMsg("User Info Change Failed : Exception Occurred");
-            responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change Failed : "+e.getMessage());
+            responseInfo.setMsg("User Info Change fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserManage][changeUserInfo] User Info Change fail : "+e.getMessage());
             responseInfo.setErr_code("UN");
         }
         return responseInfo;
@@ -401,10 +401,10 @@ public class UserManageService {
 
             if(result>0) {  // 중복
                 resInfo.setRes_status("-1");
-                resInfo.setMsg("User Info Change Failed : Duplicated Value");
+                resInfo.setMsg("User Info Change fail : Duplicated Value");
                 resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Key("+key+") Value("+value+")");
                 if(GlobalConstants.PW.equals(key)){
-                    resInfo.setMsg("User Info Change Failed : Same PW As Prev PW");
+                    resInfo.setMsg("User Info Change fail : Same PW As Prev PW");
                     resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplicated : Same PW As Prev PW Key("+key+") Value("+value+")");
                 }
                 throw new FunctionException("Duplication Check : Duplicated Key("+key+") Value("+value+")");
@@ -416,7 +416,7 @@ public class UserManageService {
             log.error("[Service-UserManage][changeUserInfo][isDuplication2]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("User Info Change Failed : Exception Occurred");
+            resInfo.setMsg("User Info Change fail : Exception Occurred");
             resInfo.setRes_data("[Service-UserManage][changeUserInfo][isDuplication2] Duplication Check Select Fail : "+e.getMessage());
             throw new FunctionException("Duplication Check Select Fail : "+e.getMessage());
         }
@@ -441,6 +441,7 @@ public class UserManageService {
             if(result==1) {
                 log.info("[Service-UserManage][changeUserInfo][updateUserInfo][{}] User Info Update Success : Key({}), Value({}), Count({})",req_id,key,value,result);
                 resInfo.setMsg("User Info Update : Success");
+                resInfo.setRes_data("{\"user_id\":\""+user_id+"\", \"key\":\""+key+"\", \"value\":\""+value+"\"}");
             } else {
                 throw new Exception("Result(" + result + ")");
             }
@@ -449,9 +450,9 @@ public class UserManageService {
             log.error("[Service-UserManage][changeUserInfo][updateUserInfo]["+req_id+"] Error PrintStack : ",e);
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
-            resInfo.setMsg("User Info Update Failed : Exception Occurred");
+            resInfo.setMsg("User Info Update fail : Exception Occurred");
             resInfo.setRes_data("[Service-UserManage][changeUserInfo][updateUserInfo] User Info Update Fail : "+e.getMessage());
-            throw new FunctionException("UserInfo Update Failed : "+e.getMessage());
+            throw new FunctionException("UserInfo Update fail : "+e.getMessage());
         }
 
     }

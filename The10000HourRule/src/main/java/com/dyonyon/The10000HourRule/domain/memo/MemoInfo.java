@@ -17,4 +17,7 @@ public class MemoInfo {
     String owner_id;    // 생성시 필요한 데이터
     String access;
     String status;
+    String shared_key;
+    String category_no;
+    String favorites;
 }
