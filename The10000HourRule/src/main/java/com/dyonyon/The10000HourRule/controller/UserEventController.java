@@ -52,8 +52,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/login]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Login fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/login] Login Controller fail : "+e.getMessage());
+            result.setMsg("Login Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/login] Login Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -75,8 +75,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/signup]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Signup fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/signup] Signup Controller fail : "+e.getMessage());
+            result.setMsg("Signup Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/signup] Signup Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -106,8 +106,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/check]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Duplication Check fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/check] Check Controller fail : "+e.getMessage());
+            result.setMsg("Duplication Check Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/check] Check Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -135,8 +135,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/auth]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Auth Key Generate fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/auth] Auth Controller fail : "+e.getMessage());
+            result.setMsg("Auth Key Generate Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/auth] Auth Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -164,8 +164,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/auth/check]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Auth Check fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/auth/check] Auth Check Controller fail : "+e.getMessage());
+            result.setMsg("Auth Check Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/auth/check] Auth Check Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -193,8 +193,8 @@ public class UserEventController {
             log.error("[Controller-UserEvent][/change]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
             result.setStatus("-1");
             result.setRes_status("-1");
-            result.setMsg("Change Info fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/change] Change Controller fail : "+e.getMessage());
+            result.setMsg("Change Info Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/change] Change Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;

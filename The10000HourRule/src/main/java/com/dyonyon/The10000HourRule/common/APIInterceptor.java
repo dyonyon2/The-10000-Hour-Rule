@@ -195,7 +195,7 @@ public class APIInterceptor implements HandlerInterceptor {
                 if (insertRes > 0) {
                     log.trace("[Interceptor-PreHandle][Request][{}] LOG INSERT SUCCESS : {}", reqId, insertRes);
                 } else {
-                    log.error("[Interceptor-PreHandle][Request][{}] LOG INSERT fail : {}", reqId, insertRes);
+                    log.error("[Interceptor-PreHandle][Request][{}] LOG INSERT Fail : {}", reqId, insertRes);
                 }
 
                 return true;
@@ -281,7 +281,7 @@ public class APIInterceptor implements HandlerInterceptor {
                 if (updateRes > 0) {
                     log.trace("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE SUCCESS : {}", reqId, updateRes);
                 } else {
-                    log.error("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE fail : {}", reqId, updateRes);
+                    log.error("[Interceptor-AfterCompletion][Response][{}] LOG UPDATE Fail : {}", reqId, updateRes);
                 }
             }
         } catch (Exception e){

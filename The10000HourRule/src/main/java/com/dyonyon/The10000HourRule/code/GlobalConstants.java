@@ -40,6 +40,7 @@ public class GlobalConstants {
     final public static String ACCESS_READ = "R";
     final public static String ACCESS_UPDATE = "U";
     final public static String ACCESS_DELETE = "D";
+    final public static String ACCESS_CREATE_READ = "CR";
     final public static String ACCESS_READ_UPDATE = "RU";
     final public static String ACCESS_READ_UPDATE_DELETE = "RUD";
 

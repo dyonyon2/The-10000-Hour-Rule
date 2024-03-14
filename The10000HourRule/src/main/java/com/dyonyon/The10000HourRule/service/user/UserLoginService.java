@@ -70,7 +70,7 @@ public class UserLoginService {
                 // 3-2. 로그인 실패 -> 4.2 로그인 로그 업데이트
                 else {
                     // 4. 로그인 로그 정보 테이블(USER_LOGIN_LOG) 상태값 update
-                    updateLogStatus(req_id, ResultCode.USER_LOGIN_FAIL, responseInfo, true);
+                    updateLogStatus(req_id, ResultCode.USER_LOGIN_Fail, responseInfo, true);
                 }
             }
         } catch (FunctionException e){

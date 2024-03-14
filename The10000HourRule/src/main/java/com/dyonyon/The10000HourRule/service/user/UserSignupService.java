@@ -187,8 +187,7 @@ public class UserSignupService {
             resInfo.setStatus("-1");
             resInfo.setRes_status("-1");
             resInfo.setRes_data("[Service-UserSignup][signup][signupUser] Signup Fail : "+e.getMessage());
-//            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
-            throw new RuntimeException("Login Log Insertion Fail : "+e.getMessage());
+            throw new FunctionException("Login Log Insertion Fail : "+e.getMessage());
         }
     }
 }
