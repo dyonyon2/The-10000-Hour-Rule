@@ -9,8 +9,10 @@ import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoListInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoCRUDMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
@@ -31,6 +34,9 @@ public class MemoCRUDService {
 
     @Value("${path.img}")
     String imgPath;
+
+    @Autowired
+    Gson gson = new Gson();
 
     public MemoCRUDService(MemoCRUDMapper memoCRUDMapper){
         this.memoCRUDMapper = memoCRUDMapper;
@@ -56,7 +62,7 @@ public class MemoCRUDService {
 
             log.info("[Service-MemoCRUD][createMemo][{}] Memo Create Success...: Memo({})", req_id, memoInfo.getMemo_idx());
             memoInfo.setStatus("1"); memoInfo.setAccess("-1");
-            responseInfo.setRes_data(memoInfo);
+            responseInfo.setRes_data(gson.toJson(memoInfo));
             responseInfo.setMsg("Memo Create Success");
         } catch (FunctionException e){
             log.error("[Service-MemoCRUD][createMemo][{}] Memo Create Fail : ERROR OCCURRED {}",req_id,e.getMessage());
@@ -204,7 +210,18 @@ public class MemoCRUDService {
                 info.getFile().transferTo(dest);
 
                 resInfo.setMsg("Save File Success : File Name("+info.getFile_name()+")");
-                resInfo.setRes_data("[Service-MemoCRUD][saveImageFile][saveImage] File Save Success : File Name("+info.getFile_name()+") Path("+info.getPath()+")");
+
+                // Return 데이터 세팅
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("memo_idx", info.getMemo_idx());
+                jsonObject.put("memo_type", info.getMemo_type());
+                jsonObject.put("user_id", info.getUser_id());
+                jsonObject.put("owner_id", info.getOwner_id());
+                jsonObject.put("path", info.getPath());
+                jsonObject.put("file_name", info.getFile_name());
+
+                resInfo.setRes_data(jsonObject.toString());
                 log.info("[Service-MemoCRUD][saveImageFile][saveImage][{}] Save File Success...", req_id);
             }
             // 이미지 데이터가 존재하지 않을 때
@@ -305,7 +322,7 @@ public class MemoCRUDService {
             int result = memoCRUDMapper.updateMemo(info);
             if(result==1){
                 log.info("[Service-MemoCRUD][updateMemo][updateMemo][{}] Memo Update Success : Owner ID({}), IDX({})",req_id, info.getOwner_id(), info.getOwner_idx());
-                resInfo.setRes_data(info);
+                resInfo.setRes_data(gson.toJson(info));
             }
             else {
                 throw new Exception("Memo Update Result("+result+")");
@@ -379,7 +396,7 @@ public class MemoCRUDService {
             MemoDetailInfo memoDetailInfo = memoCRUDMapper.readMemo(info);
             if(memoDetailInfo!=null){
                 log.info("[Service-MemoCRUD][readMemo][readMemoDetail][{}] Memo Read Success : {}",req_id, memoDetailInfo);
-                resInfo.setRes_data(memoDetailInfo);
+                resInfo.setRes_data(gson.toJson(memoDetailInfo));
             }
             else {
                 throw new Exception("Memo Read Result("+memoDetailInfo+")");
@@ -456,7 +473,7 @@ public class MemoCRUDService {
                 log.info("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete Success : Idx ({}) Type({})",req_id, info.getMemo_idx(),info.getMemo_type());
             else
                 throw new Exception("Memo Status Update Result("+result+")");
-            resInfo.setRes_data(info);
+            resInfo.setRes_data(gson.toJson(info));
         } catch (Exception e) {
             log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo][{}] Memo Delete Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][deleteMemo][updateStatusMemo]["+req_id+"] Error PrintStack : ",e);
@@ -521,7 +538,7 @@ public class MemoCRUDService {
                 log.info("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
             else
                 throw new Exception("Memo List Read Result("+list+")");
-            resInfo.setRes_data(list);
+            resInfo.setRes_data(gson.toJson(list));
         } catch (Exception e) {
             log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList][{}] Memo List Read Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readOwnMemoList]["+req_id+"] Error PrintStack : ",e);
@@ -539,7 +556,7 @@ public class MemoCRUDService {
                 log.info("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
             else
                 throw new Exception("Memo List Read Result("+list+")");
-            resInfo.setRes_data(list);
+            resInfo.setRes_data(gson.toJson(list));
         } catch (Exception e) {
             log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList][{}] Memo List Read Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readGroupMemoList]["+req_id+"] Error PrintStack : ",e);
@@ -557,7 +574,7 @@ public class MemoCRUDService {
                 log.info("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read Success : List Count ({})",req_id, list.length);
             else
                 throw new Exception("Memo List Read Result("+list+")");
-            resInfo.setRes_data(list);
+            resInfo.setRes_data(gson.toJson(list));
         } catch (Exception e) {
             log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList][{}] Memo List Read Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoCRUD][readMemoList][readFollowMemoList]["+req_id+"] Error PrintStack : ",e);

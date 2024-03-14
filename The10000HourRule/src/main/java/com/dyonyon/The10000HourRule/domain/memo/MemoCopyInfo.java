@@ -18,4 +18,5 @@ public class MemoCopyInfo {
     String new_memo_idx;
     String new_memo_type;
     String new_owner_id;
+    String new_owner_idx;
 }

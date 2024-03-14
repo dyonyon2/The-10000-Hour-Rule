@@ -7,6 +7,7 @@ import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserInfo;
 import com.dyonyon.The10000HourRule.mapper.user.UserSignupMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class UserSignupService {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
+    @Autowired
+    Gson gson = new Gson();
 
     private UserSignupMapper userSignupMapper;
 
@@ -178,7 +181,7 @@ public class UserSignupService {
             log.info("[Service-UserSignup][signup][signupUser][{}] Signup Insert Success  : USER_ID({}), USER_IDX({})",req_id, info.getUser_id(), res);
             userInfo.setUser_id(info.getUser_id()); userInfo.setUser_idx(res); userInfo.setStatus("0");
             resInfo.setMsg("Signup Success");
-            resInfo.setRes_data(userInfo);
+            resInfo.setRes_data(gson.toJson(userInfo));
         } catch (Exception e) { // 에러
             log.error("[Service-UserLogin][signup][signupUser][{}] Signup User Fail : {}",req_id,e.getMessage());
             log.error("[Service-UserSignup][signup][signupUser]["+req_id+"] Error PrintStack : ",e);

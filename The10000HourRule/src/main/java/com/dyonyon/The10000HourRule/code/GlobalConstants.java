@@ -4,7 +4,7 @@ public class GlobalConstants {
 
     // System Config Value
     final public static int LoginAttemptCount = 10;
-    final public static int MaxDataLength = 1024;
+    final public static int MaxDataLength = 1000;
 
     // Table Column Name
     final public static String USER_ID = "user_id";

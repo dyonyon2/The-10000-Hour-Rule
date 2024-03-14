@@ -36,7 +36,6 @@ public class UserEventController {
     }
 
 
-
     // 로그인 처리
     @PostMapping("/login")
     public ResponseInfo loginController(HttpServletRequest req, @RequestBody UserLoginInfo userLoginInfo) throws ParseException {

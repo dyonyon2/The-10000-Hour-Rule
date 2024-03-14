@@ -69,7 +69,7 @@ public class APIInterceptor implements HandlerInterceptor {
             String method = req.getMethod();
             String sessionId = req.getSession().getId();
             String reqId; String userId = null; String userIdx = null; String reqData = null;
-            String ownerId=null; String ownerIdx=null;
+            String ownerId=null; String ownerIdx=null; String contentIdx = null;
             APICallLogInfo apiCallLogInfo = new APICallLogInfo();
             APICallLogInfo tmp = null;
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -102,6 +102,7 @@ public class APIInterceptor implements HandlerInterceptor {
                     reqData = reqData + ", Json("+req.getParameter(GlobalConstants.JSON)+")";
                     tmp = objectMapper.readValue(req.getParameter(GlobalConstants.JSON), APICallLogInfo.class);
                     userId = tmp.getUser_id();
+                    contentIdx = tmp.getMemo_idx();
                     ownerId = tmp.getOwner_id();
 //                    log.info("tmp = {}",tmp);
 //                    log.info("reqData = {}",reqData);
@@ -152,8 +153,8 @@ public class APIInterceptor implements HandlerInterceptor {
                     case 2: // /api/memo
                         if ("GET".equals(method))
                             apiCallLogInfo.setMemo_idx(req.getParameter("memo_idx"));
-                        else if(contentType!=null && contentType.contains("form-data"))
-                            apiCallLogInfo.setMemo_idx(null);
+//                        else if(contentType!=null && contentType.contains("form-data"))
+//                            apiCallLogInfo.setMemo_idx(contentIdx);
                         else
                             apiCallLogInfo.setMemo_idx(tmp.getMemo_idx());
                         insertRes = logMapper.insertMemoLog(apiCallLogInfo);

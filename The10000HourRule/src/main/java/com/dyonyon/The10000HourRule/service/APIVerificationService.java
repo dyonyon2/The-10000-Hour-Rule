@@ -5,7 +5,9 @@ import com.dyonyon.The10000HourRule.common.FunctionException;
 import com.dyonyon.The10000HourRule.domain.ContentInfo;
 import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.mapper.APIVerificationMapper;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,6 +19,8 @@ import java.util.Date;
 public class APIVerificationService {
 
     private APIVerificationMapper apiVerificationMapper;
+    @Autowired
+    Gson gson = new Gson();
 
     public APIVerificationService(APIVerificationMapper apiVerificationMapper) {
         this.apiVerificationMapper = apiVerificationMapper;

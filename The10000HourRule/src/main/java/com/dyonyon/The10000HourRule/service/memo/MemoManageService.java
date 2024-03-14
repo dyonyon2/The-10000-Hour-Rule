@@ -9,8 +9,10 @@ import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class MemoManageService {
 
     @Value("${path.img}")
     String imgPath;
+
+    @Autowired
+    Gson gson = new Gson();
 
     public MemoManageService(MemoManageMapper memoManageMapper){
         this.memoManageMapper = memoManageMapper;
@@ -124,7 +129,7 @@ public class MemoManageService {
                 log.info("[Service-MemoManage][createSharedKey][updateSharedKey][{}] Memo Shared Key Insert Success : Memo IDX({}), Shared Key({})",req_id, info.getMemo_idx(), info.getShared_key());
             else
                 throw new Exception("Shared Key Insert Result("+result+")");
-            resInfo.setRes_data(info);
+            resInfo.setRes_data(gson.toJson(info));
         } catch (Exception e) {
             log.error("[Service-MemoManage][createSharedKey][updateSharedKey][{}] Memo Shared Key Insert Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoManage][createSharedKey][updateSharedKey]["+req_id+"] Error PrintStack : ",e);
@@ -224,7 +229,7 @@ public class MemoManageService {
                 log.info("[Service-MemoManage][deleteSharedKey][deleteKey][{}] Memo Shared Key Delete Success : Memo IDX({}), Shared Key(NULL)",req_id, info.getMemo_idx());
             else
                 throw new Exception("Shared Key Delete Result("+result+")");
-            resInfo.setRes_data(info);
+            resInfo.setRes_data(gson.toJson(info));
         } catch (Exception e) {
             log.error("[Service-MemoManage][deleteSharedKey][deleteKey][{}] Memo Shared Key Delete Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoManage][deleteSharedKey][deleteKey]["+req_id+"] Error PrintStack : ",e);
@@ -272,7 +277,7 @@ public class MemoManageService {
                 MemoDetailInfo memo = memoManageMapper.readSharedMemo(info);
                 if (memo != null) {
                     log.info("[Service-MemoManage][readSharedMemo][checkSharedKeyAndReadMemo][{}] Shared Memo Check & Read Success : Memo IDX({}), Shared Key({}})", req_id, info.getMemo_idx(), info.getShared_key());
-                    resInfo.setRes_data(memo);
+                    resInfo.setRes_data(gson.toJson(memo));
                 }
                 else {
                     resInfo.setRes_status("-1");
@@ -381,7 +386,15 @@ public class MemoManageService {
             if(result==1) {
                 log.info("[Service-UserManage][changeMemoInfo][updateMemoInfo][{}] Memo Info Update Success : Key({}), Value({}), Count({})",req_id,key,value,result);
                 resInfo.setMsg("Memo Info Update : Success");
-                resInfo.setRes_data("{\"memo_idx\":\""+memo_idx+"\", \"memo_type\":\""+memo_type+"\", \"key\":\""+key+"\", \"value\":\""+value+"\"}");
+
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("memo_idx", memo_idx);
+                jsonObject.put("memo_type", memo_type);
+                jsonObject.put("key", key);
+                jsonObject.put("value", value);
+
+                resInfo.setRes_data(jsonObject.toString());
             } else {
                 throw new Exception("Result(" + result + ")");
             }
@@ -402,6 +415,7 @@ public class MemoManageService {
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+        memoInfo.setReq_id(req_id);
 
         try{
             log.info("[Service-MemoManage][copyMemoInfo][{}] Memo Copy Started...", req_id);
@@ -426,7 +440,6 @@ public class MemoManageService {
         }
         return responseInfo;
     }
-
     public void checkParametersAndNewOwner(String req_id, MemoCopyInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
             String new_type = info.getNew_memo_type(); String new_owner_id = info.getNew_owner_id();
@@ -447,6 +460,7 @@ public class MemoManageService {
             switch (new_type){
                 case GlobalConstants.CONTENT_TYPE_USER:
                     if(info.getUser_id().equals(info.getNew_owner_id()))
+                        authority=GlobalConstants.ACCESS_ALL;
                         result = true;
                     break;
                 case GlobalConstants.CONTENT_TYPE_GROUP:
@@ -475,16 +489,15 @@ public class MemoManageService {
             throw new FunctionException("Memo Copy Fail : "+e.getMessage());
         }
     }
-
     public void copyMemoTbl(String req_id, MemoCopyInfo info, ResponseInfo resInfo) throws FunctionException {
-        int result = -1;
+        int result = -1; String result2=null;
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
         TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
-            String new_memo_idx = null; String new_memo_type = info.getNew_memo_type(); String new_owner_id = info.getNew_owner_id();
+            String new_memo_idx = null; String new_memo_type = info.getNew_memo_type(); String new_owner_id = info.getNew_owner_id(); String new_owner_idx = null;
             String memo_idx = info.getMemo_idx();
             // Memo_Idx 받기
             result = memoManageMapper.getMemoIdx(info);
@@ -494,7 +507,28 @@ public class MemoManageService {
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Idx Get Success  : MEMO_IDX({}) -> New MEMO_IDX({})",req_id, memo_idx, new_memo_idx);
             } else {    // 에러
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Idx Get Fail : MEMO_IDX({}) RESULT ({})",req_id, memo_idx, result);
-                throw new Exception("Memo Idx Get Fail : MEMO_IDX("+memo_idx+")");
+                transactionManager.rollback(status);
+                resInfo.setMsg("Memo Copy Fail : Exception Occurred");
+                resInfo.setStatus("-1");
+                resInfo.setRes_status("-1");
+                resInfo.setRes_data("[Service-MemoManage][copyMemoInfo][copyMemoTbl] Memo Idx Get Fail : Result("+result+")");
+                throw new FunctionException("Memo Idx Get Fail : MEMO_IDX("+memo_idx+")");
+            }
+
+            // Owner_Idx 설정
+            result2 = memoManageMapper.getOwnerIdx(info);
+            if(result2!=null){
+                new_owner_idx = result2;
+                info.setNew_owner_idx(new_owner_idx);
+                log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Owner Idx Get Success  : MEMO_IDX({}) -> New MEMO IDX({}) Type({}) - Owner ID({}), IDX({})",req_id, memo_idx, new_memo_idx, new_memo_type, new_owner_id, new_owner_idx);
+            } else {    // 에러
+                log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Owner Idx Get Fail : MEMO_IDX({}) RESULT ({})",req_id, memo_idx, result2);
+                transactionManager.rollback(status);
+                resInfo.setMsg("Memo Copy Fail : Exception Occurred");
+                resInfo.setStatus("-1");
+                resInfo.setRes_status("-1");
+                resInfo.setRes_data("[Service-MemoManage][copyMemoInfo][copyMemoTbl] Memo Idx Get Fail : Result("+result2+")");
+                throw new FunctionException("Memo Owner Idx Get Fail : MEMO_IDX("+memo_idx+")");
             }
 
             // Memo Insert
@@ -503,16 +537,26 @@ public class MemoManageService {
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Info Insert Success  : MEMO_IDX({}) -> New MEMO_IDX({})",req_id, memo_idx, new_memo_idx);
             } else {    // 에러
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Info Insert Fail  : MEMO_IDX({}) -> New MEMO_IDX({}) , RESULT({})",req_id, memo_idx, new_memo_idx, result);
-                throw new Exception("Memo Info Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
+                transactionManager.rollback(status);
+                resInfo.setMsg("Memo Copy Fail : Exception Occurred");
+                resInfo.setStatus("-1");
+                resInfo.setRes_status("-1");
+                resInfo.setRes_data("[Service-MemoManage][copyMemoInfo][copyMemoTbl] Memo Info Insert Fail : Result("+result+")");
+                throw new FunctionException("Memo Info Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
             }
 
             // Memo_IMG Insert
             result = memoManageMapper.insertMemoImg(info);
-            if(result==1){
+            if(result>=0){
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo IMG Insert Success  : MEMO_IDX({}) -> New MEMO_IDX({})",req_id, memo_idx, new_memo_idx);
             } else {    // 에러
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo IMG Insert Fail  : MEMO_IDX({}) -> New MEMO_IDX({}), RESULT({})",req_id, memo_idx, new_memo_idx, result);
-                throw new Exception("Memo IMG Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
+                transactionManager.rollback(status);
+                resInfo.setMsg("Memo Copy Fail : Exception Occurred");
+                resInfo.setStatus("-1");
+                resInfo.setRes_status("-1");
+                resInfo.setRes_data("[Service-MemoManage][copyMemoInfo][copyMemoTbl] Memo IMG Insert Fail : Result("+result+")");
+                throw new FunctionException("Memo IMG Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
             }
 
             //Memo_detail Insert
@@ -521,13 +565,18 @@ public class MemoManageService {
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Detail Insert Success  : MEMO_IDX({}) -> New MEMO_IDX({})",req_id, memo_idx, new_memo_idx);
             } else {    // 에러
                 log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Detail Insert Fail  : MEMO_IDX({}) -> New MEMO_IDX({}), RESULT({})",req_id, memo_idx, new_memo_idx, result);
-                throw new Exception("Memo Detail Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
+                transactionManager.rollback(status);
+                resInfo.setMsg("Memo Copy Fail : Exception Occurred");
+                resInfo.setStatus("-1");
+                resInfo.setRes_status("-1");
+                resInfo.setRes_data("[Service-MemoManage][copyMemoInfo][copyMemoTbl] Memo Detail Insert Fail : Result("+result+")");
+                throw new FunctionException("Memo Detail Insert Fail : MEMO_IDX("+memo_idx+") -> New MEMO_IDX("+new_memo_idx+")");
             }
 
             transactionManager.commit(status);
             log.info("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Copy Success  : MEMO IDX({}), Type({}), OWNER({}) -> New MEMO IDX({}), Type({}), OWNER({})",req_id, info.getMemo_type(), info.getOwner_id(), memo_idx, new_memo_idx, new_memo_type, new_owner_id);
             resInfo.setMsg("Memo Copy Success");
-            resInfo.setRes_data(info);
+            resInfo.setRes_data(gson.toJson(info));
         } catch (Exception e) { // 에러
             log.error("[Service-MemoManage][copyMemoInfo][copyMemoTbl][{}] Memo Copy Fail : {}",req_id,e.getMessage());
             log.error("[Service-MemoManage][copyMemoInfo][copyMemoTbl]["+req_id+"] Error PrintStack : ",e);

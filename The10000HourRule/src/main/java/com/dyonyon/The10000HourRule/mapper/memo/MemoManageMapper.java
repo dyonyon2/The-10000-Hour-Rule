@@ -17,4 +17,5 @@ public interface MemoManageMapper {
     int insertMemo(MemoCopyInfo info);
     int insertMemoImg(MemoCopyInfo info);
     int insertMemoDetail(MemoCopyInfo info);
+    String getOwnerIdx(MemoCopyInfo info);
 }

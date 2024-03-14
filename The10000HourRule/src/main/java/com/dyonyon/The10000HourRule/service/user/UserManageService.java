@@ -7,9 +7,11 @@ import com.dyonyon.The10000HourRule.domain.user.UserAuthInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.mapper.user.UserManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
+import com.google.gson.Gson;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +30,8 @@ public class UserManageService {
     String title;
     @Value("${auth.content}")
     String content;
+    @Autowired
+    Gson gson = new Gson();
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -193,7 +197,7 @@ public class UserManageService {
                     throw new FunctionException("Auth Key Send Fail : Invalid Method("+info.getMethod()+")");
             }
             resInfo.setMsg("Auth Key Generate&Send Success");
-            resInfo.setRes_data(info);
+            resInfo.setRes_data(gson.toJson(info));
             log.info("[Service-UserManage][generateAndSendAuthKey][sendAuthKey][{}] Auth Key Send Success : ID({}) Method({}) Key({})",req_id, info.getUser_id(),info.getMethod(), info.getKey());
         } catch (Exception e){
             log.error("[Service-UserManage][generateAndSendAuthKey][sendAuthKey][{}] Auth Key Send Fail : ID({}) Method({}) Key({}), {}",req_id,info.getUser_id(), info.getMethod(),info.getKey(), e.getMessage());
@@ -286,7 +290,7 @@ public class UserManageService {
             if(result == 1){
                 log.info("[Service-UserManage][verifyAuthKey][verify][{}] Auth Key Verify Success : ID({}) Key({})",req_id, info.getUser_id(),info.getKey());
                 resInfo.setMsg("Auth Key Verify Success");
-                resInfo.setRes_data(info);
+                resInfo.setRes_data(gson.toJson(info));
             } else {
                 resInfo.setRes_status("-1");
                 resInfo.setMsg("Auth Key Verify Fail : Invalid Data OR Expired Key");
@@ -441,7 +445,14 @@ public class UserManageService {
             if(result==1) {
                 log.info("[Service-UserManage][changeUserInfo][updateUserInfo][{}] User Info Update Success : Key({}), Value({}), Count({})",req_id,key,value,result);
                 resInfo.setMsg("User Info Update : Success");
-                resInfo.setRes_data("{\"user_id\":\""+user_id+"\", \"key\":\""+key+"\", \"value\":\""+value+"\"}");
+
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("user_id", user_id);
+                jsonObject.put("key", key);
+                jsonObject.put("value", value);
+
+                resInfo.setRes_data(jsonObject.toString());
             } else {
                 throw new Exception("Result(" + result + ")");
             }

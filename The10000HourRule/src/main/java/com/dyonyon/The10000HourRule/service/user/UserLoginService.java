@@ -7,8 +7,10 @@ import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserDetailInfo;
 import com.dyonyon.The10000HourRule.domain.user.UserLoginInfo;
 import com.dyonyon.The10000HourRule.mapper.user.UserLoginMapper;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +18,9 @@ import org.springframework.stereotype.Service;
 public class UserLoginService {
 
     private UserLoginMapper userLoginMapper;
+
+    @Autowired
+    Gson gson = new Gson();
 
     public UserLoginService(UserLoginMapper userLoginMapper){
         this.userLoginMapper = userLoginMapper;
@@ -157,7 +162,7 @@ public class UserLoginService {
             if(result!=null) {
                 log.info("[Service-UserLogin][login][getLoginResult][{}] Login Success : {}", req_id, result);
                 resInfo.setMsg("Login Success");
-                resInfo.setRes_data(result);
+                resInfo.setRes_data(gson.toJson(info));
                 info.setUser_idx(result.getUser_idx());
             }
             else {
