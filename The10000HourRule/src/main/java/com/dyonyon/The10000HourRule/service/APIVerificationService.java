@@ -228,10 +228,10 @@ public class APIVerificationService {
             // True (권한 있음), False (권한 없음), Res_data에 권한 내용 작성
             // 1. Content(개인) 의 소유자
             if(!checkContentOwner(req_id, info, resInfo)) {
-                // 2. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인 => Create, Read
-                if (!checkOwnerFollower(req_id, info, resInfo)){
-                    // 3. Content(개인/그룹) 의 Follower 인지, 권한 확인 => Read
-                    if (!checkContentFollower(req_id, info, resInfo)){
+                // 2. Content(개인/그룹) 의 Follower 인지, 권한 확인
+                if (!checkContentFollower(req_id, info, resInfo)){
+                    // 3. 소유자 (개인/그룹) 의 Follower 인지, 권한 확인
+                    if (!checkOwnerFollower(req_id, info, resInfo)){
                         log.info("[Service-APICheck][verifyAuthority][verify][{}] Not Authorized : Service({}) Content_ID({}) Type({}) User({}) Owner({})", req_id, service, content_idx,type, user_id, owner_id);
                         resInfo.setRes_status("-1");
                         resInfo.setMsg("API Validation Fail : Not Authorized");

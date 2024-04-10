@@ -6,7 +6,6 @@ import com.dyonyon.The10000HourRule.domain.ResponseInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoCopyInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoDetailInfo;
 import com.dyonyon.The10000HourRule.domain.memo.MemoInfo;
-import com.dyonyon.The10000HourRule.domain.user.UserInfo;
 import com.dyonyon.The10000HourRule.mapper.memo.MemoManageMapper;
 import com.dyonyon.The10000HourRule.util.CommonUtil;
 import com.google.gson.Gson;
@@ -41,7 +40,7 @@ public class MemoManageService {
 
 
     // 메모 공유 키 생성 : checkMemoOwner, updateKey
-    public ResponseInfo updateKey(HttpServletRequest req, MemoDetailInfo memoDetailInfo) {
+    public ResponseInfo createSharedKey(HttpServletRequest req, MemoDetailInfo memoDetailInfo) {
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
@@ -52,7 +51,7 @@ public class MemoManageService {
             // 메모 Owner 인지 확인
             checkMemoOwner(req_id, memoDetailInfo, responseInfo);
             // 메모 공유 키 생성
-            updateKey(req_id, memoDetailInfo, responseInfo);
+            createSharedKey(req_id, memoDetailInfo, responseInfo);
 
             log.info("[Service-MemoManage][createSharedKey][{}] Memo Shared Key Create Success...: Memo({})", req_id, memoDetailInfo.getMemo_idx());
             responseInfo.setMsg("Memo Shared Key Create Success");
@@ -120,7 +119,7 @@ public class MemoManageService {
             throw new FunctionException("Owner ID Get Fail : "+e.getMessage());
         }
     }
-    public void updateKey(String req_id, MemoDetailInfo info, ResponseInfo resInfo) throws FunctionException {
+    public void createSharedKey(String req_id, MemoDetailInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
             String sharedKey = CommonUtil.getSharedKey();
             info.setShared_key(sharedKey);
