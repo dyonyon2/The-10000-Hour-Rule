@@ -60,7 +60,7 @@ public class UserEventController {
 
 
     // 회원가입 처리
-    @PostMapping("/signup")
+    @PostMapping("")
     public ResponseInfo signupController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();
         try {
@@ -76,6 +76,35 @@ public class UserEventController {
             result.setRes_status("-1");
             result.setMsg("Signup Fail: Exception Occurred");
             result.setRes_data("[Controller-UserEvent][/signup] Signup Controller Fail : "+e.getMessage());
+            result.setErr_code("UN");
+        }
+        return result;
+    }
+
+
+    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 처리
+    @PatchMapping("")
+    public ResponseInfo changeController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-UserEvent][/change][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
+            log.info("[Controller-UserEvent][/change][{}] BODY : {}", req.getAttribute("req_id"), userDetailInfo);
+            log.info("[Controller-UserEvent][/change][{}] Call API ApiVerificationService...", req.getAttribute("req_id"));
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-UserEvent][/change][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
+                return result;
+            }
+            log.info("[Controller-UserEvent][/change][{}] Call UserManageService....", req.getAttribute("req_id"));
+            result = userManageService.changeUserInfo(req, userDetailInfo);
+            log.info("[Controller-UserEvent][/change][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-UserEvent][/change][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-UserEvent][/change]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Change Info Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/change] Change Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
@@ -143,7 +172,7 @@ public class UserEventController {
 
 
     // Auth Key 검증 처리
-    @GetMapping("/auth/check")
+    @GetMapping("/auth")
     public ResponseInfo authCheckController(HttpServletRequest req, @ModelAttribute UserAuthInfo userAuthInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();
         try {
@@ -165,35 +194,6 @@ public class UserEventController {
             result.setRes_status("-1");
             result.setMsg("Auth Check Fail: Exception Occurred");
             result.setRes_data("[Controller-UserEvent][/auth/check] Auth Check Controller Fail : "+e.getMessage());
-            result.setErr_code("UN");
-        }
-        return result;
-    }
-
-
-    // 유저 정보(닉네임, 비번, 이메일, 핸드폰) 변경 처리
-    @PatchMapping("/change")
-    public ResponseInfo changeController(HttpServletRequest req, @RequestBody UserDetailInfo userDetailInfo) throws ParseException {
-        ResponseInfo result = new ResponseInfo();
-        try {
-            log.info("[Controller-UserEvent][/change][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
-            log.info("[Controller-UserEvent][/change][{}] BODY : {}", req.getAttribute("req_id"), userDetailInfo);
-            log.info("[Controller-UserEvent][/change][{}] Call API ApiVerificationService...", req.getAttribute("req_id"));
-            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userDetailInfo.getUser_id(), req.getSession().getId());
-            if ("-1".equals(result.getRes_status())) {
-                log.info("[Controller-UserEvent][/change][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
-                return result;
-            }
-            log.info("[Controller-UserEvent][/change][{}] Call UserManageService....", req.getAttribute("req_id"));
-            result = userManageService.changeUserInfo(req, userDetailInfo);
-            log.info("[Controller-UserEvent][/change][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
-        } catch (Exception e){
-            log.error("[Controller-UserEvent][/change][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
-            log.error("[Controller-UserEvent][/change]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
-            result.setStatus("-1");
-            result.setRes_status("-1");
-            result.setMsg("Change Info Fail: Exception Occurred");
-            result.setRes_data("[Controller-UserEvent][/change] Change Controller Fail : "+e.getMessage());
             result.setErr_code("UN");
         }
         return result;
