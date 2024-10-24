@@ -7,8 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function Login() {
+export default function Signup() {
   return(
-    <LoginBox />
+    <>
+      It's Signup Page.
+    </>
   );
 }

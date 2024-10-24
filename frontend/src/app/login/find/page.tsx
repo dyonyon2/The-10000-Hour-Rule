@@ -7,8 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function Login() {
+export default function Find() {
   return(
-    <LoginBox />
+    <>
+      It's Find Page.  
+    </>
   );
 }
