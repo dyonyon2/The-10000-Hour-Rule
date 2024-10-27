@@ -1,30 +1,49 @@
 import useStyles from "@/app/style";
 import { LoginInfo } from "@/util/types";
-import { Avatar, Button, Grid, Grid2, Link, Paper, TextField } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Button, Grid, Grid2, Link, Paper, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function LoginBox() {
-  const [loginInfo,setLoginInfo] = useState<LoginInfo>({id:"", pw :""});
-  const style = useStyles();
+  const [loginFlag,setLoginFlag] = useState<boolean>(false);  // 로그인 체크 Flag
+  const [loginInfo,setLoginInfo] = useState<LoginInfo>({id:"", pw :""});  // 로그인 입력 데이터
+  const style = useStyles();  // Style 세팅
 
-  function setInfo(key:string, value:string){
+  // 로그인 화면 useEffect 로직
+  // - 로그인 정보가 존재하는지 체크하여 로그인 Flag 세팅 (SessionStorage에서 loginFlag와 loginInfo로 확인)
+  useEffect(()=>{
+    logInCheck(); 
+  },[]);
+
+  function logInCheck(){  // 로그인 체크
+    if(sessionStorage.getItem('loginFlag')&&sessionStorage.getItem('loginInfo')){ 
+      console.log("로그인 되어 있음. 메인 페이지로 이동! (In logInCall()");
+      window.location.href = "/";
+    } else {
+      console.log("로그인 되어 있지 않음. (In logInCall()");
+      setLoginFlag(false);
+    }
+  }
+
+  function setInfo(key:string, value:string){ // 로그인 정보 입력
     var newInfo = {...loginInfo};
     if(key==="id") newInfo.id = value;
     else if(key==="pw") newInfo.pw = value;
     setLoginInfo(newInfo);
   }
 
+  function logInCall(){ // LoginFormInfo로 서버에 로그인 요청
+    setLoginFlag(true);
+    window.location.href = "/";
+  }
+
+
+
   return (
     <>
       <Grid2 container className={style.container} >
         <Grid2 className={style.paper}>
-          <Image src="/logo/Logo1.png" width={100} height={100} alt="test" className={style.logo} onClick={()=>{
-            // 새로고침
-          }}/>
           <Avatar className={style.avatar} />
-          {loginInfo.id}
-          {loginInfo.pw}
           <TextField
             onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("id",event.target.value)}
             value={loginInfo.id}
@@ -56,7 +75,7 @@ export default function LoginBox() {
             variant="contained"
             color="primary"
             className={style.submit}
-            // onClick = {handelLogin}
+            onClick = {logInCall}
           >
             Sign In
           </Button>
