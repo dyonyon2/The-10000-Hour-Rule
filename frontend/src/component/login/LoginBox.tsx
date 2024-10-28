@@ -1,8 +1,9 @@
 import useStyles from "@/app/style";
 import { LoginInfo } from "@/util/types";
-import { Avatar, Button, Grid, Grid2, Link, Paper, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Grid2, Link, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { pageUrl } from "@/util/values";
 
 export default function LoginBox() {
   const [loginFlag,setLoginFlag] = useState<boolean>(false);  // 로그인 체크 Flag
@@ -37,53 +38,33 @@ export default function LoginBox() {
     window.location.href = "/";
   }
 
-
-
   return (
     <>
-      <Grid2 container className={style.container} >
-        <Grid2 className={style.paper}>
+      <Grid2 container className={style.container} direction={"column"}>
+        <Grid2 container className={style.paper} direction={"column"}>
           <Avatar className={style.avatar} />
           <TextField
-            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("id",event.target.value)}
-            value={loginInfo.id}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoFocus
+            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("id",event.target.value)} value={loginInfo.id} 
+            variant="outlined" margin="normal" required fullWidth id="username" label="Username" name="username" autoFocus
           />
           <TextField
-            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("pw",event.target.value)}
-            value={loginInfo.pw}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("pw",event.target.value)} value={loginInfo.pw}
+            variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password"
           />
           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={style.submit}
-            onClick = {logInCall}
+            type="submit" fullWidth variant="contained" color="primary"
+            className={style.submit} onClick = {logInCall} disabled={(!loginInfo.id)||(!loginInfo.pw)}
           >
             Sign In
           </Button>
-          <Link className={style.margin} href="/login/find" variant="body2">
-            {"Don't remeber ID/PW?"}
+          <Link className={style.margin} href={pageUrl.findId} variant="body2">
+            {"Find ID"}
           </Link>
-          <Link className={style.margin} href="/login/signup" variant="body2">
-            {"Don't have an account? Sign Up"}
+          <Link className={style.margin} href={pageUrl.findPw} variant="body2">
+            {"Find Password"}
+          </Link>
+          <Link className={style.margin} href={pageUrl.signup} variant="body2">
+            {"Sign Up"}
           </Link>
         </Grid2>
       </Grid2>
