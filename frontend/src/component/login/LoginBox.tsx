@@ -1,6 +1,6 @@
 import useStyles from "@/app/style";
 import { LoginInfo } from "@/util/types";
-import { Avatar, Button, Grid2, Link, TextField } from "@mui/material";
+import { Avatar, Button, Grid2, Link, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { pageUrl } from "@/util/values";
@@ -57,15 +57,21 @@ export default function LoginBox() {
           >
             Sign In
           </Button>
-          <Link className={style.margin} href={pageUrl.findId} variant="body2">
-            {"Find ID"}
-          </Link>
-          <Link className={style.margin} href={pageUrl.findPw} variant="body2">
-            {"Find Password"}
-          </Link>
-          <Link className={style.margin} href={pageUrl.signup} variant="body2">
-            {"Sign Up"}
-          </Link>
+          <Grid2 container columns={2} direction={"row"} alignItems={"center"}>
+            <Typography>
+              <Link className={style.margin} href={pageUrl.findId} variant="body2">
+                아이디 찾기
+              </Link>
+              |
+              <Link className={style.margin} href={pageUrl.findPw} variant="body2">
+                비밀번호 찾기
+              </Link>
+              |
+              <Link className={style.margin} href={pageUrl.signup} variant="body2">
+                회원가입
+              </Link>
+            </Typography>
+          </Grid2>
         </Grid2>
       </Grid2>
     </>

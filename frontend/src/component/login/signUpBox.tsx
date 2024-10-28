@@ -7,7 +7,7 @@ import { Box, Button, FormControlLabel, Grid2, Radio, RadioGroup, TextField, Typ
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function FindBox() {
+export default function SignUpBox() {
   const searchParams = useSearchParams();
   const [type, setType] = useState<any>("id");
   const [requestFlag, setRequestFlag] = useState<boolean>(false);
@@ -68,7 +68,7 @@ export default function FindBox() {
     <>
       <Grid2 container  className={style.container} direction={"column"} wrap="nowrap">
         <Grid2 container className={style.paper} direction={"column"} wrap="nowrap">
-          <Typography variant="h3"> {toUpperString(type)} 찾기 </Typography>
+          <Typography variant="h3"> 회원가입 </Typography>
           <div className={style.divider} />
           {(type==="id"?
             <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" >
@@ -108,49 +108,33 @@ export default function FindBox() {
               </RadioGroup>
             </Grid2>
           </Grid2>
-          {(!authKeyInfo.type)?
-          <></>
-          : <Grid2 container size={12} columns={3} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
-              <Grid2 size={4} >
-                  {(authKeyInfo.type==="email")?
-                  <Typography variant="h5" className={style.white} > 이메일</Typography>
-                  :<Typography variant="h5" className={style.white} > 휴대폰</Typography>
-                  }
-              </Grid2>
-              <Grid2 size={8} className={style.margin_textField}>
-                <TextField
-                  onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo(authKeyInfo.type,event.target.value)} value={(authKeyInfo.type==="email")?authKeyInfo.email:authKeyInfo.phone}
-                  variant="outlined" margin="normal" required fullWidth id={authKeyInfo.type} label="이메일" name={authKeyInfo.type} autoFocus
-                  disabled={(!authKeyInfo.type)?true:false} sx={{ margin: '0 auto' }}
-                />
-              </Grid2>
-              <Grid2 size={2} display={"flex"} justifyContent={"center"} className={style.margin_textField}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={style.submit}
-                  onClick = {logInCall}
-                  disabled={checkSendAble()}
-                  sx={{ width: '60%' }}
-                >
-                  전송
-                </Button>
-              </Grid2>
-            </Grid2>
-          }
           <Grid2 container size={12} columns={2} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
-              <Grid2 size={4} >
-                  <Typography variant="h5" className={style.white} >인증키</Typography>
-              </Grid2>
-              <Grid2 size={8} className={style.white} >
-                <TextField
-                  onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("key",event.target.value)} value={authKeyInfo.key}
-                  variant="outlined" margin="normal" required fullWidth id="authKey" label="인증키" name="authKey" autoFocus
-                  disabled={(!requestFlag)?true:false} sx={{ margin: '0 auto' }}
-                />
-              </Grid2>
+            <Grid2 size={8} className={style.margin_textField}>
+              <TextField
+                onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo(authKeyInfo.type,event.target.value)} value={(authKeyInfo.type==="email")?authKeyInfo.email:authKeyInfo.phone}
+                variant="outlined" margin="normal" required fullWidth id={authKeyInfo.type} label="이메일" name={authKeyInfo.type} autoFocus
+                disabled={(!authKeyInfo.type)?true:false} sx={{ margin: '0 auto' }}
+              />
             </Grid2>
+            <Grid2 size={4} display={"flex"} justifyContent={"center"} className={style.margin_textField}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={style.submit}
+                onClick = {logInCall}
+                disabled={checkSendAble()}
+                sx={{ width: '60%' }}
+              >
+                전송
+              </Button>
+            </Grid2>
+          </Grid2>
+          <TextField
+            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("key",event.target.value)} value={authKeyInfo.key}
+            variant="outlined" margin="normal" required fullWidth id="authKey" label="인증키" name="authKey" autoFocus
+            disabled={(!requestFlag)?true:false} sx={{ margin: '0 auto' }}
+          />
           <Grid2 container size={12} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
             <Button
               type="submit"

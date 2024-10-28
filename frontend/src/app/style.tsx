@@ -2,21 +2,21 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
     container: {
-        height: "100vh",
+        // height: "100vh",
         alignItems: "center",
-        justifyContent: "center",
+        // justifyContent: "center",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: "red",
+        // backgroundColor: "red",
     },
 
     paper: {
         padding: '4vw',
         alignItems: "center",
         justifyContent: "center",
+        marginTop: "10vh",
         width: "30vw",  // 뷰포트 기준 width : vw
-        minWidth : "300px",     // 최소 width
-        height: "80vh", // 뷰포트 기준 height : vh
+        minWidth : "500px",     // 최소 width
         minHeight : "600px",    // 최소 height
         border : "solid",
         borderColor : "black",
@@ -30,7 +30,13 @@ const useStyles = makeStyles({
         width: "100px",  // 뷰포트 기준 width : vw
         height: "100px", // 뷰포트 기준 height : vh
         marginBottom : "30px",
-        backgroundColor: "red",
+        // backgroundColor: "red",
+    },
+
+    margin_textField : {
+        marginTop : "20px",
+        marginBottom : "20px",
+        // backgroundColor: "red",
     },
 
     red: {
@@ -39,6 +45,10 @@ const useStyles = makeStyles({
 
     orange: {
         backgroundColor: "orange",
+    },
+
+    white: {
+        backgroundColor: "white",
     },
 
     margin: {
