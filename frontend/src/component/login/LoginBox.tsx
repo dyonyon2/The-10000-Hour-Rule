@@ -2,7 +2,6 @@ import useStyles from "@/app/style";
 import { LoginInfo } from "@/util/types";
 import { Avatar, Button, Grid2, Link, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { pageUrl } from "@/util/values";
 
 export default function LoginBox() {

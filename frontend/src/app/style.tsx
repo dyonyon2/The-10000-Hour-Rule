@@ -39,17 +39,10 @@ const useStyles = makeStyles({
         // backgroundColor: "red",
     },
 
-    red: {
-        backgroundColor: "red",
-    },
-
-    orange: {
-        backgroundColor: "orange",
-    },
-
-    white: {
-        backgroundColor: "white",
-    },
+    red: {backgroundColor: "red",},
+    orange: {backgroundColor: "orange",},
+    white: {backgroundColor: "white",},
+    blue: {backgroundColor: "blue",},
 
     margin: {
         margin: '3px',
@@ -66,19 +59,19 @@ const useStyles = makeStyles({
         width : "100%",
         marginTop: "15px",
         marginBottom: "15px",
-    }
+    },
 
-    // logo : {
-    //     width: "100px",  // 뷰포트 기준 width : vw
-    //     height: "50px", // 뷰포트 기준 height : vh
-    //     marginBottom : "30px",
-    //     objectFit : "contain",
-    //     // color:"black",
-    //     backgroundImage : "url(/logo/Logo1.png)",
-    //     backgroundRepeat: "no-repeat",
-    //     // backgroundSize: 'cover',
-    //     backgroundPosition: 'center',
-    // },
+    logo : {
+        // marginBottom : "30px",
+        objectFit : "contain",
+        minWidth : "200px",     // 최소 width
+        minHeight : "80px",    // 최소 height
+        // color:"black",
+        backgroundImage : "url(/logo/Logo1.png)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
 
     
 });

@@ -2,7 +2,7 @@ import useStyles from "@/app/style";
 import { toUpperString } from "@/util/stringUtil";
 import { authKeyInfo } from "@/util/types";
 import { pageUrl } from "@/util/values";
-import { ArrowBackOutlined } from "@mui/icons-material";
+import { ArrowBackOutlined, CheckBoxOutlined } from "@mui/icons-material";
 import { Box, Button, FormControlLabel, Grid2, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,7 +37,10 @@ export default function FindBox() {
     authKeyRequest();
   }
 
-  function checkSendAble(){ // 인증 종류에 해당하는 값 존재하는지 체크 & 이전 전송 요청과의 텀 체크(무한 전송 방지)
+  function checkSendAble(){ // 인증 종류에 해당하는 값 존재하는지 체크
+    if(requestFlag) // 인증키 전송 여부
+      return true;
+
     if(!authKeyInfo.type) // Type 세팅 여부
       return true;
       
@@ -49,7 +52,6 @@ export default function FindBox() {
         return true;
     }
 
-    // if() // 연속 전송 체크
     return false;
   }
 
@@ -71,7 +73,8 @@ export default function FindBox() {
           <Typography variant="h3"> {toUpperString(type)} 찾기 </Typography>
           <div className={style.divider} />
           {(type==="id"?
-            <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" >
+            // <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" >
+            <Grid2 container size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
               <Grid2 size={4} className={style.white}>
                 <Typography variant="h5" > 이름</Typography>
               </Grid2>
@@ -83,7 +86,8 @@ export default function FindBox() {
               </Grid2>
             </Grid2>
             :
-            <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" >
+            // <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" >
+            <Grid2 container size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
               <Grid2 size={4} className={style.white}>
                 <Typography variant="h5" > 아이디 </Typography>
               </Grid2>
@@ -95,7 +99,8 @@ export default function FindBox() {
               </Grid2>
             </Grid2>
           )}
-          <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"}  wrap="nowrap" sx={{ marginTop: '10px' }} >
+          {/* <Grid2 container size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"}  wrap="nowrap" sx={{ marginTop: '20px' }} > */}
+          <Grid2 container size={12} columns={2} spacing={2} alignItems={"center"}  wrap="nowrap" sx={{ marginTop: '20px' }} >
             <Grid2 size={4} >
               <Typography variant="h5" className={style.white} >인증 수단</Typography>
             </Grid2>
@@ -110,7 +115,8 @@ export default function FindBox() {
           </Grid2>
           {(!authKeyInfo.type)?
           <></>
-          : <Grid2 container size={12} columns={3} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
+          // : <Grid2 container size={12} columns={3} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
+          : <Grid2 container size={12} columns={3} spacing={1} alignItems={"center"} wrap="nowrap">
               <Grid2 size={4} >
                   {(authKeyInfo.type==="email")?
                   <Typography variant="h5" className={style.white} > 이메일</Typography>
@@ -139,7 +145,10 @@ export default function FindBox() {
               </Grid2>
             </Grid2>
           }
-          <Grid2 container size={12} columns={2} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
+          {(!requestFlag)?
+          <></>
+          // : <Grid2 container size={12} columns={2} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
+          : <Grid2 container size={12} columns={2} spacing={1} alignItems={"center"} wrap="nowrap">
               <Grid2 size={4} >
                   <Typography variant="h5" className={style.white} >인증키</Typography>
               </Grid2>
@@ -151,7 +160,9 @@ export default function FindBox() {
                 />
               </Grid2>
             </Grid2>
-          <Grid2 container size={12} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
+          }
+          {/* <Grid2 container size={12} spacing={1} direction={"row"} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap"> */}
+          <Grid2 container size={12} spacing={1} justifyContent={"space-between"} alignItems={"center"} wrap="nowrap">
             <Button
               type="submit"
               variant="contained"
@@ -170,6 +181,7 @@ export default function FindBox() {
               className={style.submit}
               onClick = {authKeyValidation}
               disabled={(!authKeyInfo.key)}
+              startIcon={<CheckBoxOutlined />}
             >
               Confirm
             </Button>
