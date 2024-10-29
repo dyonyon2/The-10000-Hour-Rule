@@ -107,8 +107,8 @@ export default function FindBox() {
             <Grid2 size={8} className={style.white} >
               <RadioGroup value={authKeyInfo.type} row onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{setInfo("type",event.target.value)}} >
                 <Box display="flex" justifyContent="center" width="100%" >
-                  <FormControlLabel value="email" control={<Radio />} label="email" />
-                  <FormControlLabel value="phone" control={<Radio />} label="phone" />
+                  <FormControlLabel value="email" control={<Radio disabled={requestFlag}/>} label="email" />
+                  <FormControlLabel value="phone" control={<Radio disabled={requestFlag}/>} label="phone" />
                 </Box>
               </RadioGroup>
             </Grid2>
@@ -123,14 +123,14 @@ export default function FindBox() {
                   :<Typography variant="h5" className={style.white} > 휴대폰</Typography>
                   }
               </Grid2>
-              <Grid2 size={8} className={style.margin_textField}>
+              <Grid2 size={8} className={style.margin_TB}>
                 <TextField
                   onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo(authKeyInfo.type,event.target.value)} value={(authKeyInfo.type==="email")?authKeyInfo.email:authKeyInfo.phone}
-                  variant="outlined" margin="normal" required fullWidth id={authKeyInfo.type} label="이메일" name={authKeyInfo.type} autoFocus
-                  disabled={(!authKeyInfo.type)?true:false} sx={{ margin: '0 auto' }}
+                  variant="outlined" margin="normal" required fullWidth id={authKeyInfo.type} label={(authKeyInfo.type==="email")?"이메일":"휴대폰 번호"} name={authKeyInfo.type} autoFocus
+                  disabled={(!authKeyInfo.type)?true:requestFlag} sx={{ margin: '0 auto' }}
                 />
               </Grid2>
-              <Grid2 size={2} display={"flex"} justifyContent={"center"} className={style.margin_textField}>
+              <Grid2 size={2} display={"flex"} justifyContent={"center"} className={style.margin_TB}>
                 <Button
                   type="submit"
                   variant="contained"

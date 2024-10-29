@@ -7,7 +7,7 @@ export default function Navigation() {
   const style = useStyles();  // Style 세팅
 
   return (
-    <Grid2 size={1} sx={{backgroundColor:"green"}} height="100vh">   
+    <Grid2 size={1} className={style.navigation} >
       <div>nav</div>  
     </Grid2>
   );

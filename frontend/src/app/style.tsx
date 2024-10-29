@@ -33,9 +33,45 @@ const useStyles = makeStyles({
         // backgroundColor: "red",
     },
 
-    margin_textField : {
+    header: {
+        minHeight : "80px",
+        height:"8vh",
+        borderBottom: "2px solid gray"
+        // backgroundColor: "red",
+    },
+
+    headerMenu :{
+        minWidth : "600px",
+        width:"30vw",
+        // backgroundColor: "white",
+    },
+
+    navigation :{
+        height:"100vh",
+        border: "2px solid gray",
+        // backgroundColor:"green",
+    },
+
+    icon : {
+        borderRadius: '50%',
+        width: '50px',
+        height: '60px',
+        padding: "10px",
+        // backgroundColor: "white",
+        color: "black",
+        marginLeft: "0.25vw",
+        marginRight: "0.25vw",
+    },
+
+    margin_TB : {
         marginTop : "20px",
         marginBottom : "20px",
+        // backgroundColor: "red",
+    },
+
+    margin_LR : {
+        marginLeft : "20px",
+        marginRight : "20px",
         // backgroundColor: "red",
     },
 
@@ -62,11 +98,8 @@ const useStyles = makeStyles({
     },
 
     logo : {
-        // marginBottom : "30px",
-        objectFit : "contain",
         minWidth : "200px",     // 최소 width
-        minHeight : "80px",    // 최소 height
-        // color:"black",
+        minHeight : "70px",    // 최소 height
         backgroundImage : "url(/logo/Logo1.png)",
         backgroundRepeat: "no-repeat",
         backgroundSize: 'cover',

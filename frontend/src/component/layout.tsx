@@ -12,8 +12,12 @@ export default function Layout({children,}:{
     <Grid2 container size={12}>
       <Header />
       <Navigation />
-      <Grid2 size={11} sx={{backgroundColor:"orange"}} height="100vh">
+      <Grid2 size={11} 
+        // sx={{backgroundColor:"orange"}}
+        height="100vh"
+      >
         <main>{children}</main>
+        {/* {children} */}
       </Grid2>
     </Grid2>
   );
