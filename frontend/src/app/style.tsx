@@ -34,10 +34,12 @@ const useStyles = makeStyles({
     },
 
     header: {
+        minWidth : "800px",
         minHeight : "80px",
         height:"8vh",
-        borderBottom: "2px solid gray"
-        // backgroundColor: "red",
+        borderBottom: "2px solid gray",
+        backgroundColor: "white",
+        color:"black",
     },
 
     headerMenu :{
@@ -47,9 +49,10 @@ const useStyles = makeStyles({
     },
 
     navigation :{
+        minWidth : "50px",
         height:"100vh",
-        border: "2px solid gray",
-        // backgroundColor:"green",
+        backgroundColor:"#333333",
+        justifyContent: "center",
     },
 
     icon : {
@@ -61,6 +64,17 @@ const useStyles = makeStyles({
         color: "black",
         marginLeft: "0.25vw",
         marginRight: "0.25vw",
+    },
+
+    nav_icon : {
+        borderRadius: '50%',
+        width: '100%',
+        height: '10vh',
+        // aspectRatio:2,
+        // aspect-ratio: 1,
+        // padding: "10px",
+        // backgroundColor: "white",
+        color: "white",
     },
 
     margin_TB : {

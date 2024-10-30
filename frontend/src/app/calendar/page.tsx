@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-export default function Home() {
+export default function Calendar() {
   return (
     <div>
-      It's Login Page
+      It's Calendar Page
     </div>
   );
 }

@@ -15,9 +15,19 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* color: var(--foreground);
+  background: var(--background); */
+  background-color: #ffffff; /* 흰색 배경 */
+  color: #000000; /* 검은색 글자 */
+  /* font-family: Arial, Helvetica, sans-serif; */
+  /* src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
+  font-family: 'Cafe24Oneprettynight';
+  font-weight: normal;
+  font-style: normal; */
+  font-family: "Noto Serif KR", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
 @layer utilities {

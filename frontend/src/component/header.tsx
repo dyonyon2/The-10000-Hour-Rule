@@ -4,6 +4,7 @@ import { Box, Button, Grid2, IconButton, Typography } from "@mui/material";
 // import Image from "next/image";
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import { useEffect, useState } from "react";
+import { pageUrl } from "@/util/values";
 
 
 export default function Header() {
@@ -16,10 +17,10 @@ export default function Header() {
 
   return (
     <Grid2 container size={12} className={style.header} justifyContent="space-between" >   
-      <Grid2 size={1.5} className={style.logo} justifyContent={"center"} alignContent={"center"} onClick={()=>{console.log("Click!!")}}></Grid2>
+      <Grid2 size={1.5} className={style.logo} justifyContent={"center"} alignContent={"center"} onClick={()=>{window.location.href=pageUrl.main}}></Grid2>
       <Grid2 container size={3} className={style.headerMenu} justifyContent={"right"} alignContent={"center"}>
-        <Button type="submit" variant="text" className={style.icon} sx={{backgroundImage:"url(/logo/아이유.png)", backgroundPosition:"center", backgroundSize:"cover"}}></Button> 
-        <Typography alignContent={"center"} className={style.margin_LR}>{userInfo.name}님</Typography>
+        <Button type="submit" variant="text" className={style.icon} onClick={()=>{window.location.href=pageUrl.user}} sx={{backgroundImage:"url(/logo/아이유.png)", backgroundPosition:"center", backgroundSize:"cover"}}></Button> 
+        <Typography alignContent={"center"} className={style.margin_LR} fontFamily={"Noto Serif KR"}>{userInfo.name}님</Typography>
         <Button type="submit" variant="text" className={style.icon}><PowerSettingsNew /></Button> 
         <Button type="submit" variant="text" className={style.icon}><Person2Outlined /></Button>
         <Button type="submit" variant="text" className={style.icon}><NotificationsActiveOutlined /></Button>
