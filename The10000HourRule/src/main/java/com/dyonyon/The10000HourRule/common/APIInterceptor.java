@@ -79,6 +79,10 @@ public class APIInterceptor implements HandlerInterceptor {
 
             String contentType = req.getContentType();
 
+            if ("OPTIONS".equals(method)) { // Preflight 는 OPTIONS로 날아오는데 처리 안하고 패스!
+                return true;
+            }
+
             // 정의된 Call만 처리
             if (result > 0) {
                 // Filter에서 attribute 세팅한 req_id를 get

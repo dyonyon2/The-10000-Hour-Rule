@@ -14,3 +14,7 @@
 
 - Typography variant 
     - h1, h2, h3, body1, body2, catpion, overline
+
+
+- axios에서 withCredentials: true 세팅을 통해 쿠키ID가 변경되지 않도록 세팅함!
+- CORS는 Backend Spring에서 허용하도록 설정함!

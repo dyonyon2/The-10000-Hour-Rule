@@ -3,10 +3,11 @@ import { LoginInfo } from "@/util/types";
 import { Avatar, Button, Grid2, Link, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { pageUrl } from "@/util/values";
+import { ApiCall, apiUrl } from "@/util/apiCall";
 
 export default function LoginBox() {
   const [loginFlag,setLoginFlag] = useState<boolean>(false);  // 로그인 체크 Flag
-  const [loginInfo,setLoginInfo] = useState<LoginInfo>({id:"", pw :""});  // 로그인 입력 데이터
+  const [loginInfo,setLoginInfo] = useState<LoginInfo>({user_id:"", pw :""});  // 로그인 입력 데이터
   const style = useStyles();  // Style 세팅
 
   // 로그인 화면 useEffect 로직
@@ -16,25 +17,26 @@ export default function LoginBox() {
   },[]);
 
   function logInCheck(){  // 로그인 체크
-    if(sessionStorage.getItem('loginFlag')&&sessionStorage.getItem('loginInfo')){ 
-      console.log("로그인 되어 있음. 메인 페이지로 이동! (In logInCall()");
-      window.location.href = "/";
-    } else {
-      console.log("로그인 되어 있지 않음. (In logInCall()");
-      setLoginFlag(false);
-    }
+    // if(sessionStorage.getItem('loginFlag')&&sessionStorage.getItem('loginInfo')){ 
+    //   console.log("로그인 되어 있음. 메인 페이지로 이동! (In logInCall()");
+    //   window.location.href = "/";
+    // } else {
+    //   console.log("로그인 되어 있지 않음. (In logInCall()");
+    //   setLoginFlag(false);
+    // }
   }
 
   function setInfo(key:string, value:string){ // 로그인 정보 입력
     var newInfo = {...loginInfo};
-    if(key==="id") newInfo.id = value;
+    if(key==="id") newInfo.user_id = value;
     else if(key==="pw") newInfo.pw = value;
     setLoginInfo(newInfo);
   }
 
   function logInCall(){ // LoginFormInfo로 서버에 로그인 요청
+    ApiCall.call(apiUrl.login,'post',loginInfo);
     setLoginFlag(true);
-    window.location.href = "/";
+    // window.location.href = "/";
   }
 
   return (
@@ -43,16 +45,16 @@ export default function LoginBox() {
         <Grid2 container className={style.paper} direction={"column"}>
           <Avatar className={style.avatar} />
           <TextField
-            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("id",event.target.value)} value={loginInfo.id} 
-            variant="outlined" margin="normal" required fullWidth id="username" label="Username" name="username" autoFocus
+            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("id",event.target.value)} value={loginInfo.user_id} 
+            variant="outlined" margin="normal" required fullWidth id="user_id" label="id" name="user_id" autoFocus
           />
           <TextField
             onChange={(event:React.ChangeEvent<HTMLInputElement>)=>setInfo("pw",event.target.value)} value={loginInfo.pw}
-            variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password"
+            variant="outlined" margin="normal" required fullWidth name="password" label="password" type="password" id="password"
           />
           <Button
             type="submit" fullWidth variant="contained" color="primary"
-            className={style.submit} onClick = {logInCall} disabled={(!loginInfo.id)||(!loginInfo.pw)}
+            className={style.submit} onClick = {logInCall} disabled={(!loginInfo.user_id)||(!loginInfo.pw)}
           >
             Sign In
           </Button>

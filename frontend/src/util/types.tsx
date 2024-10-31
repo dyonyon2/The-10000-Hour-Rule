@@ -4,7 +4,7 @@ export enum ObjectKeys {
 }
 
 export type LoginInfo = {
-    id : string;
+    user_id : string;
     pw : string;
 }
 
