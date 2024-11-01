@@ -92,6 +92,35 @@ public class UserLoginService {
         return responseInfo;
     }
 
+    // 로그아웃
+    public ResponseInfo logout(HttpServletRequest req, UserLoginInfo userLoginInfo) {
+
+        String req_id = String.valueOf(req.getAttribute("req_id"));
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");
+        try {
+            log.info("[Service-UserLogin][logout][{}] Logout Started...", req_id);
+
+            // 0. 변수 세팅
+            userLoginInfo.setReq_id(req_id); userLoginInfo.setSession_id(req.getSession().getId());
+
+            // 1. 로그인 세션 삭제
+            deleteLoginSession(req_id, userLoginInfo, responseInfo);
+            log.info("[Service-UserLogin][logout][{}] Logout Success...: ID({})", req_id, userLoginInfo.getUser_id());
+        } catch (FunctionException e){
+            log.error("[Service-UserLogin][logout][{}] Logout Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+        } catch (Exception e){
+            log.error("[Service-UserLogin][logout][{}] Logout Fail : ERROR OCCURRED {}",req_id,e.getMessage());
+            log.error("[Service-UserLogin][logout]["+req_id+"] Error PrintStack : ",e);
+            responseInfo.setStatus("-1");
+            responseInfo.setRes_status("-1");
+            responseInfo.setMsg("Logout Fail : Exception Occurred");
+            responseInfo.setRes_data("[Service-UserLogin][logout] Logout Fail : "+e.getMessage());
+            responseInfo.setErr_code("UN");
+        }
+        return responseInfo;
+    }
+
     // Insert Return 값이 1이면 정상, 그 이외는 비정상
     public void insertLoginLog(String req_id, UserLoginInfo info, ResponseInfo resInfo) throws FunctionException {
         int result = -1;
@@ -235,6 +264,31 @@ public class UserLoginService {
             resInfo.setMsg("Login Fail : Exception Occurred");
             resInfo.setRes_data("[Service-UserLogin][login][insertLoginSession] Login Session Insert Fail  : "+e.getMessage());
             throw new FunctionException("Login Session Insert/Update Fail  : "+e.getMessage());
+        }
+    }
+
+    // Login Session TBL에서 기존 로그인 세션 delete
+    public void deleteLoginSession(String req_id, UserLoginInfo info, ResponseInfo resInfo) throws FunctionException {
+        int result = -1;
+        try {
+            result = userLoginMapper.deleteLoginSession(info);
+            if(result>=0) {
+                log.info("[Service-UserLogin][logout][deleteLoginSession][{}] Login Session Delete Success : {}", req_id, result);
+                resInfo.setMsg("Logout Success");
+                resInfo.setRes_data(gson.toJson(info));
+            }
+            else {
+                log.info("[Service-UserLogin][logout][deleteLoginSession][{}] Login Session Delete Fail : {}", req_id, result);
+                throw new Exception("USER_ID("+info.getUser_id()+")");
+            }
+        } catch (Exception e) {
+            log.error("[Service-UserLogin][logout][deleteLoginSession][{}] Login Session Delete Fail : {}, {}",req_id, result, e.getMessage());
+            log.error("[Service-UserLogin][logout][deleteLoginSession]["+req_id+"] Error PrintStack : ",e);
+            resInfo.setStatus("-1");
+            resInfo.setRes_status("-1");
+            resInfo.setMsg("Login Fail : Exception Occurred");
+            resInfo.setRes_data("[Service-UserLogin][logout][deleteLoginSession] Login Session Delete Fail  : "+e.getMessage());
+            throw new FunctionException("Login Session Delete Fail  : "+e.getMessage());
         }
     }
 }

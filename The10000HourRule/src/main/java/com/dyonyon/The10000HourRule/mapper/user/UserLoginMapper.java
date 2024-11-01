@@ -16,4 +16,5 @@ public interface UserLoginMapper {
     String getLoginSessionId(String user_id);
     int updateLoginSession(UserLoginInfo info);
     int insertLoginSession(UserLoginInfo info);
+    int deleteLoginSession(UserLoginInfo info);
 }

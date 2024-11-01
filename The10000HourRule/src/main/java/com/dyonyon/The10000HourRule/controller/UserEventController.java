@@ -58,6 +58,33 @@ public class UserEventController {
         return result;
     }
 
+    // 로그아웃 처리
+    @PostMapping("/logout")
+    public ResponseInfo logoutController(HttpServletRequest req, @RequestBody UserLoginInfo userLoginInfo) throws ParseException {
+        ResponseInfo result = new ResponseInfo();
+        try {
+            log.info("[Controller-UserEvent][/logout][{}] URL : {}", req.getAttribute("req_id"), req.getRequestURL());
+            log.info("[Controller-UserEvent][/logout][{}] BODY : {}", req.getAttribute("req_id"), userLoginInfo);
+            result = apiVerificationService.checkLoginSession((String) req.getAttribute("req_id"), userLoginInfo.getUser_id(), req.getSession().getId());
+            if ("-1".equals(result.getRes_status())) {
+                log.info("[Controller-UserEvent][/logout][{}] API Verification Fail... : Check Login Session", req.getAttribute("req_id"));
+                return result;
+            }
+            log.info("[Controller-UserEvent][/logout][{}] Call UserLoginService...", req.getAttribute("req_id"));
+            result = userLoginService.logout(req, userLoginInfo);
+            log.info("[Controller-UserEvent][/logout][{}] RESULT : STATUS({}) RES_STATUS({})", req.getAttribute("req_id"), result.getStatus(), result.getRes_status());
+        } catch (Exception e){
+            log.error("[Controller-UserEvent][/logout][{}] ERROR OCCURRED {}",req.getAttribute("req_id"),e.getMessage());
+            log.error("[Controller-UserEvent][/logout]["+req.getAttribute("req_id")+"] Error PrintStack : ",e);
+            result.setStatus("-1");
+            result.setRes_status("-1");
+            result.setMsg("Logout Fail: Exception Occurred");
+            result.setRes_data("[Controller-UserEvent][/logout] Login Controller Fail : "+e.getMessage());
+            result.setErr_code("UN");
+        }
+        return result;
+    }
+
 
     // 회원가입 처리
     @PostMapping("")

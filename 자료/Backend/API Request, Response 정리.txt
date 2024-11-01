@@ -1,0 +1,23 @@
+API 명세서
+
+1. 로그인 요청 (API - #0001) 
+    1. API 요청
+        POST : "/api/user/login",    // 로그인 (POST)
+        BODY : {"user_id":"dyonyon","pw":"1234","req_id":"20241101141519989327","session_id":"0F4209BEBF6E816F6589CF8CFA438381"}
+    2. Return
+        성공
+            {
+                "status":"1",
+                "msg":"Login Success",
+                "res_status":"1",
+                "res_data":"{\"user_id\":\"dyonyon\",\"pw\":\"1234\",\"req_id\":\"20241101141519989327\",\"session_id\":\"0F4209BEBF6E816F6589CF8CFA438381\"}",
+                "err_code":"000000"
+            }
+        실패
+            {
+                "status":"1",
+                "msg":"Login Fail : Invalid ID/PW",
+                "res_status":"-1",
+                "res_data":"[Service-UserLogin][login][getLoginResult] Invalid ID/PW : ID(dyonyon) PW(12345)",
+                "err_code":"000000"
+            }

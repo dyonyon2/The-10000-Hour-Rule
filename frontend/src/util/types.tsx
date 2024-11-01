@@ -8,7 +8,12 @@ export type LoginInfo = {
     pw : string;
 }
 
-export type authKeyInfo = {
+export type UserInfo = {
+    user_id : string;
+    pw : string;
+}
+
+export type AuthKeyInfo = {
     name : string;
     type : string;  // findIdByPhone, findIdByEmail, resetPwByPhone, resetPwByEmail
     id : string;
@@ -17,7 +22,7 @@ export type authKeyInfo = {
     key : string;
 }
 
-export type signInfo = {
+export type SignInfo = {
     user_id : string,
     pw : string,
     name : string,
@@ -27,6 +32,14 @@ export type signInfo = {
     region : string,
     phone : string,
     mail : string,
+}
+
+export type ApiReturnForm = {
+    status : string, // 0 처리중, 1 처리완료, -1 처리중 에러
+    msg : string, // 사용자에게 전달할 데이터
+    res_status : string,  // 정상 000000, 에러 DB0001
+    res_data : string,  // STATUS가 1일 때에는 특정 객체, 1일때 데이터 없으면 안된것으로 판단하면 됨, -1 에러일때에는 에러 메시지
+    err_code : string
 }
 
 // {

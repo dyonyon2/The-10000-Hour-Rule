@@ -6,7 +6,6 @@ import { pageUrl } from "@/util/values";
 import { ApiCall, apiUrl } from "@/util/apiCall";
 
 export default function LoginBox() {
-  const [loginFlag,setLoginFlag] = useState<boolean>(false);  // 로그인 체크 Flag
   const [loginInfo,setLoginInfo] = useState<LoginInfo>({user_id:"", pw :""});  // 로그인 입력 데이터
   const style = useStyles();  // Style 세팅
 
@@ -17,13 +16,10 @@ export default function LoginBox() {
   },[]);
 
   function logInCheck(){  // 로그인 체크
-    // if(sessionStorage.getItem('loginFlag')&&sessionStorage.getItem('loginInfo')){ 
-    //   console.log("로그인 되어 있음. 메인 페이지로 이동! (In logInCall()");
-    //   window.location.href = "/";
-    // } else {
-    //   console.log("로그인 되어 있지 않음. (In logInCall()");
-    //   setLoginFlag(false);
-    // }
+    if(sessionStorage.getItem('user_id')){ 
+      console.log("로그인 되어 있음. 메인 페이지로 이동!");
+      window.location.href = pageUrl.main;
+    } else console.log("로그인 되어 있지 않음.");
   }
 
   function setInfo(key:string, value:string){ // 로그인 정보 입력
@@ -33,10 +29,22 @@ export default function LoginBox() {
     setLoginInfo(newInfo);
   }
 
-  function logInCall(){ // LoginFormInfo로 서버에 로그인 요청
-    ApiCall.call(apiUrl.login,'post',loginInfo);
-    setLoginFlag(true);
-    // window.location.href = "/";
+  async function logInCall(){ // LoginFormInfo로 서버에 로그인 요청
+    var result= await ApiCall.call(apiUrl.login,'post',loginInfo);
+    if(result.res_status){  // 정상적인 API CALL Return
+      alert(result.msg);
+      if(result.res_status==="1") {  // 로그인 성공
+        console.log("로그인 성공");
+        var tmp = JSON.parse(result.res_data);  // res_data(JSON)을 객체로 파싱
+        sessionStorage.setItem("user_id",tmp.user_id);  // 로그인 된 user_id를 sessionStorage에 저장
+        window.location.href = pageUrl.main;
+      } else {
+        console.log("로그인 실패");
+        sessionStorage.setItem("user_id","");
+      } 
+    } else {    // 비정상적인 API CALL Return
+      alert("올바르지 않은 Response 입니다."+result);
+    }
   }
 
   return (

@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { ApiReturnForm } from "./types";
 
 const url = "http://127.0.0.1:8080/api";
 export enum apiUrl {
     /* User 관련 API */
     login=url+"/user/login",    // 로그인 (POST)
+    logout=url+"/user/logout",    // 로그아웃 (POST)
     authRequest=url+"/user/auth",    // 이메일 인증번호 요청 (POST)
     authCheck=url+"/user/auth/check?user_id={0}&key={1}",     // 이메일 인증번호 확인 (GET)
 
@@ -55,11 +57,13 @@ export class ApiCall{
                 ...(body && { data: body })
             };
 
-            console.log('API CALL :',config);
+            console.log('API CALL REQUEST:',config);
             let response = await axios(config);
-            console.log(response);
+            console.log('API CALL RESPONSE:',response.data);
+            return response.data;
         } catch(err:any){
             console.error('API CALL ERROR:',err);
+            return err;
         }
     }
 }

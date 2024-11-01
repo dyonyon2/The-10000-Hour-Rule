@@ -1,6 +1,6 @@
 import useStyles from "@/app/style";
 import { toUpperString } from "@/util/stringUtil";
-import { authKeyInfo, signInfo } from "@/util/types";
+import { AuthKeyInfo, SignInfo } from "@/util/types";
 import { pageUrl } from "@/util/values";
 import { ArrowBackOutlined, CheckBoxOutlined, ConfirmationNumberOutlined } from "@mui/icons-material";
 import { Box, Button, FormControlLabel, Grid2, Radio, RadioGroup, TextField, Typography } from "@mui/material";
@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SignUpBox() {
-  const [signInfo,setSignInfo] = useState<signInfo>({user_id : "",pw : "",name : "",nickname : "",sex : "",birth : "",region : "",phone : "",mail : ""});  // 회원가입 데이터
+  const [signInfo,setSignInfo] = useState<SignInfo>({user_id : "",pw : "",name : "",nickname : "",sex : "",birth : "",region : "",phone : "",mail : ""});  // 회원가입 데이터
   const style = useStyles();  // Style 세팅
 
   function checkSignInfo(){
@@ -56,7 +56,7 @@ export default function SignUpBox() {
             </Grid2>
           </Grid2>
           {/* <Grid2 container className={style.margin_textField} size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" > */}
-          <Grid2 container className={style.margin_textField} size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
+          <Grid2 container className={style.margin_TB} size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
             <Grid2 size={4} className={style.white}>
               <Typography variant="h5" > 아이디</Typography>
             </Grid2>
@@ -80,7 +80,7 @@ export default function SignUpBox() {
             </Grid2>
           </Grid2>
           {/* <Grid2 container className={style.margin_textField}  size={12} columns={2} spacing={2} direction={"row"} justifyContent={"flex-start"} alignItems={"center"} wrap="nowrap" > */}
-          <Grid2 container className={style.margin_textField}  size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
+          <Grid2 container className={style.margin_TB}  size={12} columns={2} spacing={2} alignItems={"center"} wrap="nowrap" >
             <Grid2 size={4} className={style.white}>
               <Typography variant="h5" > 이메일</Typography>
             </Grid2>
