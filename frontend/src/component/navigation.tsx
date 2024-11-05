@@ -9,7 +9,7 @@ export default function Navigation() {
   const style = useStyles();  // Style 세팅
 
   return (
-    <Grid2 size={0.5} spacing={2} className={style.navigation}>
+    <Grid2 spacing={2} className={style.navigation}>
       <Button type="submit" variant="text" disableRipple className={style.nav_icon} onClick={()=>{window.location.href=pageUrl.memo}}><LibraryBooks /></Button> 
       <Button type="submit" variant="text" disableRipple className={style.nav_icon} onClick={()=>{window.location.href=pageUrl.calendar}}><EditCalendarSharp /></Button> 
       <Button type="submit" variant="text" disableRipple className={style.nav_icon} onClick={()=>{window.location.href=pageUrl.routine}}><ListAlt /></Button>       

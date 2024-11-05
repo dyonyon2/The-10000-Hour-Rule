@@ -2,12 +2,9 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
     container: {
-        // height: "100vh",
         alignItems: "center",
-        // justifyContent: "center",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        // backgroundColor: "red",
     },
 
     paper: {
@@ -30,37 +27,82 @@ const useStyles = makeStyles({
         width: "100px",  // 뷰포트 기준 width : vw
         height: "100px", // 뷰포트 기준 height : vh
         marginBottom : "30px",
-        // backgroundColor: "red",
     },
 
     header: {
         minWidth : "800px",
         minHeight : "80px",
-        height:"8vh",
         borderBottom: "2px solid gray",
         backgroundColor: "white",
         color:"black",
+        position:"fixed",
+        zIndex:"1"
     },
 
     headerMenu :{
         minWidth : "600px",
         width:"30vw",
-        // backgroundColor: "white",
     },
 
     navigation :{
-        minWidth : "50px",
+        width : "100px",
+        top : "80px",
         height:"100vh",
         backgroundColor:"#333333",
         justifyContent: "center",
+        flexShrink: 0,
+        minHeight:"300px",
+        position:"fixed"
     },
+    
+    mainBody : {
+        backgroundColor:"green",
+        marginTop : "80px",
+        marginLeft : "100px",
+        height:"100vh",
+        width : "calc(100vw - 100px)",
+        flexGrow:1,
+        padding : "10px",
+    },
+
+    memoBoard : {
+        backgroundColor:"blue",
+        // minHeight:"200px",
+        // minWidth : "1000px",
+        height:"80vh"
+    },
+
+    memoItem3x3 : {
+        backgroundColor:"gray",
+        height:"20vh",
+        width:"25vw",
+        minWidth : "80px",
+        minHeight : "80px",
+    },
+
+    memoItem4x4 : {
+        backgroundColor:"gray",
+        height:"18vh",
+        width:"20vw",
+        minWidth : "200px",
+        minHeight : "100px",
+    },
+
 
     icon : {
         borderRadius: '50%',
         width: '50px',
         height: '60px',
         padding: "10px",
-        // backgroundColor: "white",
+        color: "black",
+        marginLeft: "0.25vw",
+        marginRight: "0.25vw",
+    },
+
+    icon_square : {
+        width: '50px',
+        // height: '60px',
+        padding: "10px",
         color: "black",
         marginLeft: "0.25vw",
         marginRight: "0.25vw",
@@ -70,29 +112,26 @@ const useStyles = makeStyles({
         borderRadius: '50%',
         width: '100%',
         height: '10vh',
-        // aspectRatio:2,
-        // aspect-ratio: 1,
-        // padding: "10px",
-        // backgroundColor: "white",
         color: "white",
     },
 
     margin_TB : {
         marginTop : "20px",
         marginBottom : "20px",
-        // backgroundColor: "red",
     },
 
     margin_LR : {
         marginLeft : "20px",
         marginRight : "20px",
-        // backgroundColor: "red",
     },
 
     red: {backgroundColor: "red",},
     orange: {backgroundColor: "orange",},
     white: {backgroundColor: "white",},
     blue: {backgroundColor: "blue",},
+    yellow: {backgroundColor: "yellow",},
+    black: {backgroundColor: "black",},
+    gray: {backgroundColor: "gray",},
 
     margin: {
         margin: '3px',
@@ -120,7 +159,6 @@ const useStyles = makeStyles({
         backgroundPosition: 'center',
     },
 
-    
 });
 
 

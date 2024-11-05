@@ -1,6 +1,6 @@
 import useStyles from "@/app/style";
 import { toUpperString } from "@/util/stringUtil";
-import { authKeyInfo } from "@/util/types";
+import { AuthKeyInfo } from "@/util/types";
 import { pageUrl } from "@/util/values";
 import { ArrowBackOutlined, CheckBoxOutlined } from "@mui/icons-material";
 import { Box, Button, FormControlLabel, Grid2, Radio, RadioGroup, TextField, Typography } from "@mui/material";
@@ -11,7 +11,7 @@ export default function FindBox() {
   const searchParams = useSearchParams();
   const [type, setType] = useState<any>("id");
   const [requestFlag, setRequestFlag] = useState<boolean>(false);
-  const [authKeyInfo,setAuthKeyInfo] = useState<authKeyInfo>({name:"", type:"", id:"", phone:"", email:"", key:""});  // 로그인 입력 데이터
+  const [authKeyInfo,setAuthKeyInfo] = useState<AuthKeyInfo>({name:"", type:"", id:"", phone:"", email:"", key:""});  // 로그인 입력 데이터
   const style = useStyles();  // Style 세팅
 
   function authKeyRequest(){  // 인증키 요청

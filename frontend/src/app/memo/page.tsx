@@ -1,10 +1,9 @@
-import Layout from "@/component/layout";
-import Image from "next/image";
+"use client"
 
-export default function Memo() {
+import MemoBoard from "@/component/memo/memoBoard";
+
+export default function MemoList() {
   return (
-    <div>
-      It's Memo Page
-    </div>
+    <MemoBoard />
   );
 }
