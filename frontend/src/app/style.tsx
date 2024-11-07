@@ -60,6 +60,7 @@ const useStyles = makeStyles({
         marginTop : "80px",
         marginLeft : "100px",
         height:"100vh",
+        minHeight:"600px",
         width : "calc(100vw - 100px)",
         flexGrow:1,
         padding : "10px",
@@ -67,7 +68,7 @@ const useStyles = makeStyles({
 
     memoBoard : {
         backgroundColor:"blue",
-        // minHeight:"200px",
+        minHeight:"500px",
         // minWidth : "1000px",
         height:"80vh"
     },
@@ -81,6 +82,14 @@ const useStyles = makeStyles({
     },
 
     memoItem4x4 : {
+        backgroundColor:"gray",
+        height:"18vh",
+        width:"20vw",
+        minWidth : "200px",
+        minHeight : "100px",
+    },
+
+    memoItem5x5 : {
         backgroundColor:"gray",
         height:"18vh",
         width:"20vw",
