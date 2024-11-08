@@ -56,7 +56,7 @@ const useStyles = makeStyles({
     },
     
     mainBody : {
-        backgroundColor:"green",
+        // backgroundColor:"green",
         marginTop : "80px",
         marginLeft : "100px",
         height:"100vh",
@@ -68,33 +68,44 @@ const useStyles = makeStyles({
 
     memoBoard : {
         backgroundColor:"blue",
-        minHeight:"500px",
+        minHeight:"600px",
         // minWidth : "1000px",
-        height:"80vh"
+        height:"90vh",
+        // backgroundImage :"url(/blurMemo.jpg)",
+        backgroundImage :"url(/board1.jpg)",
+        backgroundSize: "cover", /* 요소의 크기에 맞춰 이미지를 조정 */
+        backgroundRepeat : "no-repeat", /* 이미지를 반복하지 않음 */
+        backgroundPosition: "center", /* 이미지를 중앙에 위치시킴 */
     },
 
     memoItem3x3 : {
-        backgroundColor:"gray",
-        height:"20vh",
-        width:"25vw",
-        minWidth : "80px",
-        minHeight : "80px",
+        backgroundColor:"yellow",
+        width:"20vw",
+        height:"16vh",
+        // minWidth : "200px",
+        // minHeight : "100px",
+        marginTop : "20px",
+        marginBottom : "20px",
     },
 
     memoItem4x4 : {
         backgroundColor:"gray",
-        height:"18vh",
+        height:"16vh",
         width:"20vw",
         minWidth : "200px",
         minHeight : "100px",
+        marginTop : "20px",
+        marginBottom : "20px",
     },
 
     memoItem5x5 : {
         backgroundColor:"gray",
-        height:"18vh",
-        width:"20vw",
+        height:"12vh",
+        width:"15vw",
         minWidth : "200px",
         minHeight : "100px",
+        marginTop : "20px",
+        marginBottom : "20px",
     },
 
 
@@ -122,6 +133,12 @@ const useStyles = makeStyles({
         width: '100%',
         height: '10vh',
         color: "white",
+    },
+
+
+    margin_TB10 : {
+        marginTop : "10px",
+        marginBottom : "10px",
     },
 
     margin_TB : {
