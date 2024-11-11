@@ -67,10 +67,9 @@ const useStyles = makeStyles({
     },
 
     memoBoard : {
-        backgroundColor:"blue",
-        minHeight:"600px",
+        minHeight:"800px",
         // minWidth : "1000px",
-        height:"90vh",
+        height:"95vh",
         // backgroundImage :"url(/blurMemo.jpg)",
         backgroundImage :"url(/board1.jpg)",
         backgroundSize: "cover", /* 요소의 크기에 맞춰 이미지를 조정 */
@@ -79,33 +78,54 @@ const useStyles = makeStyles({
     },
 
     memoItem3x3 : {
-        backgroundColor:"yellow",
-        width:"20vw",
-        height:"16vh",
-        // minWidth : "200px",
-        // minHeight : "100px",
+        width:"25vw",
+        height:"25vh",
+        minWidth : "150px",
+        minHeight : "150px",
         marginTop : "20px",
         marginBottom : "20px",
+
+        padding: "20px",
+        backgroundColor: "#fffb87", /* 밝은 노란색으로 포스트잇 느낌 */
+        border: "1px solid #e0d800", /* 포스트잇 테두리 */
+        borderRadius: "5px", /* 부드러운 모서리 */
+        boxShadow: "15px 15px 8px rgba(0, 0, 0, 1)", /* 약간의 그림자 */
+        transform: "rotate(-2deg)", /* 살짝 기울여서 포스트잇 느낌 */
+        color: "#333" /* 글씨 색상 */
     },
 
     memoItem4x4 : {
-        backgroundColor:"gray",
-        height:"16vh",
-        width:"20vw",
+        width:"18vw",
+        height:"18vh",
         minWidth : "200px",
-        minHeight : "100px",
+        minHeight : "150px",
         marginTop : "20px",
         marginBottom : "20px",
+        
+        padding: "20px",
+        backgroundColor: "#fffb87", /* 밝은 노란색으로 포스트잇 느낌 */
+        border: "1px solid #e0d800", /* 포스트잇 테두리 */
+        borderRadius: "5px", /* 부드러운 모서리 */
+        boxShadow: "15px 15px 8px rgba(0, 0, 0, 1)", /* 약간의 그림자 */
+        transform: "rotate(-2deg)", /* 살짝 기울여서 포스트잇 느낌 */
+        color: "#333" /* 글씨 색상 */
     },
 
     memoItem5x5 : {
-        backgroundColor:"gray",
-        height:"12vh",
-        width:"15vw",
+        width:"16vw",
+        height:"14vh",
         minWidth : "200px",
-        minHeight : "100px",
+        minHeight : "120px",
         marginTop : "20px",
         marginBottom : "20px",
+        
+        padding: "20px",
+        backgroundColor: "#fffb87", /* 밝은 노란색으로 포스트잇 느낌 */
+        border: "1px solid #e0d800", /* 포스트잇 테두리 */
+        borderRadius: "5px", /* 부드러운 모서리 */
+        boxShadow: "15px 15px 8px rgba(0, 0, 0, 1)", /* 약간의 그림자 */
+        transform: "rotate(-2deg)", /* 살짝 기울여서 포스트잇 느낌 */
+        color: "#333" /* 글씨 색상 */
     },
 
 
