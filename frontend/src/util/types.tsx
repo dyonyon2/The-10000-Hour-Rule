@@ -40,6 +40,8 @@ export type MemoListInfo = {
     owner_id    : string,
     title       : string,
     content     : string,
+    category_no : string,
+    favorites   : string,
     create_dt   : string,
     update_dt   : string,
 }

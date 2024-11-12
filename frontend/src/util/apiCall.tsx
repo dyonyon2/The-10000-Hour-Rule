@@ -26,7 +26,7 @@ export enum apiUrl {
 
     memoImageCreate=url+"/memo/image", // 메모 이미지 생성 (POST)
     
-    memoListRead=url+"/memo/list",   // 메모 목록 읽기 (GET)
+    memoListRead=url+"/memo/list?user_id={0}&target={1}",   // 메모 목록 읽기 (GET)
     
     memoSettingUpdate=url+"/memo/setting", // 메모 정보(상태, 권한, 카테고리, 즐겨찾기) (PATCH)
     

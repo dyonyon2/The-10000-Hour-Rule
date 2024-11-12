@@ -13,6 +13,8 @@ public class MemoListInfo {
     String owner_id;    // 생성시 필요한 데이터
     String title;
     String content;
+    String category_no;
+    String favorites;
     String create_dt;
     String update_dt;
 }

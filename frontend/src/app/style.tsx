@@ -66,10 +66,10 @@ const useStyles = makeStyles({
         padding : "10px",
     },
 
-    memoBoard : {
-        minHeight:"800px",
+    memoGridBoard : {
+        minHeight:"1000px",
         // minWidth : "1000px",
-        height:"95vh",
+        height:"110vh",
         // backgroundImage :"url(/blurMemo.jpg)",
         backgroundImage :"url(/board1.jpg)",
         backgroundSize: "cover", /* 요소의 크기에 맞춰 이미지를 조정 */
@@ -115,7 +115,7 @@ const useStyles = makeStyles({
         width:"16vw",
         height:"14vh",
         minWidth : "200px",
-        minHeight : "120px",
+        minHeight : "150px",
         marginTop : "20px",
         marginBottom : "20px",
         
