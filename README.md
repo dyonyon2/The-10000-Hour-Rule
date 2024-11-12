@@ -1,16 +1,24 @@
+2024.11.12
+    [Front]
+        - MemoGridBoard 완성
+            - 메모 item UI 및 크기 조절 완료
+            - Paging 기능도 데이터에 직접 연결 완료
+    [Back]
+        - Memo response Body 사이즈가 커서 컬럼 사이즈 오류 발생중 -> MaxLength를 1000에서 900으로 줄임
+
+
 [To Do List] // 코드내에 TDL 주석 체크!
 - 프론트엔드
-    - 로그인 후
+    - Memo 구현
+        - MemoListBoard UI 구현
+        - MemoDetailInfo Page 구현
+        - Memo 작성 Page 구현
+    - Calendar Page 구현
+    - Routine Page 구현
+    - Main Page 구현
+
 
 - 백엔드
-    - 메모 작성 누르면 바로 빈 메모 생성으로 시작하자. -> 그 뒤 모든 작업들이 Memo_idx 가지고 시작!
-    - res_data 오류일때 1024자 짜르기
-    - 메모 수정
-    - 굳이 owner_id를 가지고 있어야하나? 그냥 서비스에 콘텐츠 ID만 있으면 될거 같은데....?? => 그냥 가자. 목록 읽기 같은거는 session 체크만 하면 되지 뭐
-    - 메모 읽기
-    - 메모 목록 읽기 
-    -> 1. 내 메모 / 2.  내 그룹 메모 / 3. 내가 팔로우한 메모 
-        => 메모 제목, 메모 타입, 메모 소유자, 
     - 메모 정보 수정 리턴 값 확인! 
     - 메모 복사시 Image는 어떻게 할거? => 동일한 파일 가르키도록 IMG 테이블만 등록
     - 메모 검증 부분 스킵 (그룹, Follow 기능 완료한 뒤에)
