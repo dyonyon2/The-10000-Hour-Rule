@@ -6,6 +6,12 @@
     [Back]
         - Memo response Body 사이즈가 커서 컬럼 사이즈 오류 발생중 -> MaxLength를 1000에서 900으로 줄임
 
+2024.11.13
+    [Front]
+        - 
+    [Back]
+        - 
+
 
 [To Do List] // 코드내에 TDL 주석 체크!
 - 프론트엔드

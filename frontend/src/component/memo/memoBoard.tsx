@@ -1,7 +1,7 @@
 import useStyles from "@/app/style";
 import { MemoListInfo } from "@/util/types";
-import { AllInbox, AllInclusive, AllOut, Create, FollowTheSigns, Group, NoteAlt, NotificationsActiveOutlined, Person, PostAdd, Share, ViewHeadline, ViewModule } from "@mui/icons-material";
-import { Button, Grid, Grid2, MenuItem, Pagination, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { AllInbox, AllInclusive, AllOut, Create, FollowTheSigns, Group, NoteAlt, NotificationsActiveOutlined, Person, PostAdd, Share, Star, StarOutline, ViewHeadline, ViewModule } from "@mui/icons-material";
+import { Button, Grid, Grid2, MenuItem, Pagination, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import MemoBoardItem from "./memoBoardItem";
 import { ApiCall, apiUrl } from "@/util/apiCall";
@@ -62,19 +62,29 @@ export default function MemoBoard() {
         setPage(value);
     };
 
-    function changeViewSort(value: string){
-        setPage(1);
-        setSortCnt(value);
-        setMaxPage(Math.ceil(memoList.length/parseInt(value)/parseInt(value)));
+    function changeViewSort(type:"GRID"|"LIST",value: string){
+        if(type=="GRID"){
+            setPage(1);
+            setSortCnt(value);
+            setMaxPage(Math.ceil(memoList.length/parseInt(value)/parseInt(value)));
+        } else if (type=="LIST"){
+            setPage(1);
+            setSortCnt(value);
+            setMaxPage(Math.ceil(memoList.length/parseInt(value)));
+        }
     }
 
     function changeViewType(type:"GRID"|"LIST"){
         if(type=="GRID"){
+            setPage(1);
             setViewType("GRID");
             setSortCnt("3");
+            setMaxPage(Math.ceil(memoList.length/3/3));
         } else if (type=="LIST"){
+            setPage(1);
             setViewType("LIST");
             setSortCnt("10");
+            setMaxPage(Math.ceil(memoList.length/10));
         }
     }
 
@@ -93,12 +103,12 @@ export default function MemoBoard() {
                     <Button type="submit" variant="text" className={style.icon_square} sx={{backgroundColor: (viewType=="LIST")?"gray":"white"}} onClick={()=>{changeViewType("LIST")}}><ViewHeadline /></Button>
                     {
                         (viewType=="GRID")?
-                        <Select id="demo-simple-select" value={sortCnt} label="type" sx={{width:"100px"}} onChange={(event : SelectChangeEvent)=>{changeViewSort(event.target.value)}}>
+                        <Select id="demo-simple-select" value={sortCnt} label="type" sx={{width:"100px"}} onChange={(event : SelectChangeEvent)=>{changeViewSort("GRID",event.target.value)}}>
                             <MenuItem value={"3"}>3x3</MenuItem>
                             <MenuItem value={"4"}>4x4</MenuItem>
                             <MenuItem value={"5"}>5x5</MenuItem>
                         </Select>
-                        :<Select id="demo-simple-select" value={sortCnt} label="type" sx={{width:"100px"}} onChange={(event : SelectChangeEvent)=>{setSortCnt(event.target.value);}}>
+                        :<Select id="demo-simple-select" value={sortCnt} label="type" sx={{width:"100px"}} onChange={(event : SelectChangeEvent)=>{changeViewSort("LIST",event.target.value)}}>
                             <MenuItem value={"10"}>10</MenuItem>
                             <MenuItem value={"15"}>15</MenuItem>
                             <MenuItem value={"20"}>20</MenuItem>
@@ -107,23 +117,76 @@ export default function MemoBoard() {
                 </Grid2>
             </Grid2>
             <Grid2 container size={12} className={style.margin_TB10} />
-            <Grid2 container size={12} className={style.memoGridBoard} justifyContent={"space-around"} alignContent={"space-around"}>
-                <Grid2 container size={12} className={style.margin_TB10} />
-                {
-                    Array.from({length:parseInt(sortCnt)},(_, index) => (
-                        <Grid2 container size={12} justifyContent={"space-around"} alignContent={"space-around"}>
-                            {
-                                (memoList.slice((page-1)*parseInt(sortCnt)*parseInt(sortCnt),page*parseInt(sortCnt)*parseInt(sortCnt))).map((memo, idx) => (
-                                    ((index*parseInt(sortCnt))<=idx&&idx<((index+1)*parseInt(sortCnt)))?
-                                    <MemoBoardItem style={sortCnt=="3"?style.memoItem3x3:(sortCnt=="4"?style.memoItem4x4:style.memoItem5x5)} data={memo} />
-                                    :<></>
-                                ))
-                            }
-                        </Grid2>
-                    ))
-                }
-                <Grid2 container size={12} className={style.margin_TB10} />
-            </Grid2>
+            {   
+                (viewType=="GRID")?
+                <Grid2 container size={12} className={style.memoGridBoard} justifyContent={"space-around"} alignContent={"space-around"}>
+                    <Grid2 container size={12} className={style.margin_TB10} />
+                    {
+                        Array.from({length:parseInt(sortCnt)},(_, index) => (
+                            <Grid2 container size={12} justifyContent={"space-around"} alignContent={"space-around"}>
+                                {
+                                    (memoList.slice((page-1)*parseInt(sortCnt)*parseInt(sortCnt),page*parseInt(sortCnt)*parseInt(sortCnt))).map((memo, idx) => (
+                                        ((index*parseInt(sortCnt))<=idx&&idx<((index+1)*parseInt(sortCnt)))?
+                                        <MemoBoardItem style={sortCnt=="3"?style.memoItem3x3:(sortCnt=="4"?style.memoItem4x4:style.memoItem5x5)} data={memo} />
+                                        :<></>
+                                    ))
+                                }
+                            </Grid2>
+                        ))
+                    }
+                    <Grid2 container size={12} className={style.margin_TB10} />
+                </Grid2>
+                :<Grid2 container size={12} justifyContent={"space-around"} alignContent={"space-around"}>
+                    <Grid2 container size={12} className={style.margin_TB10} />
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead sx={{backgroundColor:"lightgray"}}>
+                                <TableRow>
+                                    <TableCell sx={{width:'5%'}}>
+                                        즐겨찾기
+                                    </TableCell>
+                                    <TableCell sx={{width:'5%'}}>
+                                        카테고리
+                                    </TableCell>
+                                    <TableCell sx={{width:'20%'}}>
+                                        제목
+                                    </TableCell>
+                                    <TableCell sx={{width:'60%'}}>
+                                        내용
+                                    </TableCell>
+                                    <TableCell sx={{width:'10%'}}>
+                                        업데이트 시간
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    (memoList.slice((page-1)*parseInt(sortCnt),page*parseInt(sortCnt))).map((memo, idx) => (
+                                        <TableRow>
+                                            <TableCell>
+                                                {memo.favorites=="Y"?<Star fontSize="small" color="error" />:<StarOutline fontSize="small"/>}
+                                            </TableCell>
+                                            <TableCell>
+                                                {(!memo.category_no)?"분류없음":memo.category_no}
+                                            </TableCell>
+                                            <TableCell>
+                                                {memo.title}
+                                            </TableCell>
+                                            <TableCell>
+                                                {memo.content}
+                                            </TableCell>
+                                            <TableCell>
+                                                {memo.update_dt}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <Grid2 container size={12} className={style.margin_TB10} />
+                </Grid2>
+            }           
             
             <Grid2 container size={12} justifyContent={"space-between"} alignContent={"space-around"} >
                 <Grid2 container size={3} justifyContent={"space-around"} alignContent={"space-around"} >
