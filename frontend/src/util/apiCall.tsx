@@ -54,7 +54,7 @@ export class ApiCall{
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                ...(body && { data: body })
+                ...(body && { data: {...body,user_id:sessionStorage.getItem('user_id')} })
             };
 
             console.log('API CALL REQUEST:',config);

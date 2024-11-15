@@ -11,7 +11,6 @@ public interface MemoManageMapper {
     int deleteSharedKey(MemoDetailInfo info);
     MemoDetailInfo readSharedMemo(MemoInfo info);
     int updateMemoInfo(String key, String value, String memo_idx, String memo_type);
-    int updateMemoDetailInfo(String key, String value, String memo_idx, String memo_type);
     String getNewOwnerAuthority(MemoCopyInfo info);
     int getMemoIdx(MemoCopyInfo info);
     int insertMemo(MemoCopyInfo info);

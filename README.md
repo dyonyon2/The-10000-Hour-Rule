@@ -8,15 +8,22 @@
 
 2024.11.13
     [Front]
-        - 
+        - MemoListBoard 완성
+
+2024.11.15
+    [Front]
+        - MemoList에서(Grid,List) 즐겨찾기 변경 기능 추가 (API Call)
+            - MemoBoardItem에서 API Call한 뒤에 화면에 반영하려고 MemoBoardItem에서 useState 사용하니 꼬인다...!!
+                -> memoBoard에서 함수 만들어줘서 memoBoardItem으로 던져줘서 해결!
     [Back]
-        - 
+        - 메모 update시 조건 추가하여 변경할 값만 넣도록 query 변경
+        - /memo/setting patch에 있던 즐겨찾기, 카테고리 변경을 /memo patch 로 변경
+
 
 
 [To Do List] // 코드내에 TDL 주석 체크!
 - 프론트엔드
     - Memo 구현
-        - MemoListBoard UI 구현
         - MemoDetailInfo Page 구현
         - Memo 작성 Page 구현
     - Calendar Page 구현
@@ -25,6 +32,7 @@
 
 
 - 백엔드
+    - 메모 리스트 조회시, favorite, update로 order by!
     - 메모 정보 수정 리턴 값 확인! 
     - 메모 복사시 Image는 어떻게 할거? => 동일한 파일 가르키도록 IMG 테이블만 등록
     - 메모 검증 부분 스킵 (그룹, Follow 기능 완료한 뒤에)

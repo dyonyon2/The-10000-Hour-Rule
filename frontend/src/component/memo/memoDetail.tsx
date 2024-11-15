@@ -5,10 +5,10 @@ import { Button, Grid, Grid2, MenuItem, Select, SelectChangeEvent, Typography } 
 import { useState } from "react";
 
 
-export default function MemoItem(){
+export default function MemoDetail(){
     return (
         <div>
-            Memo Item Page
+            Memo Detail Page
         </div>
     );
 };

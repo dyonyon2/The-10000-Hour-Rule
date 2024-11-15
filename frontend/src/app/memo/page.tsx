@@ -2,7 +2,7 @@
 
 import MemoBoard from "@/component/memo/memoBoard";
 
-export default function MemoList() {
+export default function MemoListPage() {
   return (
     <MemoBoard />
   );

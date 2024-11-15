@@ -304,7 +304,7 @@ public class MemoManageService {
     }
 
 
-    // 메모 정보(상태, 권한, 카테고리, 즐겨찾기) 변경 : checkSharedKeyAndReadMemo
+    // 메모 정보(상태, 권한,) 변경
     public ResponseInfo changeMemoInfo(HttpServletRequest req, MemoInfo memoInfo) {
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
@@ -318,20 +318,9 @@ public class MemoManageService {
                 key = GlobalConstants.ACCESS;
                 value = memoInfo.getAccess();
             }
-            // 1-2. 비번 체크
             else if(memoInfo.getStatus()!=null&&!memoInfo.getStatus().isEmpty()){
                 key = GlobalConstants.STATUS;
                 value = memoInfo.getStatus();
-            }
-            // 1-3. 메일 체크
-            else if(memoInfo.getCategory_no()!=null&&!memoInfo.getCategory_no().isEmpty()){
-                key = GlobalConstants.CATEGORY_NO;
-                value = memoInfo.getCategory_no();
-            }
-            // 1-4. 핸드폰 체크
-            else if(memoInfo.getFavorites()!=null&&!memoInfo.getFavorites().isEmpty()){
-                key = GlobalConstants.FAVORITES;
-                value = memoInfo.getFavorites();
             }
             else{
                 responseInfo.setRes_status("-1");
@@ -365,15 +354,13 @@ public class MemoManageService {
         }
         return responseInfo;
     }
+
     public void updateMemoInfo(String req_id, String key, String value, String memo_idx, String memo_type, ResponseInfo resInfo) throws FunctionException {
         try {
             int result = 0;
             switch (key){
                 case GlobalConstants.ACCESS, GlobalConstants.STATUS: // MEMO 변경
                     result = memoManageMapper.updateMemoInfo(key, value, memo_idx, memo_type);
-                    break;
-                case GlobalConstants.CATEGORY_NO, GlobalConstants.FAVORITES: // MEMO_DETAIL 변경
-                    result = memoManageMapper.updateMemoDetailInfo(key, value, memo_idx, memo_type);
                     break;
                 default:
                     resInfo.setRes_status("-1");

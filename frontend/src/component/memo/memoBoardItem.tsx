@@ -1,4 +1,5 @@
 import useStyles from "@/app/style";
+import { ApiCall, apiUrl } from "@/util/apiCall";
 import { MemoListInfo } from "@/util/types";
 import { NotificationsActiveOutlined, Star, StarOutline, Start, ViewHeadline, ViewModule } from "@mui/icons-material";
 import { Box, Button, Divider, Grid, Grid2, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
@@ -7,16 +8,20 @@ import { useState } from "react";
 type props = {
     style   : string;
     data    : MemoListInfo;
+    changeFavorite : (target:MemoListInfo) => void;
 }
 
-const MemoBoardItem: React.FC<props> = ({style, data}) => {    
+
+
+const MemoBoardItem: React.FC<props> = ({style, data, changeFavorite}) => {    
+
     return (
         <Grid2 container className={style} alignContent={"flex-start"}>
             <Grid2 container size={12} justifyContent="space-between" wrap="nowrap">
                 <Typography variant="h4" noWrap>
                     {data.title}
                 </Typography>
-                {data.favorites=="Y"?<Star fontSize="small" color="error" />:<StarOutline fontSize="small"/>}
+                {data.favorites=="Y"?<Star fontSize="small" color="error" onClick={()=>{changeFavorite(data)}}/>:<StarOutline fontSize="small" onClick={()=>{changeFavorite(data)}}/>}
             </Grid2>
             <Grid2 container size={12} justifyContent="right">
                 <Typography variant="body1" noWrap>

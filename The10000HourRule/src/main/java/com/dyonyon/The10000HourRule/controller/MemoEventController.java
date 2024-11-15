@@ -376,7 +376,7 @@ public class MemoEventController {
     }
 
 
-    // 메모 정보(상태, 권한, 카테고리, 즐겨찾기) 변경
+    // 메모 정보(상태, 권한) 변경
     @PatchMapping("/setting")
     public ResponseInfo memoInfoChangeController(HttpServletRequest req, @RequestBody MemoInfo memoInfo) throws ParseException {
         ResponseInfo result = new ResponseInfo();

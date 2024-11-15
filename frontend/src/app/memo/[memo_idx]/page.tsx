@@ -1,9 +1,9 @@
 "use client"
 
-import MemoItem from "@/component/memo/memoItem";
+import MemoDetail from "@/component/memo/memoDetail";
 
-export default function MemoDetail() {
+export default function MemoDetailPage() {
   return (
-    <MemoItem />
+    <MemoDetail />
   );
 }
