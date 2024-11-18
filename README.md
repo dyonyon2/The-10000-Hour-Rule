@@ -19,6 +19,11 @@
         - 메모 update시 조건 추가하여 변경할 값만 넣도록 query 변경
         - /memo/setting patch에 있던 즐겨찾기, 카테고리 변경을 /memo patch 로 변경
 
+2024.11.18
+    [Front]
+        - Memo 상세 페이지 구현 시작!
+    [Back]
+        - 
 
 
 [To Do List] // 코드내에 TDL 주석 체크!

@@ -6,6 +6,7 @@ export enum pageUrl {
     signup = "/login/signup",
     user = "/user",
     memo = "/memo",
+    memoDetail = "/memo/",
     calendar = "/calendar",
     routine = "/routine",
 }

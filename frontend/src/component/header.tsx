@@ -39,7 +39,7 @@ export default function Header() {
   }
 
   async function logoutCall(){ // LoginFormInfo로 서버에 로그인 요청
-    var result= await ApiCall.call(apiUrl.logout,'post',{user_id:userId});
+    var result= await ApiCall.call(apiUrl.logout,'post',{user_id:userId},false);
     if(result.res_status){  // 정상적인 API CALL Return
       alert(result.msg);
       if(result.res_status==="1") {  // 로그인 성공

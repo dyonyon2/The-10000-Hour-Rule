@@ -9,7 +9,6 @@ import { pageUrl } from "@/util/values";
 
 export default function MemoBoard() {
     const style = useStyles();  // Style 세팅
-    const [userId,setUserId] = useState<string|null>("");
     const [memoList,SetMemoList] = useState<MemoListInfo[]>([]);
     const [memoType,setMemoType] = useState<"own"|"group"|"follow">("own");
     const [viewType,setViewType] = useState<"GRID"|"LIST">("GRID");
@@ -18,30 +17,15 @@ export default function MemoBoard() {
     const [page,setPage] = useState<number>(1);
 
     useEffect(()=>{
-        // 0. 로그인 체크
-        loginCheck();
         // 1. 내 메모 불러오기
         loadOwnMemo();
         // 2. 그룹 메모 불러오기 
         // 3. 내가 팔로우하는 메모 불러오기
     },[]);
-    
-
-    // 로그인 체크
-    function loginCheck(){
-        if(sessionStorage.getItem('user_id')){
-            setUserId(sessionStorage.getItem('user_id'));
-            console.log("로그인 되어 있음.");
-        }
-        else {
-            console.log("로그인 되어 있지 않음. 로그인 페이지로 이동");
-            window.location.href = pageUrl.login;
-        }
-    }
 
     // own 메모 로드
     async function loadOwnMemo(){
-        var result= await ApiCall.call(ApiCall.queryStringFormat(apiUrl.memoListRead,[sessionStorage.getItem('user_id'),'own']),'get');
+        var result= await ApiCall.call(ApiCall.queryStringFormat(apiUrl.memoListRead,[sessionStorage.getItem('user_id'),'own']),'get',false);
         console.log(result);
         if(result.res_status){  // 정상적인 API CALL Return
             // alert(result.msg);
@@ -97,7 +81,7 @@ export default function MemoBoard() {
     async function changeFavorite(target:MemoListInfo){
         if(target.favorites=="Y") target.favorites = "N";
         else target.favorites = "Y";
-        var result= await ApiCall.call(apiUrl.memoUpdate,'patch',target);
+        var result= await ApiCall.call(apiUrl.memoUpdate,'patch',target,true);
         console.log(result);
         if(result.res_status){  // 정상적인 API CALL Return
             if(result.res_status==="1") {  // 메모 읽기
@@ -193,7 +177,7 @@ export default function MemoBoard() {
                                     (memoList.slice((page-1)*parseInt(sortCnt),page*parseInt(sortCnt))).map((memo, idx) => (
                                         <TableRow>
                                             <TableCell>
-                                                {memo.favorites=="Y"?<Star fontSize="small" color="error" />:<StarOutline fontSize="small"/>}
+                                                {memo.favorites=="Y"?<Star fontSize="small" color="error" onClick={()=>{changeFavorite(memo)}} />:<StarOutline fontSize="small" onClick={()=>{changeFavorite(memo)}}/>}
                                             </TableCell>
                                             <TableCell>
                                                 {(!memo.category_no)?"분류없음":memo.category_no}

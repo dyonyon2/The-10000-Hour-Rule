@@ -30,7 +30,7 @@ export default function LoginBox() {
   }
 
   async function logInCall(){ // LoginFormInfo로 서버에 로그인 요청
-    var result= await ApiCall.call(apiUrl.login,'post',loginInfo);
+    var result= await ApiCall.call(apiUrl.login,'post',loginInfo,false);
     if(result.res_status){  // 정상적인 API CALL Return
       alert(result.msg);
       if(result.res_status==="1") {  // 로그인 성공

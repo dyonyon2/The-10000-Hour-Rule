@@ -20,7 +20,7 @@ export enum apiUrl {
 
     /* Memo 관련 API */
     memoCreate=url+"/memo", // 메모 생성 (POST)
-    memoRead=url+"/memo",   // 메모 읽기 (GET)
+    memoRead=url+"/memo?user_id={0}&memo_idx={1}",   // 메모 읽기 (GET)
     memoUpdate=url+"/memo", // 메모 수정 (PATCH)
     memoDelete=url+"/memo", // 메모 삭제 (DELETE)
 
@@ -45,7 +45,7 @@ export class ApiCall{
         }
         return url;
     }
-    public static async call(url:string, method:'get'|'post'|'delete'|'patch', body?:any){
+    public static async call(url:string, method:'get'|'post'|'delete'|'patch', body?:any, idSet?:boolean){
         try{
             const config: AxiosRequestConfig = {
                 method: method,
@@ -54,7 +54,12 @@ export class ApiCall{
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                ...(body && { data: {...body,user_id:sessionStorage.getItem('user_id')} })
+                ...(body && { 
+                    data: {
+                        ...body,
+                        ...(idSet ? {user_id:sessionStorage.getItem('user_id')}:{}),
+                    }, 
+                })
             };
 
             console.log('API CALL REQUEST:',config);
