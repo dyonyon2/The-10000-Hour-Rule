@@ -341,7 +341,6 @@ public class MemoCRUDService {
 
     // 메모 읽기 : setOwnerIdx, readMemoDetail
     public ResponseInfo readMemo(HttpServletRequest req, MemoInfo memoInfo) {
-        // owner_idx 세팅, 메모 수정
         String req_id = String.valueOf(req.getAttribute("req_id"));
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.setStatus("1"); responseInfo.setRes_status("1"); responseInfo.setErr_code("000000");

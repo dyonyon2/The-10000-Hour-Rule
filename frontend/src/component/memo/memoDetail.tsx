@@ -16,7 +16,7 @@ export default function MemoDetail({memo_idx}:pageParam) {
     },[]);
 
     async function loadMemo(){
-        // var result= await ApiCall.call(ApiCall.queryStringFormat(apiUrl.memoListRead,[sessionStorage.getItem('user_id'),'own']),'get',false);
+        var result= await ApiCall.call(ApiCall.queryStringFormat(apiUrl.memoRead,[sessionStorage.getItem('user_id'),'own']),'get',false);
         // console.log(result);
         // if(result.res_status){  // 정상적인 API CALL Return
         //     // alert(result.msg);

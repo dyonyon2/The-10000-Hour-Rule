@@ -22,8 +22,15 @@
 2024.11.18
     [Front]
         - Memo 상세 페이지 구현 시작!
+        - user_id 세팅 flag로 분리
     [Back]
         - 
+
+2024.11.19
+    [Front]
+        - Memo 상세 페이지 구현 시작!
+    [Back]
+        
 
 
 [To Do List] // 코드내에 TDL 주석 체크!
@@ -37,7 +44,7 @@
 
 
 - 백엔드
-    - 메모 리스트 조회시, favorite, update로 order by!
+    - Memo Read 부분, user_idx와 memo_idx만으로 조회하도록 변경해야함
     - 메모 정보 수정 리턴 값 확인! 
     - 메모 복사시 Image는 어떻게 할거? => 동일한 파일 가르키도록 IMG 테이블만 등록
     - 메모 검증 부분 스킵 (그룹, Follow 기능 완료한 뒤에)

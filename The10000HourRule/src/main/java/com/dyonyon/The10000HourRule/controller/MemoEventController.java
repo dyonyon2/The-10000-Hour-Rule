@@ -91,8 +91,8 @@ public class MemoEventController {
             }
             // 권한 확인
             ContentInfo verifyInfo = new ContentInfo();
-            verifyInfo.setService(GlobalConstants.SERVICE_MEMO); verifyInfo.setAccess(GlobalConstants.ACCESS_READ); verifyInfo.setContent_idx(memoInfo.getMemo_idx());
-            verifyInfo.setContent_type(memoInfo.getMemo_type()); verifyInfo.setUser_id(memoInfo.getUser_id()); verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
+            verifyInfo.setService(GlobalConstants.SERVICE_MEMO); verifyInfo.setAccess(GlobalConstants.ACCESS_READ); verifyInfo.setContent_idx(memoInfo.getMemo_idx()); verifyInfo.setUser_id(memoInfo.getUser_id());
+//            verifyInfo.setContent_type(memoInfo.getMemo_type());  verifyInfo.setOwner_id(memoInfo.getOwner_id()); verifyInfo.setGroup_id(memoInfo.getOwner_id());
             result = apiVerificationService.verifyAuthority((String) req.getAttribute("req_id"), verifyInfo);
             if ("-1".equals(result.getRes_status())) {
                 log.info("[Controller-MemoEvent][/read][{}] API Verification Fail... : Check Authority", req.getAttribute("req_id"));

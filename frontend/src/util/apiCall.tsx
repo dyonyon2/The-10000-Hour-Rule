@@ -20,7 +20,7 @@ export enum apiUrl {
 
     /* Memo 관련 API */
     memoCreate=url+"/memo", // 메모 생성 (POST)
-    memoRead=url+"/memo?user_id={0}&memo_idx={1}",   // 메모 읽기 (GET)
+    memoRead=url+"/memo?user_id={0}&memo_idx={1}&owner_id={2}&memo_type={3}",   // 메모 읽기 (GET)
     memoUpdate=url+"/memo", // 메모 수정 (PATCH)
     memoDelete=url+"/memo", // 메모 삭제 (DELETE)
 

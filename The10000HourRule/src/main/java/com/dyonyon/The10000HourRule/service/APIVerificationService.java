@@ -158,6 +158,9 @@ public class APIVerificationService {
         try {
             log.info("[Service-APICheck][verifyAuthority][{}] Authority Verify Started... : checkParams -> verify", req_id);
 
+            // owner_id
+            checkParams(req_id, verifyInfo, responseInfo);
+
             // 데이터 존재 여부
             checkParams(req_id, verifyInfo, responseInfo);
 
@@ -181,11 +184,12 @@ public class APIVerificationService {
 
     public void checkParams(String req_id, ContentInfo info, ResponseInfo resInfo) throws FunctionException {
         try {
-            // CRUD 필수 값
-            String service = info.getService(); String access = info.getAccess();
-            String user_id = info.getUser_id(); String owner_id = info.getOwner_id(); String type = info.getContent_type();
+            // 필수 값
+            String service = info.getService(); String access = info.getAccess(); String user_id = info.getUser_id();
             // RUD 필수 값
             String content_idx = info.getContent_idx();
+            //
+            String owner_id = info.getOwner_id(); String type = info.getContent_type();
             if(user_id!=null&&owner_id!=null&&service!=null&&type!=null&&access!=null){
                 log.info("[Service-APICheck][verifyAuthority][checkParams][{}] Check Parameters : Service({}) Access({}) Type({}) User({}) Owner({})", req_id, service, access, type, user_id, owner_id);
                 if(access.contains(GlobalConstants.ACCESS_READ)||access.contains(GlobalConstants.ACCESS_UPDATE)||access.contains(GlobalConstants.ACCESS_DELETE)){
